@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- Favicons -->
+  <link rel="apple-touch-icon" sizes="180x180" href="images/favicons/apple-touch-icon.png">
+  <link rel="icon" type="image/png" href="images/favicons/favicon-32x32.png" sizes="32x32">
+  <link rel="icon" type="image/png" href="images/favicons/favicon-16x16.png" sizes="16x16">
+  <link rel="manifest" href="images/favicons/manifest.json">
+  <link rel="mask-icon" href="images/favicons/safari-pinned-tab.svg" color="#5bbad5">
+  <meta name="theme-color" content="#ffffff">
+
+  <title>Synchronization, Part 6: Implementing a barrier</title>
+
+  <link async rel="stylesheet" href="/lib/bootstrap-3.3.7/dist/css/bootstrap.min.css">
+  <link async rel="stylesheet" href="/css/code-style.css">
+  <link async rel="stylesheet" href="/css/main.css">
+
+</head>
+
+<body>
+<!-- Always shows a header, even in smaller screens. -->
+<nav class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <div class="container">
+        <div class="navbar-header">
+
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target=".navbar-collapse" aria-expanded="false" aria-controls="navbar">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            </button>
+
+            <a class="navbar-brand navbar-link normal" href="/">CS 241: System Programming</a>
+            <a class="navbar-brand navbar-link small" href="/">CS 241</a>
+        </div>
+
+        <div id="navbar" class="navbar-collapse collapse">
+          <ul class="nav navbar-nav">
+            <li>
+            <a class="navbar-link" href="/mps.html">MPs</a>
+            </li>
+            <li>
+            <a class="navbar-link" href="/labs.html">Labs</a>
+            </li>
+            <li>
+            <a class="navbar-link" href="/help.html">Help!</a>
+            </li>
+            <li>
+            <a class="navbar-link" href="/schedule.html">Schedule</a>
+            </li>
+            <li>
+            <a class="navbar-link" href="/honors.html">Honors</a>
+            </li>
+            <li>
+            <a class="navbar-link" href="/staff.html">The Crew</a>
+            </li>
+            <li>
+            <a class="navbar-link" href="/search.html">Search</a>
+            </li>
+            <li>
+            <a class="navbar-link" href="/wikibook/home.html">Wikibook</a>
+            </li>
+          </ul>
+        </div>
+        </div>
+</nav>
+
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-md-2 col-sm-1 col-xs-0"></div>
+    <div class="col-md-8 col-sm-10 col-xs-12">
+      <div class="wrapper">
+        <div class="pad"><div class="card">
+          <div class="title">
+            <div class="speaker-wrapper">
+              <button onclick="speak()" class="speaker" alt="Read Page"></button>
+            </div>
+            <h1>
+              Synchronization, Part 6: Implementing a barrier
+              
+                <a class="github-link hidden-xs" href="https://github.com/angrave/SystemProgramming/wiki//Synchronization,-Part-6:-Implementing-a-barrier">Edit on Github</a>
+              
+            </h1>
+          </div>
+          <div class="container-fluid"><div class="row"><div class="content col-sm-11 .col-sm-offset-1">
+            
+          </div></div></div>
+        </div></div>
+      </div>
+      <div class="toc-wrapper">
+<h4>Content</h4>
+<ul class="toc"><li><a id="toc_how-do-i-wait-for-n-threads-to-reach-a-certain-point-before-continuing-onto-the-next-step" href="#how-do-i-wait-for-n-threads-to-reach-a-certain-point-before-continuing-onto-the-next-step" class="fancy-link">How do I wait for N threads to reach a certain point before continuing onto the next step?</a></li></ul>
+</div>
+      <div id="content">
+        
+        <div class="wrapper">
+
+</div>
+        <div class="wrapper"><div class="pad"><div class="card">
+<div class="title"><h2 id="how-do-i-wait-for-n-threads-to-reach-a-certain-point-before-continuing-onto-the-next-step" class="title-text">How do I wait for N threads to reach a certain point before continuing onto the next step?<a class="anchor title-text" href="#how-do-i-wait-for-n-threads-to-reach-a-certain-point-before-continuing-onto-the-next-step">#</a>
+</h2></div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="container-fluid"><div class="row"><div class="content col-sm-11 .col-sm-offset-1">
+<p>Suppose we wanted to perform a multi-threaded calculation that has two stages, but we don’t want to advance to the second stage until the first stage is completed.</p>
+<p>We could use a synchronization method called a <strong>barrier</strong>. When a thread reaches a barrier, it will wait at the barrier until all the threads reach the barrier, and then they’ll all proceed together.</p>
+<p>Think of it like being out for a hike with some friends.  You agree to wait for each other at the top of each hill (and you make a mental note how many are in your group). Say you’re the first one to reach the top of the first hill. You’ll wait there at the top for your friends. One by one, they’ll arrive at the top, but nobody will continue until the last person in your group arrives.  Once they do, you’ll all proceed.</p>
+<p>Pthreads has a function <code class="highlighter-rouge">pthread_barrier_wait()</code> that implements this. You’ll need to declare a <code class="highlighter-rouge">pthread_barrier_t</code> variable and initialize it with <code class="highlighter-rouge">pthread_barrier_init()</code>.  <code class="highlighter-rouge">pthread_barrier_init()</code> takes the number of threads that will be participating in the barrier as an argument.  <a href="/wikibook/sample-program-using-pthread-barriers.html#" class="fancy-link wiki-link">Here’s an example.</a></p>
+<p>Now let’s implement our own barrier and use it to keep all the threads in sync in a large calculation.</p>
+<pre><code class="language-C"><a class="code-copy" rel="code-copy-0" onclick="onCopy(this);">Copy</a><span class="kt">double</span> <span class="n">data</span><span class="p">[</span><span class="mi">256</span><span class="p">][</span><span class="mi">8192</span><span class="p">]</span>
+
+<span class="mi">1</span> <span class="n">Threads</span> <span class="k">do</span> <span class="n">first</span> <span class="n">calculation</span> <span class="p">(</span><span class="n">use</span> <span class="n">and</span> <span class="n">change</span> <span class="n">values</span> <span class="n">in</span> <span class="n">data</span><span class="p">)</span>
+
+<span class="mi">2</span> <span class="n">Barrier</span><span class="o">!</span> <span class="n">Wait</span> <span class="k">for</span> <span class="n">all</span> <span class="n">threads</span> <span class="n">to</span> <span class="n">finish</span> <span class="n">first</span> <span class="n">calculation</span> <span class="n">before</span> <span class="n">continuing</span>
+
+<span class="mi">3</span> <span class="n">Threads</span> <span class="k">do</span> <span class="n">second</span> <span class="n">calculation</span> <span class="p">(</span><span class="n">use</span> <span class="n">and</span> <span class="n">change</span> <span class="n">values</span> <span class="n">in</span> <span class="n">data</span><span class="p">)</span>
+<textarea id="code-copy-0" class="code-copy-textarea" value="double data[256][8192]
+
+1 Threads do first calculation (use and change values in data)
+
+2 Barrier! Wait for all threads to finish first calculation before continuing
+
+3 Threads do second calculation (use and change values in data)
+"></textarea></code></pre>
+<p>The thread function has four main parts-</p>
+<pre><code class="language-C"><a class="code-copy" rel="code-copy-1" onclick="onCopy(this);">Copy</a><span class="kt">void</span> <span class="o">*</span><span class="nf">calc</span><span class="p">(</span><span class="kt">void</span> <span class="o">*</span><span class="n">arg</span><span class="p">)</span> <span class="p">{</span>
+  <span class="cm">/* Do my part of the first calculation */</span>
+  <span class="cm">/* Am I the last thread to finish? If so wake up all the other threads! */</span>
+  <span class="cm">/* Otherwise wait until the other threads has finished part one */</span>
+  <span class="cm">/* Do my part of the second calculation */</span>
+<span class="p">}</span>
+<textarea id="code-copy-1" class="code-copy-textarea" value="void *calc(void *arg) {
+  /* Do my part of the first calculation */
+  /* Am I the last thread to finish? If so wake up all the other threads! */
+  /* Otherwise wait until the other threads has finished part one */
+  /* Do my part of the second calculation */
+}
+"></textarea></code></pre>
+<p>Our main thread will create the 16 threads and we will divide each calculation into 16 separate pieces.  Each thread will be given a unique value (0,1,2,..15), so it can work on its own block.
+Since a (void*) type can hold small integers, we will pass the value of <code class="highlighter-rouge"><a href="https://linux.die.net/man/3/i" class="fancy-link">i</a></code> by casting it to a void pointer.</p>
+<pre><code class="language-C"><a class="code-copy" rel="code-copy-2" onclick="onCopy(this);">Copy</a><span class="cp">#define N (16)
+</span><span class="kt">double</span> <span class="n">data</span><span class="p">[</span><span class="mi">256</span><span class="p">][</span><span class="mi">8192</span><span class="p">]</span> <span class="p">;</span>
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">pthread_t</span> <span class="n">ids</span><span class="p">[</span><span class="n">N</span><span class="p">];</span>
+    <span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">N</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span>  
+        <span class="n">pthread_create</span><span class="p">(</span><span class="o">&amp;</span><span class="n">ids</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="nb">NULL</span><span class="p">,</span> <span class="n">calc</span><span class="p">,</span> <span class="p">(</span><span class="kt">void</span> <span class="o">*</span><span class="p">)</span> <span class="n">i</span><span class="p">);</span>
+<textarea id="code-copy-2" class="code-copy-textarea" value="#define N (16)
+double data[256][8192] ;
+int main() {
+    pthread_t ids[N];
+    for(int i = 0; i &amp;lt; N; i++)  
+        pthread_create(&amp;amp;ids[i], NULL, calc, (void *) i);
+"></textarea></code></pre>
+<p>Note, we will never dereference this pointer value as an actual memory location - we will just cast it straight back to an integer:</p>
+<pre><code class="language-C"><a class="code-copy" rel="code-copy-3" onclick="onCopy(this);">Copy</a><span class="kt">void</span> <span class="o">*</span><span class="nf">calc</span><span class="p">(</span><span class="kt">void</span> <span class="o">*</span><span class="n">ptr</span><span class="p">)</span> <span class="p">{</span>
+<span class="c1">// Thread 0 will work on rows 0..15, thread 1 on rows 16..31
+</span>  <span class="kt">int</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">start</span> <span class="o">=</span> <span class="n">N</span> <span class="o">*</span> <span class="p">(</span><span class="kt">int</span><span class="p">)</span> <span class="n">ptr</span><span class="p">;</span>
+  <span class="kt">int</span> <span class="n">end</span> <span class="o">=</span> <span class="n">start</span> <span class="o">+</span> <span class="n">N</span><span class="p">;</span> 
+  <span class="k">for</span><span class="p">(</span><span class="n">x</span> <span class="o">=</span> <span class="n">start</span><span class="p">;</span> <span class="n">x</span> <span class="o">&lt;</span> <span class="n">end</span><span class="p">;</span> <span class="n">x</span><span class="o">++</span><span class="p">)</span> <span class="k">for</span> <span class="p">(</span><span class="n">y</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">y</span> <span class="o">&lt;</span> <span class="mi">8192</span><span class="p">;</span> <span class="n">y</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span> <span class="cm">/* do calc #1 */</span> <span class="p">}</span>
+<textarea id="code-copy-3" class="code-copy-textarea" value="void *calc(void *ptr) {
+// Thread 0 will work on rows 0..15, thread 1 on rows 16..31
+  int x, y, start = N * (int) ptr;
+  int end = start + N; 
+  for(x = start; x &amp;lt; end; x++) for (y = 0; y &amp;lt; 8192; y++) { /* do calc #1 */ }
+"></textarea></code></pre>
+<p>After calculation 1 completes, we need to wait for the slower threads (unless we are the last thread!).
+So, keep track of the number of threads that have arrived at our barrier aka ‘checkpoint’:</p>
+<pre><code class="language-C"><a class="code-copy" rel="code-copy-4" onclick="onCopy(this);">Copy</a><span class="c1">// Global: 
+</span><span class="kt">int</span> <span class="n">remain</span> <span class="o">=</span> <span class="n">N</span><span class="p">;</span>
+
+
+<span class="c1">// After calc #1 code:
+</span><span class="n">remain</span><span class="o">--</span><span class="p">;</span> <span class="c1">// We finished
+</span><span class="k">if</span> <span class="p">(</span><span class="n">remain</span> <span class="o">==</span><span class="mi">0</span><span class="p">)</span> <span class="p">{</span><span class="cm">/*I'm last!  -  Time for everyone to wake up! */</span> <span class="p">}</span>
+<span class="k">else</span> <span class="p">{</span>
+  <span class="k">while</span> <span class="p">(</span><span class="n">remain</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span> <span class="cm">/* spin spin spin*/</span> <span class="p">}</span>
+<span class="p">}</span>
+<textarea id="code-copy-4" class="code-copy-textarea" value="// Global: 
+int remain = N;
+
+
+// After calc #1 code:
+remain--; // We finished
+if (remain ==0) {/*I'm last!  -  Time for everyone to wake up! */ }
+else {
+  while (remain != 0) { /* spin spin spin*/ }
+}
+"></textarea></code></pre>
+<p>However the above code has a race condition (two threads might try to decrement <code class="highlighter-rouge">remain</code>) and the loop is a busy loop. We can do better! Let’s use a condition variable and then we will use a broadcast/signal functions to wake up the sleeping threads.</p>
+<p>A reminder, that a condition variable is similar to a house! Threads go there to sleep (<code class="highlighter-rouge"><a href="https://linux.die.net/man/3/pthread_cond_wait" class="fancy-link">pthread_cond_wait</a></code>). You can choose to wake up one thread (<code class="highlighter-rouge"><a href="https://linux.die.net/man/3/pthread_cond_signal" class="fancy-link">pthread_cond_signal</a></code>) or all of them (<code class="highlighter-rouge"><a href="https://linux.die.net/man/3/pthread_cond_broadcast" class="fancy-link">pthread_cond_broadcast</a></code>).  If there are no threads currently waiting then these two calls have no effect.</p>
+<p>A condition variable version is usually very similar to a busy loop incorrect solution - as we will show next. First, let’s add a mutex and condition global variables and don’t forget to initialize them in <code class="highlighter-rouge">main</code> …</p>
+<pre><code class="language-C"><a class="code-copy" rel="code-copy-5" onclick="onCopy(this);">Copy</a><span class="c1">//global variables
+</span><span class="n">pthread_mutex_t</span> <span class="n">m</span><span class="p">;</span>
+<span class="n">pthread_cond_t</span> <span class="n">cv</span><span class="p">;</span>
+
+<span class="n">main</span><span class="p">()</span> <span class="p">{</span>
+  <span class="n">pthread_mutex_init</span><span class="p">(</span><span class="o">&amp;</span><span class="n">m</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">);</span>
+  <span class="n">pthread_cond_init</span><span class="p">(</span><span class="o">&amp;</span><span class="n">cv</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">);</span>
+<textarea id="code-copy-5" class="code-copy-textarea" value="//global variables
+pthread_mutex_t m;
+pthread_cond_t cv;
+
+main() {
+  pthread_mutex_init(&amp;amp;m, NULL);
+  pthread_cond_init(&amp;amp;cv, NULL);
+"></textarea></code></pre>
+<p>We will use the mutex to ensure that only one thread modifies <code class="highlighter-rouge">remain</code> at a time.
+The last arriving thread needs to wake up <em>all</em> sleeping threads - so we will use <code class="highlighter-rouge">pthread_cond_broadcast(&amp;cv)</code> not <code class="highlighter-rouge"><a href="https://linux.die.net/man/3/pthread_cond_signal" class="fancy-link">pthread_cond_signal</a></code></p>
+<pre><code class="language-C"><a class="code-copy" rel="code-copy-6" onclick="onCopy(this);">Copy</a><span class="n">pthread_mutex_lock</span><span class="p">(</span><span class="o">&amp;</span><span class="n">m</span><span class="p">);</span>
+<span class="n">remain</span><span class="o">--</span><span class="p">;</span> 
+<span class="k">if</span> <span class="p">(</span><span class="n">remain</span> <span class="o">==</span><span class="mi">0</span><span class="p">)</span> <span class="p">{</span> <span class="n">pthread_cond_broadcast</span><span class="p">(</span><span class="o">&amp;</span><span class="n">cv</span><span class="p">);</span> <span class="p">}</span>
+<span class="k">else</span> <span class="p">{</span>
+  <span class="k">while</span><span class="p">(</span><span class="n">remain</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span> <span class="n">pthread_cond_wait</span><span class="p">(</span><span class="o">&amp;</span><span class="n">cv</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">m</span><span class="p">);</span> <span class="p">}</span>
+<span class="p">}</span>
+<span class="n">pthread_mutex_unlock</span><span class="p">(</span><span class="o">&amp;</span><span class="n">m</span><span class="p">);</span>
+<textarea id="code-copy-6" class="code-copy-textarea" value="pthread_mutex_lock(&amp;amp;m);
+remain--; 
+if (remain ==0) { pthread_cond_broadcast(&amp;amp;cv); }
+else {
+  while(remain != 0) { pthread_cond_wait(&amp;amp;cv, &amp;amp;m); }
+}
+pthread_mutex_unlock(&amp;amp;m);
+"></textarea></code></pre>
+<p>When a thread enters <code class="highlighter-rouge"><a href="https://linux.die.net/man/3/pthread_cond_wait" class="fancy-link">pthread_cond_wait</a></code>, it releases the mutex and sleeps. At some point in the future, it will be awoken. Once we bring a thread back from its sleep, before returning it must wait until it can lock the mutex. Notice that even if a sleeping thread wakes up early, it will check the while loop condition and re-enter wait if necessary.</p>
+<p><strong>The above barrier is not reusable</strong> Meaning that if we stick it into any old calculation loop there is a good chance that the code will encounter a condition where the barrier either deadlocks or a thread races ahead one iteration faster. Think about how you can make the above barrier reusable, meaning that if mutliple threads call <code class="highlighter-rouge">barrier_wait</code> in a loop then one can guarantee that they are on the same iteration.</p>
+</div></div></div>
+</div></div></div>
+        
+        <div class="wrapper">
+</div>
+      </div>
+      <div class="col-md-2 col-sm-1 col-xs-0"></div>
+    </div>
+  </div>
+  <script>
+    var github_repo = "illinois-cs241/illinois-cs241.github.io";
+    var github_path = "_wikibook/synchronization-part-6-implementing-a-barrier.md";
+  </script>
+  <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML" integrity="sha384-Ra6zh6uYMmH5ydwCqqMoykyf1T/+ZcnOQfFPhDrp2kI4OIxadnhsvvA2vv9A7xYv" crossorigin="anonymous"></script>
+<script src="/lib/bootstrap-3.3.7/dist/js/bootstrap.min.js"></script>
+<script src="/js/main.js"></script>
+
+<script>
+$(document).ready(function(){
+    $('[data-toggle="popover"]').popover({
+      trigger: 'manual',
+        container: $(this).attr('id'),
+        placement: 'top',
+        content: function () {
+            return '<div class="hover-hovercard"></div>';
+        }
+    }).on("mouseenter", function () {
+        var _this = this;
+        $(this).popover("show");
+        $(this).siblings(".popover").on("mouseleave", function () {
+            $(_this).popover('hide');
+        });
+    }).on("mouseleave", function () {
+        var _this = this;
+        setTimeout(function () {
+            if (!$(".popover:hover").length) {
+               $(_this).popover("hide")
+            }
+        }, 100);
+    });
+
+    $('[data-toggle="tooltip"]').tooltip();
+});
+/*
+$('[data-toggle="popover"]').on('shown.bs.popover', function () {
+    var $pop = $(this);
+    setTimeout(function () {
+        $pop.popover('hide');
+    }, 2000);
+});*/
+</script>
+<script src="/js/analytics.js"></script>
+<footer class="">
+
+<div class="container-fluid">
+<div class="shadow"></div>
+<!--<div class="row">
+  <h4 class="col-md-3">CS 241: System Programming</h4>
+  
+    <div class="col-md-3">
+    <a href="https://github.com/illinois-cs241"><span class="icon icon--github"><svg viewBox="0 0 16 16"><path fill="#828282" d="M7.999,0.431c-4.285,0-7.76,3.474-7.76,7.761 c0,3.428,2.223,6.337,5.307,7.363c0.388,0.071,0.53-0.168,0.53-0.374c0-0.184-0.007-0.672-0.01-1.32 c-2.159,0.469-2.614-1.04-2.614-1.04c-0.353-0.896-0.862-1.135-0.862-1.135c-0.705-0.481,0.053-0.472,0.053-0.472 c0.779,0.055,1.189,0.8,1.189,0.8c0.692,1.186,1.816,0.843,2.258,0.645c0.071-0.502,0.271-0.843,0.493-1.037 C4.86,11.425,3.049,10.76,3.049,7.786c0-0.847,0.302-1.54,0.799-2.082C3.768,5.507,3.501,4.718,3.924,3.65 c0,0,0.652-0.209,2.134,0.796C6.677,4.273,7.34,4.187,8,4.184c0.659,0.003,1.323,0.089,1.943,0.261 c1.482-1.004,2.132-0.796,2.132-0.796c0.423,1.068,0.157,1.857,0.077,2.054c0.497,0.542,0.798,1.235,0.798,2.082 c0,2.981-1.814,3.637-3.543,3.829c0.279,0.24,0.527,0.713,0.527,1.437c0,1.037-0.01,1.874-0.01,2.129 c0,0.208,0.14,0.449,0.534,0.373c3.081-1.028,5.302-3.935,5.302-7.362C15.76,3.906,12.285,0.431,7.999,0.431z"/></svg>
+</span><span class="username">illinois-cs241</span></a>
+
+    </div>
+  
+  
+</div>
+
+<div class="row">
+  <div class="col-md-12 col-sm-12">
+    <p>Webpage for CS 241: System Programming at the University of Illinois Urbana-Champaign. All documentation and information about the course can be found here.
+</p>
+  </div>
+</div> -->
+</div>
+
+</footer>
+
+</body>
+</html>

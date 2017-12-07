@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- Favicons -->
+  <link rel="apple-touch-icon" sizes="180x180" href="images/favicons/apple-touch-icon.png">
+  <link rel="icon" type="image/png" href="images/favicons/favicon-32x32.png" sizes="32x32">
+  <link rel="icon" type="image/png" href="images/favicons/favicon-16x16.png" sizes="16x16">
+  <link rel="manifest" href="images/favicons/manifest.json">
+  <link rel="mask-icon" href="images/favicons/safari-pinned-tab.svg" color="#5bbad5">
+  <meta name="theme-color" content="#ffffff">
+
+  <title>Scheduling, Part 2: Scheduling Processes: Algorithms</title>
+
+  <link async rel="stylesheet" href="/lib/bootstrap-3.3.7/dist/css/bootstrap.min.css">
+  <link async rel="stylesheet" href="/css/code-style.css">
+  <link async rel="stylesheet" href="/css/main.css">
+
+</head>
+
+<body>
+<!-- Always shows a header, even in smaller screens. -->
+<nav class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <div class="container">
+        <div class="navbar-header">
+
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target=".navbar-collapse" aria-expanded="false" aria-controls="navbar">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            </button>
+
+            <a class="navbar-brand navbar-link normal" href="/">CS 241: System Programming</a>
+            <a class="navbar-brand navbar-link small" href="/">CS 241</a>
+        </div>
+
+        <div id="navbar" class="navbar-collapse collapse">
+          <ul class="nav navbar-nav">
+            <li>
+            <a class="navbar-link" href="/mps.html">MPs</a>
+            </li>
+            <li>
+            <a class="navbar-link" href="/labs.html">Labs</a>
+            </li>
+            <li>
+            <a class="navbar-link" href="/help.html">Help!</a>
+            </li>
+            <li>
+            <a class="navbar-link" href="/schedule.html">Schedule</a>
+            </li>
+            <li>
+            <a class="navbar-link" href="/honors.html">Honors</a>
+            </li>
+            <li>
+            <a class="navbar-link" href="/staff.html">The Crew</a>
+            </li>
+            <li>
+            <a class="navbar-link" href="/search.html">Search</a>
+            </li>
+            <li>
+            <a class="navbar-link" href="/wikibook/home.html">Wikibook</a>
+            </li>
+          </ul>
+        </div>
+        </div>
+</nav>
+
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-md-2 col-sm-1 col-xs-0"></div>
+    <div class="col-md-8 col-sm-10 col-xs-12">
+      <div class="wrapper">
+        <div class="pad"><div class="card">
+          <div class="title">
+            <div class="speaker-wrapper">
+              <button onclick="speak()" class="speaker" alt="Read Page"></button>
+            </div>
+            <h1>
+              Scheduling, Part 2: Scheduling Processes: Algorithms
+              
+                <a class="github-link hidden-xs" href="https://github.com/angrave/SystemProgramming/wiki//Scheduling,-Part-2:-Scheduling-Processes:-Algorithms">Edit on Github</a>
+              
+            </h1>
+          </div>
+          <div class="container-fluid"><div class="row"><div class="content col-sm-11 .col-sm-offset-1">
+            
+          </div></div></div>
+        </div></div>
+      </div>
+      <div class="toc-wrapper">
+<h4>Content</h4>
+<ul class="toc"></ul>
+</div>
+      <div id="content">
+        
+        <div class="wrapper">
+
+</div>
+        <div class="wrapper">
+<div class="pad"><div class="card">
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="container-fluid"><div class="row"><div class="content col-sm-11 .col-sm-offset-1">
+<h1 id="what-are-some-well-known-scheduling-algorithms">What are some well known scheduling algorithms?</h1>
+<p>For all the examples,</p>
+<p>Process 1: Runtime 1000ms</p>
+<p>Process 2: Runtime 2000ms</p>
+<p>Process 3: Runtime 3000ms</p>
+<p>Process 4: Runtime 4000ms</p>
+<p>Process 5: Runtime 5000ms</p>
+</div></div></div>
+</div></div>
+<div class="pad"><div class="card">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="container-fluid"><div class="row"><div class="content col-sm-11 .col-sm-offset-1">
+<h1 id="shortest-job-first-sjf">Shortest Job First (SJF)</h1>
+<p><img src="http://i.imgur.com/jGLvjqT.png" alt=""></p>
+<ul>
+  <li>P1 Arrival: 0ms</li>
+  <li>P2 Arrival: 0ms</li>
+  <li>P3 Arrival: 0ms</li>
+  <li>P4 Arrival: 0ms</li>
+  <li>P5 Arrival: 0ms</li>
+</ul>
+<p>The processes all arrive at the start and the scheduler schedules the job with the shortest total CPU time. The glaring problem is that this scheduler needs to know how long this program will run over time before it ran the program.</p>
+<p>Technical Note: A realistic SJF implementation would not use the total execution time of the process but the burst time (the total CPU time including future computational execution before the process will no longer be ready to run). The expected burst time can be estimated by using an exponentially decaying weighted rolling average based on the previous burst time but for this exposition we will simplify this discussion to use the total running time of the process as a proxy for the burst time.</p>
+<p><strong>Advantages</strong></p>
+<ul>
+  <li>Shorter jobs tend to get run first</li>
+</ul>
+<p><strong>Disadvantages</strong></p>
+<ul>
+  <li>Needs algorithm to be omniscient</li>
+</ul>
+</div></div></div>
+</div></div>
+<div class="pad"><div class="card">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="container-fluid"><div class="row"><div class="content col-sm-11 .col-sm-offset-1">
+<h1 id="preemptive-shortest-job-first-psjf">Preemptive Shortest Job First (PSJF)</h1>
+<p>Preemptive shortest job first is like shortest job first but if a new job comes in with a shorter runtime than the total runtime of the current job, it is run instead. (If it is equal like our example our algorithm can choose). The scheduler uses the <em>total</em> runtime of the process. If you want the shortest <em>remaining</em> time left, that is a variant of PSJF called Shortest Remaining Time First (SRTF).</p>
+<p><img src="http://i.imgur.com/QvoX7Ia.png" alt=""></p>
+<ul>
+  <li>P2 at 0ms</li>
+  <li>P1 at 1000ms</li>
+  <li>P5 at 3000ms</li>
+  <li>P4 at 4000ms</li>
+  <li>P3 at 5000ms</li>
+</ul>
+<p>Here’s what our algorithm does. It runs P2 because it is the only thing to run. Then P1 comes in at 1000ms, P2 runs for 2000ms, so our scheduler preemptively stops P2, and let’s P1 run all the way through (this is completely up to the algorithm because the times are equal). Then, P5 Comes in – since there are no processes running, the scheduler will run process 5. P4 comes in, and since the runtimes are equal P5, the scheduler stops P5 and runs P4. Finally P3 comes in, preempts P4, and runs to completion. Then P4 runs, then P5 runs.</p>
+<p><strong>Advantages</strong></p>
+<ul>
+  <li>Ensures shorter jobs get run first</li>
+</ul>
+<p><strong>Disadvantages</strong></p>
+<ul>
+  <li>Need to know the runtime again</li>
+</ul>
+</div></div></div>
+</div></div>
+<div class="pad"><div class="card">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="container-fluid"><div class="row"><div class="content col-sm-11 .col-sm-offset-1">
+<h1 id="first-come-first-served-fcfs">First Come First Served (FCFS)</h1>
+<p><img src="http://i.imgur.com/lcMpUZz.png" alt=""></p>
+<ul>
+  <li>P2 at 0ms</li>
+  <li>P1 at 1000ms</li>
+  <li>P5 at 3000ms</li>
+  <li>P4 at 4000ms</li>
+  <li>P3 at 5000ms</li>
+</ul>
+<p>Processes are scheduled in the order of arrival. One advantage of FCFS is that scheduling algorithm is simple: the ready queue is a just a FIFO (first in first out) queue.
+FCFS suffers from the Convoy effect.</p>
+<p>Here P2 Arrives, then P1 arrives, then P5, then P4, then P3. You can see the convoy effect for P5.</p>
+<p><strong>Advantages</strong></p>
+<ul>
+  <li>Simple implementation</li>
+</ul>
+<p><strong>Disadvantages</strong></p>
+<ul>
+  <li>Long running processes could block all other processes</li>
+</ul>
+</div></div></div>
+</div></div>
+<div class="pad"><div class="card">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="container-fluid"><div class="row"><div class="content col-sm-11 .col-sm-offset-1">
+<h1 id="round-robin-rr">Round Robin (RR)</h1>
+<p>Processes are scheduled in order of their arrival in the ready queue. However after a small time step a running process will be forcibly removed from the running state and placed back on the ready queue. This ensures that a long-running process can not starve all other processes from running.
+The maximum amount of time that a process can execute before being returned to the ready queue is called the time quanta. In the limit of large time quanta (where the time quanta is longer than the running time of all processes) round robin will be equivalent to FCFS.</p>
+<p><img src="http://i.imgur.com/AlBYi0Y.png" alt=""></p>
+<ul>
+  <li>P1 Arrival: 0ms</li>
+  <li>P2 Arrival: 0ms</li>
+  <li>P3 Arrival: 0ms</li>
+  <li>P4 Arrival: 0ms</li>
+  <li>P5 Arrival: 0ms</li>
+</ul>
+<p>Quantum = 1000ms</p>
+<p>Here all processes arrive at the same time. P1 is run for 1 quantum and is finished. P2 for one quantum; then, it is stopped for P3. After all other processes run for a quantum we cycle back to P2 until all the processes are finished.</p>
+<p><strong>Advantages</strong></p>
+<ul>
+  <li>Ensures some notion of fairness</li>
+</ul>
+<p><strong>Disadvantages</strong></p>
+<ul>
+  <li>Large number of processes = Lots of switching</li>
+</ul>
+</div></div></div>
+</div></div>
+<div class="pad"><div class="card">
+
+
+<div class="container-fluid"><div class="row"><div class="content col-sm-11 .col-sm-offset-1">
+<h1 id="priority">Priority</h1>
+<p>Processes are scheduled in the order of priority value. For example, a navigation process might be more important to execute than a logging process.</p>
+</div></div></div>
+</div></div>
+</div>
+        
+        <div class="wrapper">
+</div>
+      </div>
+      <div class="col-md-2 col-sm-1 col-xs-0"></div>
+    </div>
+  </div>
+  <script>
+    var github_repo = "illinois-cs241/illinois-cs241.github.io";
+    var github_path = "_wikibook/scheduling-part-2-scheduling-processes-algorithms.md";
+  </script>
+  <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML" integrity="sha384-Ra6zh6uYMmH5ydwCqqMoykyf1T/+ZcnOQfFPhDrp2kI4OIxadnhsvvA2vv9A7xYv" crossorigin="anonymous"></script>
+<script src="/lib/bootstrap-3.3.7/dist/js/bootstrap.min.js"></script>
+<script src="/js/main.js"></script>
+
+<script>
+$(document).ready(function(){
+    $('[data-toggle="popover"]').popover({
+      trigger: 'manual',
+        container: $(this).attr('id'),
+        placement: 'top',
+        content: function () {
+            return '<div class="hover-hovercard"></div>';
+        }
+    }).on("mouseenter", function () {
+        var _this = this;
+        $(this).popover("show");
+        $(this).siblings(".popover").on("mouseleave", function () {
+            $(_this).popover('hide');
+        });
+    }).on("mouseleave", function () {
+        var _this = this;
+        setTimeout(function () {
+            if (!$(".popover:hover").length) {
+               $(_this).popover("hide")
+            }
+        }, 100);
+    });
+
+    $('[data-toggle="tooltip"]').tooltip();
+});
+/*
+$('[data-toggle="popover"]').on('shown.bs.popover', function () {
+    var $pop = $(this);
+    setTimeout(function () {
+        $pop.popover('hide');
+    }, 2000);
+});*/
+</script>
+<script src="/js/analytics.js"></script>
+<footer class="">
+
+<div class="container-fluid">
+<div class="shadow"></div>
+<!--<div class="row">
+  <h4 class="col-md-3">CS 241: System Programming</h4>
+  
+    <div class="col-md-3">
+    <a href="https://github.com/illinois-cs241"><span class="icon icon--github"><svg viewBox="0 0 16 16"><path fill="#828282" d="M7.999,0.431c-4.285,0-7.76,3.474-7.76,7.761 c0,3.428,2.223,6.337,5.307,7.363c0.388,0.071,0.53-0.168,0.53-0.374c0-0.184-0.007-0.672-0.01-1.32 c-2.159,0.469-2.614-1.04-2.614-1.04c-0.353-0.896-0.862-1.135-0.862-1.135c-0.705-0.481,0.053-0.472,0.053-0.472 c0.779,0.055,1.189,0.8,1.189,0.8c0.692,1.186,1.816,0.843,2.258,0.645c0.071-0.502,0.271-0.843,0.493-1.037 C4.86,11.425,3.049,10.76,3.049,7.786c0-0.847,0.302-1.54,0.799-2.082C3.768,5.507,3.501,4.718,3.924,3.65 c0,0,0.652-0.209,2.134,0.796C6.677,4.273,7.34,4.187,8,4.184c0.659,0.003,1.323,0.089,1.943,0.261 c1.482-1.004,2.132-0.796,2.132-0.796c0.423,1.068,0.157,1.857,0.077,2.054c0.497,0.542,0.798,1.235,0.798,2.082 c0,2.981-1.814,3.637-3.543,3.829c0.279,0.24,0.527,0.713,0.527,1.437c0,1.037-0.01,1.874-0.01,2.129 c0,0.208,0.14,0.449,0.534,0.373c3.081-1.028,5.302-3.935,5.302-7.362C15.76,3.906,12.285,0.431,7.999,0.431z"/></svg>
+</span><span class="username">illinois-cs241</span></a>
+
+    </div>
+  
+  
+</div>
+
+<div class="row">
+  <div class="col-md-12 col-sm-12">
+    <p>Webpage for CS 241: System Programming at the University of Illinois Urbana-Champaign. All documentation and information about the course can be found here.
+</p>
+  </div>
+</div> -->
+</div>
+
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- Favicons -->
+  <link rel="apple-touch-icon" sizes="180x180" href="images/favicons/apple-touch-icon.png">
+  <link rel="icon" type="image/png" href="images/favicons/favicon-32x32.png" sizes="32x32">
+  <link rel="icon" type="image/png" href="images/favicons/favicon-16x16.png" sizes="16x16">
+  <link rel="manifest" href="images/favicons/manifest.json">
+  <link rel="mask-icon" href="images/favicons/safari-pinned-tab.svg" color="#5bbad5">
+  <meta name="theme-color" content="#ffffff">
+
+  <title>C Programming, Review Questions</title>
+
+  <link async rel="stylesheet" href="/lib/bootstrap-3.3.7/dist/css/bootstrap.min.css">
+  <link async rel="stylesheet" href="/css/code-style.css">
+  <link async rel="stylesheet" href="/css/main.css">
+
+</head>
+
+<body>
+<!-- Always shows a header, even in smaller screens. -->
+<nav class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <div class="container">
+        <div class="navbar-header">
+
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target=".navbar-collapse" aria-expanded="false" aria-controls="navbar">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            </button>
+
+            <a class="navbar-brand navbar-link normal" href="/">CS 241: System Programming</a>
+            <a class="navbar-brand navbar-link small" href="/">CS 241</a>
+        </div>
+
+        <div id="navbar" class="navbar-collapse collapse">
+          <ul class="nav navbar-nav">
+            <li>
+            <a class="navbar-link" href="/mps.html">MPs</a>
+            </li>
+            <li>
+            <a class="navbar-link" href="/labs.html">Labs</a>
+            </li>
+            <li>
+            <a class="navbar-link" href="/help.html">Help!</a>
+            </li>
+            <li>
+            <a class="navbar-link" href="/schedule.html">Schedule</a>
+            </li>
+            <li>
+            <a class="navbar-link" href="/honors.html">Honors</a>
+            </li>
+            <li>
+            <a class="navbar-link" href="/staff.html">The Crew</a>
+            </li>
+            <li>
+            <a class="navbar-link" href="/search.html">Search</a>
+            </li>
+            <li>
+            <a class="navbar-link" href="/wikibook/home.html">Wikibook</a>
+            </li>
+          </ul>
+        </div>
+        </div>
+</nav>
+
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-md-2 col-sm-1 col-xs-0"></div>
+    <div class="col-md-8 col-sm-10 col-xs-12">
+      <div class="wrapper">
+        <div class="pad"><div class="card">
+          <div class="title">
+            <div class="speaker-wrapper">
+              <button onclick="speak()" class="speaker" alt="Read Page"></button>
+            </div>
+            <h1>
+              C Programming, Review Questions
+              
+                <a class="github-link hidden-xs" href="https://github.com/angrave/SystemProgramming/wiki//C-Programming,-Review-Questions">Edit on Github</a>
+              
+            </h1>
+          </div>
+          <div class="container-fluid"><div class="row"><div class="content col-sm-11 .col-sm-offset-1">
+            
+          </div></div></div>
+        </div></div>
+      </div>
+      <div class="toc-wrapper">
+<h4>Content</h4>
+<ul class="toc"></ul>
+</div>
+      <div id="content">
+        
+        <div class="wrapper">
+
+</div>
+        <div class="wrapper">
+<div class="pad"><div class="card">
+
+
+<div class="container-fluid"><div class="row"><div class="content col-sm-11 .col-sm-offset-1">
+<h1 id="topics">Topics</h1>
+<ul>
+  <li>C Strings representation</li>
+  <li>C Strings as pointers</li>
+  <li>char p[]vs char* p</li>
+  <li>Simple C string functions (strcmp, strcat, strcpy)</li>
+  <li>sizeof char</li>
+  <li>sizeof x vs x*</li>
+  <li>Heap memory lifetime</li>
+  <li>Calls to heap allocation</li>
+  <li>Deferencing pointers</li>
+  <li>Address-of operator</li>
+  <li>Pointer arithmetic</li>
+  <li>String duplication</li>
+  <li>String truncation</li>
+  <li>double-free error</li>
+  <li>String literals</li>
+  <li>Print formatting.</li>
+  <li>memory out of bounds errors</li>
+  <li>static memory</li>
+  <li>fileio POSIX vs. C library</li>
+  <li>C io fprintf and printf</li>
+  <li>POSIX file IO (read, write, open)</li>
+  <li>Buffering of stdout</li>
+</ul>
+</div></div></div>
+</div></div>
+<div class="pad"><div class="card">
+
+
+
+
+<div class="container-fluid"><div class="row"><div class="content col-sm-11 .col-sm-offset-1">
+<h1 id="questionsexercises">Questions/Exercises</h1>
+<ul>
+  <li>What does the following print out
+    <pre><code class="language-C"><a class="code-copy" rel="code-copy-0" onclick="onCopy(this);">Copy</a><span class="kt">int</span> <span class="n">main</span><span class="p">(){</span>
+  <span class="n">fprintf</span><span class="p">(</span><span class="n">stderr</span><span class="p">,</span> <span class="s">"Hello "</span><span class="p">);</span>
+  <span class="n">fprintf</span><span class="p">(</span><span class="n">stdout</span><span class="p">,</span> <span class="s">"It's a small "</span><span class="p">);</span>
+  <span class="n">fprintf</span><span class="p">(</span><span class="n">stderr</span><span class="p">,</span> <span class="s">"World</span><span class="se">\n</span><span class="s">"</span><span class="p">);</span>
+  <span class="n">fprintf</span><span class="p">(</span><span class="n">stdout</span><span class="p">,</span> <span class="s">"place</span><span class="se">\n</span><span class="s">"</span><span class="p">);</span>
+  <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+<textarea id="code-copy-0" class="code-copy-textarea" value="int main(){
+  fprintf(stderr, &quot;Hello &quot;);
+  fprintf(stdout, &quot;It's a small &quot;);
+  fprintf(stderr, &quot;World\n&quot;);
+  fprintf(stdout, &quot;place\n&quot;);
+  return 0;
+}
+"></textarea></code></pre>
+  </li>
+  <li>What are the differences between the following two declarations? What does <code class="highlighter-rouge">sizeof</code> return for one of them?
+    <pre><code class="language-C"><a class="code-copy" rel="code-copy-1" onclick="onCopy(this);">Copy</a><span class="kt">char</span> <span class="n">str1</span><span class="p">[]</span> <span class="o">=</span> <span class="s">"bhuvan"</span><span class="p">;</span>
+<span class="kt">char</span> <span class="o">*</span><span class="n">str2</span> <span class="o">=</span> <span class="s">"another one"</span><span class="p">;</span>
+<textarea id="code-copy-1" class="code-copy-textarea" value='char str1[] = "bhuvan";
+char *str2 = "another one";
+'></textarea></code></pre>
+  </li>
+  <li>What is a string in c?</li>
+  <li>Code up a simple <code class="highlighter-rouge">my_strcmp</code>. How about <code class="highlighter-rouge">my_strcat</code>, <code class="highlighter-rouge">my_strcpy</code>, or <code class="highlighter-rouge">my_strdup</code>? Bonus: Code the functions while only going through the strings <em>once</em>.</li>
+  <li>What should the following usually return?
+    <pre><code class="language-C"><a class="code-copy" rel="code-copy-2" onclick="onCopy(this);">Copy</a><span class="kt">int</span> <span class="o">*</span><span class="n">ptr</span><span class="p">;</span>
+<span class="k">sizeof</span><span class="p">(</span><span class="n">ptr</span><span class="p">);</span>
+<span class="k">sizeof</span><span class="p">(</span><span class="o">*</span><span class="n">ptr</span><span class="p">);</span>
+<textarea id="code-copy-2" class="code-copy-textarea" value="int *ptr;
+sizeof(ptr);
+sizeof(*ptr);
+"></textarea></code></pre>
+  </li>
+  <li>What is <code class="highlighter-rouge"><a href="https://linux.die.net/man/3/malloc" class="fancy-link">malloc</a></code>? How is it different than <code class="highlighter-rouge"><a href="https://linux.die.net/man/3/calloc" class="fancy-link">calloc</a></code>. Once memory is <code class="highlighter-rouge"><a href="https://linux.die.net/man/3/malloc" class="fancy-link">malloc</a></code>ed how can I use <code class="highlighter-rouge"><a href="https://linux.die.net/man/3/realloc" class="fancy-link">realloc</a></code>?</li>
+  <li>What is the <code class="highlighter-rouge">&amp;</code> operator? How about <code class="highlighter-rouge">*</code>?</li>
+  <li>Pointer Arithmetic. Assume the following addresses. What are the following shifts?
+    <pre><code class="language-C"><a class="code-copy" rel="code-copy-3" onclick="onCopy(this);">Copy</a><span class="kt">char</span><span class="o">**</span> <span class="n">ptr</span> <span class="o">=</span> <span class="n">malloc</span><span class="p">(</span><span class="mi">10</span><span class="p">);</span> <span class="c1">//0x100
+</span><span class="n">ptr</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">malloc</span><span class="p">(</span><span class="mi">20</span><span class="p">);</span> <span class="c1">//0x200
+</span><span class="n">ptr</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">malloc</span><span class="p">(</span><span class="mi">20</span><span class="p">);</span> <span class="c1">//0x300
+</span><textarea id="code-copy-3" class="code-copy-textarea" value="char** ptr = malloc(10); //0x100
+ptr[0] = malloc(20); //0x200
+ptr[1] = malloc(20); //0x300
+"></textarea></code></pre>
+    <ul>
+      <li><code class="highlighter-rouge">ptr + 2</code></li>
+      <li><code class="highlighter-rouge">ptr + 4</code></li>
+      <li><code class="highlighter-rouge">ptr[0] + 4</code></li>
+      <li><code class="highlighter-rouge">ptr[1] + 2000</code></li>
+      <li><code class="highlighter-rouge">*((int)(ptr + 1)) + 3</code></li>
+    </ul>
+  </li>
+  <li>How do we prevent double free errors?</li>
+  <li>What is the printf specifier to print a string, <code class="highlighter-rouge"><a href="https://linux.die.net/man/3/int" class="fancy-link">int</a></code>, or <code class="highlighter-rouge"><a href="https://linux.die.net/man/3/char" class="fancy-link">char</a></code>?</li>
+  <li>Is the following code valid? If so, why? Where is <code class="highlighter-rouge">output</code> located?
+    <pre><code class="language-C"><a class="code-copy" rel="code-copy-4" onclick="onCopy(this);">Copy</a><span class="kt">char</span> <span class="o">*</span><span class="n">foo</span><span class="p">(</span><span class="kt">int</span> <span class="n">var</span><span class="p">){</span>
+  <span class="k">static</span> <span class="kt">char</span> <span class="n">output</span><span class="p">[</span><span class="mi">20</span><span class="p">];</span>
+  <span class="n">snprintf</span><span class="p">(</span><span class="n">output</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="s">"%d"</span><span class="p">,</span> <span class="n">var</span><span class="p">);</span>
+  <span class="k">return</span> <span class="n">output</span><span class="p">;</span>
+<span class="p">}</span>
+<textarea id="code-copy-4" class="code-copy-textarea" value='char *foo(int var){
+  static char output[20];
+  snprintf(output, 20, "%d", var);
+  return output;
+}
+'></textarea></code></pre>
+  </li>
+  <li>Write a function that accepts a string and opens that file prints out the file 40 bytes at a time but every other print reverses the string (try using POSIX API for this).</li>
+  <li>What are some differences between the POSIX filedescriptor model and C’s <code class="highlighter-rouge">FILE*</code> (ie what function calls are used and which is buffered)? Does POSIX use C’s <code class="highlighter-rouge">FILE*</code> internally or vice versa?</li>
+</ul>
+<div align="center">
+<a href="/wikibook/c-programming-part-5-debugging.html#" class="fancy-link wiki-link">
+Back: C Programming, Part 5: Debugging
+</a>
+</div>
+</div></div></div>
+</div></div>
+</div>
+        
+        <div class="wrapper">
+</div>
+      </div>
+      <div class="col-md-2 col-sm-1 col-xs-0"></div>
+    </div>
+  </div>
+  <script>
+    var github_repo = "illinois-cs241/illinois-cs241.github.io";
+    var github_path = "_wikibook/c-programming-review-questions.md";
+  </script>
+  <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML" integrity="sha384-Ra6zh6uYMmH5ydwCqqMoykyf1T/+ZcnOQfFPhDrp2kI4OIxadnhsvvA2vv9A7xYv" crossorigin="anonymous"></script>
+<script src="/lib/bootstrap-3.3.7/dist/js/bootstrap.min.js"></script>
+<script src="/js/main.js"></script>
+
+<script>
+$(document).ready(function(){
+    $('[data-toggle="popover"]').popover({
+      trigger: 'manual',
+        container: $(this).attr('id'),
+        placement: 'top',
+        content: function () {
+            return '<div class="hover-hovercard"></div>';
+        }
+    }).on("mouseenter", function () {
+        var _this = this;
+        $(this).popover("show");
+        $(this).siblings(".popover").on("mouseleave", function () {
+            $(_this).popover('hide');
+        });
+    }).on("mouseleave", function () {
+        var _this = this;
+        setTimeout(function () {
+            if (!$(".popover:hover").length) {
+               $(_this).popover("hide")
+            }
+        }, 100);
+    });
+
+    $('[data-toggle="tooltip"]').tooltip();
+});
+/*
+$('[data-toggle="popover"]').on('shown.bs.popover', function () {
+    var $pop = $(this);
+    setTimeout(function () {
+        $pop.popover('hide');
+    }, 2000);
+});*/
+</script>
+<script src="/js/analytics.js"></script>
+<footer class="">
+
+<div class="container-fluid">
+<div class="shadow"></div>
+<!--<div class="row">
+  <h4 class="col-md-3">CS 241: System Programming</h4>
+  
+    <div class="col-md-3">
+    <a href="https://github.com/illinois-cs241"><span class="icon icon--github"><svg viewBox="0 0 16 16"><path fill="#828282" d="M7.999,0.431c-4.285,0-7.76,3.474-7.76,7.761 c0,3.428,2.223,6.337,5.307,7.363c0.388,0.071,0.53-0.168,0.53-0.374c0-0.184-0.007-0.672-0.01-1.32 c-2.159,0.469-2.614-1.04-2.614-1.04c-0.353-0.896-0.862-1.135-0.862-1.135c-0.705-0.481,0.053-0.472,0.053-0.472 c0.779,0.055,1.189,0.8,1.189,0.8c0.692,1.186,1.816,0.843,2.258,0.645c0.071-0.502,0.271-0.843,0.493-1.037 C4.86,11.425,3.049,10.76,3.049,7.786c0-0.847,0.302-1.54,0.799-2.082C3.768,5.507,3.501,4.718,3.924,3.65 c0,0,0.652-0.209,2.134,0.796C6.677,4.273,7.34,4.187,8,4.184c0.659,0.003,1.323,0.089,1.943,0.261 c1.482-1.004,2.132-0.796,2.132-0.796c0.423,1.068,0.157,1.857,0.077,2.054c0.497,0.542,0.798,1.235,0.798,2.082 c0,2.981-1.814,3.637-3.543,3.829c0.279,0.24,0.527,0.713,0.527,1.437c0,1.037-0.01,1.874-0.01,2.129 c0,0.208,0.14,0.449,0.534,0.373c3.081-1.028,5.302-3.935,5.302-7.362C15.76,3.906,12.285,0.431,7.999,0.431z"/></svg>
+</span><span class="username">illinois-cs241</span></a>
+
+    </div>
+  
+  
+</div>
+
+<div class="row">
+  <div class="col-md-12 col-sm-12">
+    <p>Webpage for CS 241: System Programming at the University of Illinois Urbana-Champaign. All documentation and information about the course can be found here.
+</p>
+  </div>
+</div> -->
+</div>
+
+</footer>
+
+</body>
+</html>

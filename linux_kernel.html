@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- Favicons -->
+  <link rel="apple-touch-icon" sizes="180x180" href="images/favicons/apple-touch-icon.png">
+  <link rel="icon" type="image/png" href="images/favicons/favicon-32x32.png" sizes="32x32">
+  <link rel="icon" type="image/png" href="images/favicons/favicon-16x16.png" sizes="16x16">
+  <link rel="manifest" href="images/favicons/manifest.json">
+  <link rel="mask-icon" href="images/favicons/safari-pinned-tab.svg" color="#5bbad5">
+  <meta name="theme-color" content="#ffffff">
+
+  <title>Super Linux Kernel Super Lab</title>
+
+  <link async rel="stylesheet" href="/lib/bootstrap-3.3.7/dist/css/bootstrap.min.css">
+  <link async rel="stylesheet" href="/css/code-style.css">
+  <link async rel="stylesheet" href="/css/main.css">
+
+</head>
+
+<body>
+<!-- Always shows a header, even in smaller screens. -->
+<nav class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <div class="container">
+        <div class="navbar-header">
+
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target=".navbar-collapse" aria-expanded="false" aria-controls="navbar">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            </button>
+
+            <a class="navbar-brand navbar-link normal" href="/">CS 241: System Programming</a>
+            <a class="navbar-brand navbar-link small" href="/">CS 241</a>
+        </div>
+
+        <div id="navbar" class="navbar-collapse collapse">
+          <ul class="nav navbar-nav">
+            <li>
+            <a class="navbar-link" href="/mps.html">MPs</a>
+            </li>
+            <li>
+            <a class="navbar-link" href="/labs.html">Labs</a>
+            </li>
+            <li>
+            <a class="navbar-link" href="/help.html">Help!</a>
+            </li>
+            <li>
+            <a class="navbar-link" href="/schedule.html">Schedule</a>
+            </li>
+            <li>
+            <a class="navbar-link" href="/honors.html">Honors</a>
+            </li>
+            <li>
+            <a class="navbar-link" href="/staff.html">The Crew</a>
+            </li>
+            <li>
+            <a class="navbar-link" href="/search.html">Search</a>
+            </li>
+            <li>
+            <a class="navbar-link" href="/wikibook/home.html">Wikibook</a>
+            </li>
+          </ul>
+        </div>
+        </div>
+</nav>
+
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-md-2 col-sm-1 col-xs-0"></div>
+    <div class="col-md-8 col-sm-10 col-xs-12">
+      <div class="wrapper">
+        <div class="pad"><div class="card">
+          <div class="title">
+            <div class="speaker-wrapper">
+              <button onclick="speak()" class="speaker" alt="Read Page"></button>
+            </div>
+            <h1>
+              Super Linux Kernel Super Lab
+              
+                <a class="github-link hidden-xs" href="https://github.com/illinois-cs241/illinois-cs241.github.io/blob/develop/_docs/linux_kernel.md">Edit on Github</a>
+              
+            </h1>
+          </div>
+          <div class="container-fluid"><div class="row"><div class="content col-sm-11 .col-sm-offset-1">
+            
+              <div class="submission-wrapper">
+                
+                  <b>Entire Assignment</b> due <b>12/13/2017 11:59pm</b><br/>
+                  
+                    <b>Graded files:</b>
+                    <ul>
+                      
+                        <li>mutex.c</li>
+                      
+                        <li>mutex.h</li>
+                      
+                        <li>epoll.c</li>
+                      
+                        <li>epoll.h</li>
+                      
+                        <li>Makefile</li>
+                      
+                    </ul>
+                  
+                
+              </div>
+            
+          </div></div></div>
+        </div></div>
+      </div>
+      <div class="toc-wrapper">
+<h4>Content</h4>
+<ul class="toc">
+<li><a id="toc_overview" href="#overview" class="fancy-link">Overview</a></li>
+<li><a id="toc_mutex" href="#mutex" class="fancy-link">Mutex</a></li>
+<li><a id="toc_epoll-downloader" href="#epoll-downloader" class="fancy-link">Epoll Downloader</a></li>
+<li><a id="toc_makefile" href="#makefile" class="fancy-link">Makefile</a></li>
+<li><a id="toc_testing" href="#testing" class="fancy-link">Testing</a></li>
+<li><a id="toc_important-video-resources" href="#important-video-resources" class="fancy-link">Important: Video resources</a></li>
+<li><a id="toc_alternative-assignment" href="#alternative-assignment" class="fancy-link">Alternative assignment</a></li>
+</ul>
+</div>
+      <div id="content">
+        
+        <div class="wrapper">
+  <div class="pad"><div class="card">
+<div class="title"><h2 id="learning-objectives" class="title-text">Learning Objectives<a class="anchor title-text" href="#learning-objectives">#</a>
+</h2></div>
+  
+  
+
+
+<div class="container-fluid"><div class="row"><div class="content col-sm-11 .col-sm-offset-1">
+<p>
+    The learning objectives for Super Linux Kernel Super Lab are: <br>
+    </p>
+<ul class="mdl-list">
+      
+        <li class="mdl-list__item">
+          <span class="mdl-list__item-primary-content">Implement a mutex using C11 atomics and signal handlers</span>
+        </li>
+      
+        <li class="mdl-list__item">
+          <span class="mdl-list__item-primary-content">Use epoll and your new mutex to download a file</span>
+        </li>
+      
+    </ul>
+</div></div></div>
+</div></div>
+</div>
+        <div class="wrapper">
+<div class="pad"><div class="card">
+<div class="title"><h2 id="overview" class="title-text">Overview<a class="anchor title-text" href="#overview">#</a>
+</h2></div>
+
+
+
+
+
+<div class="container-fluid"><div class="row"><div class="content col-sm-11 .col-sm-offset-1">
+<p>This seems daunting, but you will finally use all of your systems programming knowledge from day one to today to fully implement something found in the kernel! (For ease of development, we will be doing it in the userspace.)</p>
+<p>In the spirit of kernel programming, we haven’t provided any starter code this time. You are going to have to create the <code class="highlighter-rouge">linux_kernel</code> SVN directory and the files to be graded from scratch!</p>
+</div></div></div>
+</div></div>
+<div class="pad"><div class="card">
+<div class="title"><h2 id="mutex" class="title-text">Mutex<a class="anchor title-text" href="#mutex">#</a>
+</h2></div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="container-fluid"><div class="row"><div class="content col-sm-11 .col-sm-offset-1">
+<p>The mutex we are going to implement will have the following interface:</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+int atomic_compare_exchange_weak_explicit(int* addr, int* expected, int value, memory_order succ, memory_order fail)
+
+</code></pre></div></div>
+<p>This function atomically takes the the value at <code class="highlighter-rouge">addr</code> and compares with to the value at <code class="highlighter-rouge">expected</code>. If the two are equal, then it stores <code class="highlighter-rouge">value</code> into <code class="highlighter-rouge">addr</code>. Otherwise, the contents of <code class="highlighter-rouge">addr</code> are written into <code class="highlighter-rouge">value</code>. For the <a href="http://en.cppreference.com/w/c/atomic/memory_order" class="fancy-link wiki-link">memory order</a>, we suggest you use <code class="highlighter-rouge">memory_order_relaxed</code>.</p>
+<p>You will want to create a lock using a struct that contains fields of your choice, such as an integer for the lock, and you’ll use atomic operations to lock and unlock it.</p>
+<p>In order to meet the POSIX specification, your mutex must support the following:</p>
+<ul>
+  <li>Locking the mutex should only let one thread continue</li>
+  <li>All other threads should be blocked</li>
+  <li>Unlocking a mutex should only be allowed by the owner of the mutex (how you can use the atomic instruction above to do this?)</li>
+</ul>
+<p>We want you to implement a normal mutex. You don’t need to worry about recursive mutexes or any more advanced structures.</p>
+<p><strong>Before you start implementing your mutex, watch the video explanation below.</strong></p>
+</div></div></div>
+</div></div>
+<div class="pad"><div class="card">
+<div class="title"><h2 id="epoll-downloader" class="title-text">Epoll Downloader<a class="anchor title-text" href="#epoll-downloader">#</a>
+</h2></div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="container-fluid"><div class="row"><div class="content col-sm-11 .col-sm-offset-1">
+<p>The second part of the lab will be implementing a file downloader using epoll and your mutex from above.</p>
+<p>We are going to pass your program a list of URLs, and you should download those using a worker pool of four threads. You can use whatever programming model you want, so long as the threads are grabbing a URL using networking calls to get a connected file descriptor and triggering a read with epoll.</p>
+<p>As a refresher, the calls to epoll are:</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>int epoll_ctl(int epfd, int op, int fd, struct epoll_event *event);
+
+int epoll_wait(int epfd, struct epoll_event *events,
+                      int maxevents, int timeout);
+
+</code></pre></div></div>
+<p>The function parameters:</p>
+<ul>
+  <li>
+<code class="highlighter-rouge">int epfd</code>: A file descriptor to the epoll object you created</li>
+  <li>
+<code class="highlighter-rouge">int op</code>: One of the operations described in the man page</li>
+  <li>
+<code class="highlighter-rouge">int fd</code>: The file descriptor to keep track of</li>
+  <li>
+<code class="highlighter-rouge">struct epoll_event *event</code>: A struct full of options (see the man page)</li>
+</ul>
+<p>This function call is pretty heavy on the learning curve, but once you have gotten all the parameters out of the way, writing the downloader is as simple as a few reads and writes among all the threads. Think about what you need to keep thread-safe among all the threads. How can you use your mutex here?</p>
+</div></div></div>
+</div></div>
+<div class="pad"><div class="card">
+<div class="title"><h2 id="makefile" class="title-text">Makefile<a class="anchor title-text" href="#makefile">#</a>
+</h2></div>
+
+
+
+
+
+
+
+<div class="container-fluid"><div class="row"><div class="content col-sm-11 .col-sm-offset-1">
+<p>You have been using <code class="highlighter-rouge"><a href="https://linux.die.net/man/3/make" class="fancy-link">make</a></code> for a while, but we’ve always provided the makefiles. For the third part of this lab, you will need to write the makefile yourself!</p>
+<p>When we type <code class="highlighter-rouge"><a href="https://linux.die.net/man/3/make" class="fancy-link">make</a></code>, it should produce your <code class="highlighter-rouge">epoll_downloader</code> executable from <code class="highlighter-rouge">epoll.c</code>. We should be able to run your downloader as <code class="highlighter-rouge">./epoll_downloader &lt;url1&gt; [url, ...]</code>.</p>
+<p>We will be testing a speedup of <em>many</em> different, small files (that is where the concurrent part of the downloader shines).</p>
+</div></div></div>
+</div></div>
+<div class="pad"><div class="card">
+<div class="title"><h2 id="testing" class="title-text">Testing<a class="anchor title-text" href="#testing">#</a>
+</h2></div>
+
+
+
+
+
+
+
+
+
+<div class="container-fluid"><div class="row"><div class="content col-sm-11 .col-sm-offset-1">
+<p><strong>Testing is ungraded, but highly recommended.</strong></p>
+<p>You are going to have to write your own tests for <code class="highlighter-rouge">mutex.h</code>.</p>
+<p>For the epoll downloader, if you run <code class="highlighter-rouge">./epoll_downloader &lt;url&gt;</code> it should grab any valid URL. For concurrent uses, try <code class="highlighter-rouge">./epoll_downloader &lt;big_url1&gt; &lt;big_url2&gt;</code>.</p>
+<p><strong>Anything not specified in these docs is considered undefined behavior, and we will not test it.</strong></p>
+</div></div></div>
+</div></div>
+<div class="pad"><div class="card">
+<div class="title"><h2 id="important-video-resources" class="title-text">Important: Video resources<a class="anchor title-text" href="#important-video-resources">#</a>
+</h2></div>
+
+
+
+
+
+
+
+
+
+<div class="container-fluid"><div class="row"><div class="content col-sm-11 .col-sm-offset-1">
+<p><big><strong><a href="https://www.youtube.com/watch?v=dQw4w9WgXcQ" class="fancy-link wiki-link">Mutex Implementation in Four Minutes</a></strong></big></p>
+<p>…</p>
+<p>…</p>
+<p>…</p>
+</div></div></div>
+</div></div>
+<div class="pad"><div class="card">
+<div class="title"><h2 id="alternative-assignment" class="title-text">Alternative assignment<a class="anchor title-text" href="#alternative-assignment">#</a>
+</h2></div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="container-fluid"><div class="row"><div class="content col-sm-11 .col-sm-offset-1">
+<p>Just kidding! There isn’t really a lab. Lab section will be spent as office hours, where you can engage with your fellow students and TAs about material in the course.</p>
+<p>You should have received a <strong>final review packet</strong> as today’s handout. It can also be found <em><a href="http://cs241.cs.illinois.edu/resources/handouts/linux_kernel.pdf" class="fancy-link wiki-link">here</a></em>.</p>
+<p><strong>Your grade for this lab will come from the final review packet submission in <a href="https://goo.gl/forms/Fw6igCt7uxaIMAmI2" class="fancy-link wiki-link">this Google Form</a>.</strong></p>
+<p>The submission deadline for this packet is the same time as the second chance submissions (<strong>December 13, 2017 at 11:59 PM</strong>).</p>
+<p>Note that you must sign in using your @illinois email. If you are having trouble logging in, try an incognito window/private browser. You <em>can</em> edit your answers after submitting them, so feel free to submit early and work on it later. (We will only grade your last submission before the deadline.)</p>
+<p>Your answers will be graded based on a good faith attempt. This means that your answers do not need to be correct, but you should at least put thought into them and try. To repeat, the grade for this review packet will be your final lab grade.</p>
+<p>Thanks for a great semester. We hope you enjoyed the class and maybe learned a thing or two, and we wish you luck on the final!</p>
+<p>You can <strong>ignore</strong> the submission instructions below.</p>
+</div></div></div>
+</div></div>
+</div>
+        
+        <div class="wrapper">
+<div class="pad"><div class="card">
+<div class="title"><h2 id="submission-instructions" class="title-text">Submission Instructions<a class="anchor title-text" href="#submission-instructions">#</a>
+</h2></div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="container-fluid"><div class="row"><div class="content col-sm-11 .col-sm-offset-1">
+<p>Please read details on <a href="http://illinois-cs241.github.io/#academic-integrity" class="fancy-link wiki-link">Academic Integrity</a> fully. These are shared by all assignments in CS 241.</p>
+<p>We will be using Subversion as our hand-in system this semester. Our grading system will checkout your most recent (pre-deadline) commit for grading. Therefore, to hand in your code, all you have to do is commit it to your Subversion repository.</p>
+<p>To check out the provided code for <code class="highlighter-rouge">linux_kernel</code> from the class repository, go to your cs241 directory (the one you checked out for “know your tools”) and run:</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>svn up
+</code></pre></div></div>
+<p>If you run <code class="highlighter-rouge"><a href="https://linux.die.net/man/1/ls" class="fancy-link">ls</a></code> you will now see a <code class="highlighter-rouge">linux_kernel</code> folder, where you can find this assignment! To commit your changes (send them to us), type:</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>svn ci -m "linux_kernel submission"
+</code></pre></div></div>
+<p>Your repository directory can be viewed from a web browser from the following URL: <a href="https://subversion.ews.illinois.edu/svn/fa17-cs241/NETID/linux_kernel" class="fancy-link wiki-link">https://subversion.ews.illinois.edu/svn/fa17-cs241/NETID/linux_kernel</a>, where NETID is your University NetID. It is important to check that the files you expect to be graded are present and up to date in your SVN copy.</p>
+</div></div></div>
+</div></div>
+<div class="pad"><div class="card">
+<div class="title"><h2 id="assignment-feedback" class="title-text">Assignment Feedback<a class="anchor title-text" href="#assignment-feedback">#</a>
+</h2></div>
+
+
+
+
+
+
+
+<div class="container-fluid"><div class="row"><div class="content col-sm-11 .col-sm-offset-1">
+<p>We strive to provide the best assignments that we can for this course, and we would like your feedback on them!</p>
+<p>This is the form we will use to evaluate our assignments. We appreciate the time you take to give us your honest feedback and we promise to keep improving the course to make your experience in CS 241 the best it can be.</p>
+<p><a href="https://goo.gl/forms/hREf0ojFWumYfQF12" class="fancy-link wiki-link">https://goo.gl/forms/hREf0ojFWumYfQF12</a></p>
+</div></div></div>
+</div></div>
+</div>
+      </div>
+      <div class="col-md-2 col-sm-1 col-xs-0"></div>
+    </div>
+  </div>
+  <script>
+    var github_repo = "illinois-cs241/illinois-cs241.github.io";
+    var github_path = "_docs/linux_kernel.md";
+  </script>
+  <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML" integrity="sha384-Ra6zh6uYMmH5ydwCqqMoykyf1T/+ZcnOQfFPhDrp2kI4OIxadnhsvvA2vv9A7xYv" crossorigin="anonymous"></script>
+<script src="/lib/bootstrap-3.3.7/dist/js/bootstrap.min.js"></script>
+<script src="/js/main.js"></script>
+
+<script>
+$(document).ready(function(){
+    $('[data-toggle="popover"]').popover({
+      trigger: 'manual',
+        container: $(this).attr('id'),
+        placement: 'top',
+        content: function () {
+            return '<div class="hover-hovercard"></div>';
+        }
+    }).on("mouseenter", function () {
+        var _this = this;
+        $(this).popover("show");
+        $(this).siblings(".popover").on("mouseleave", function () {
+            $(_this).popover('hide');
+        });
+    }).on("mouseleave", function () {
+        var _this = this;
+        setTimeout(function () {
+            if (!$(".popover:hover").length) {
+               $(_this).popover("hide")
+            }
+        }, 100);
+    });
+
+    $('[data-toggle="tooltip"]').tooltip();
+});
+/*
+$('[data-toggle="popover"]').on('shown.bs.popover', function () {
+    var $pop = $(this);
+    setTimeout(function () {
+        $pop.popover('hide');
+    }, 2000);
+});*/
+</script>
+<script src="/js/analytics.js"></script>
+<footer class="">
+
+<div class="container-fluid">
+<div class="shadow"></div>
+<!--<div class="row">
+  <h4 class="col-md-3">CS 241: System Programming</h4>
+  
+    <div class="col-md-3">
+    <a href="https://github.com/illinois-cs241"><span class="icon icon--github"><svg viewBox="0 0 16 16"><path fill="#828282" d="M7.999,0.431c-4.285,0-7.76,3.474-7.76,7.761 c0,3.428,2.223,6.337,5.307,7.363c0.388,0.071,0.53-0.168,0.53-0.374c0-0.184-0.007-0.672-0.01-1.32 c-2.159,0.469-2.614-1.04-2.614-1.04c-0.353-0.896-0.862-1.135-0.862-1.135c-0.705-0.481,0.053-0.472,0.053-0.472 c0.779,0.055,1.189,0.8,1.189,0.8c0.692,1.186,1.816,0.843,2.258,0.645c0.071-0.502,0.271-0.843,0.493-1.037 C4.86,11.425,3.049,10.76,3.049,7.786c0-0.847,0.302-1.54,0.799-2.082C3.768,5.507,3.501,4.718,3.924,3.65 c0,0,0.652-0.209,2.134,0.796C6.677,4.273,7.34,4.187,8,4.184c0.659,0.003,1.323,0.089,1.943,0.261 c1.482-1.004,2.132-0.796,2.132-0.796c0.423,1.068,0.157,1.857,0.077,2.054c0.497,0.542,0.798,1.235,0.798,2.082 c0,2.981-1.814,3.637-3.543,3.829c0.279,0.24,0.527,0.713,0.527,1.437c0,1.037-0.01,1.874-0.01,2.129 c0,0.208,0.14,0.449,0.534,0.373c3.081-1.028,5.302-3.935,5.302-7.362C15.76,3.906,12.285,0.431,7.999,0.431z"/></svg>
+</span><span class="username">illinois-cs241</span></a>
+
+    </div>
+  
+  
+</div>
+
+<div class="row">
+  <div class="col-md-12 col-sm-12">
+    <p>Webpage for CS 241: System Programming at the University of Illinois Urbana-Champaign. All documentation and information about the course can be found here.
+</p>
+  </div>
+</div> -->
+</div>
+
+</footer>
+
+</body>
+</html>

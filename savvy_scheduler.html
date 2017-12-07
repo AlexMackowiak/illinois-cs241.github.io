@@ -1,0 +1,656 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- Favicons -->
+  <link rel="apple-touch-icon" sizes="180x180" href="images/favicons/apple-touch-icon.png">
+  <link rel="icon" type="image/png" href="images/favicons/favicon-32x32.png" sizes="32x32">
+  <link rel="icon" type="image/png" href="images/favicons/favicon-16x16.png" sizes="16x16">
+  <link rel="manifest" href="images/favicons/manifest.json">
+  <link rel="mask-icon" href="images/favicons/safari-pinned-tab.svg" color="#5bbad5">
+  <meta name="theme-color" content="#ffffff">
+
+  <title>Savvy Scheduler</title>
+
+  <link async rel="stylesheet" href="/lib/bootstrap-3.3.7/dist/css/bootstrap.min.css">
+  <link async rel="stylesheet" href="/css/code-style.css">
+  <link async rel="stylesheet" href="/css/main.css">
+
+</head>
+
+<body>
+<!-- Always shows a header, even in smaller screens. -->
+<nav class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <div class="container">
+        <div class="navbar-header">
+
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target=".navbar-collapse" aria-expanded="false" aria-controls="navbar">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            </button>
+
+            <a class="navbar-brand navbar-link normal" href="/">CS 241: System Programming</a>
+            <a class="navbar-brand navbar-link small" href="/">CS 241</a>
+        </div>
+
+        <div id="navbar" class="navbar-collapse collapse">
+          <ul class="nav navbar-nav">
+            <li>
+            <a class="navbar-link" href="/mps.html">MPs</a>
+            </li>
+            <li>
+            <a class="navbar-link" href="/labs.html">Labs</a>
+            </li>
+            <li>
+            <a class="navbar-link" href="/help.html">Help!</a>
+            </li>
+            <li>
+            <a class="navbar-link" href="/schedule.html">Schedule</a>
+            </li>
+            <li>
+            <a class="navbar-link" href="/honors.html">Honors</a>
+            </li>
+            <li>
+            <a class="navbar-link" href="/staff.html">The Crew</a>
+            </li>
+            <li>
+            <a class="navbar-link" href="/search.html">Search</a>
+            </li>
+            <li>
+            <a class="navbar-link" href="/wikibook/home.html">Wikibook</a>
+            </li>
+          </ul>
+        </div>
+        </div>
+</nav>
+
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-md-2 col-sm-1 col-xs-0"></div>
+    <div class="col-md-8 col-sm-10 col-xs-12">
+      <div class="wrapper">
+        <div class="pad"><div class="card">
+          <div class="title">
+            <div class="speaker-wrapper">
+              <button onclick="speak()" class="speaker" alt="Read Page"></button>
+            </div>
+            <h1>
+              Savvy Scheduler
+              
+                <a class="github-link hidden-xs" href="https://github.com/illinois-cs241/illinois-cs241.github.io/blob/develop/_docs/savvy_scheduler.md">Edit on Github</a>
+              
+            </h1>
+          </div>
+          <div class="container-fluid"><div class="row"><div class="content col-sm-11 .col-sm-offset-1">
+            
+              <div class="submission-wrapper">
+                
+                  <b>Entire Assignment</b> due <b>11/09 11:59pm</b><br/>
+                  
+                    <b>Graded files:</b>
+                    <ul>
+                      
+                        <li>libscheduler.c</li>
+                      
+                    </ul>
+                  
+                
+              </div>
+            
+          </div></div></div>
+        </div></div>
+      </div>
+      <div class="toc-wrapper">
+<h4>Content</h4>
+<ul class="toc">
+<li><a id="toc_introduction" href="#introduction" class="fancy-link">Introduction</a></li>
+<li><a id="toc_alternative-lab" href="#alternative-lab" class="fancy-link">Alternative lab</a></li>
+<li><a id="toc_lab-scheduler" href="#lab-scheduler" class="fancy-link">Lab Scheduler</a></li>
+<li><a id="toc_before-you-start" href="#before-you-start" class="fancy-link">Before you start</a></li>
+<li><a id="toc_mission" href="#mission" class="fancy-link">Mission</a></li>
+<li><a id="toc_directions" href="#directions" class="fancy-link">Directions</a></li>
+<li><a id="toc_compile-and-run" href="#compile-and-run" class="fancy-link">Compile and Run</a></li>
+<li><a id="toc_how-simulatorc-works" href="#how-simulatorc-works" class="fancy-link">How simulator.c works:</a></li>
+</ul>
+</div>
+      <div id="content">
+        
+        <div class="wrapper">
+  <div class="pad"><div class="card">
+<div class="title"><h2 id="learning-objectives" class="title-text">Learning Objectives<a class="anchor title-text" href="#learning-objectives">#</a>
+</h2></div>
+  
+  
+
+
+  <div class="container-fluid"><div class="row"><div class="content col-sm-11 .col-sm-offset-1">
+<p>
+    The learning objectives for Savvy Scheduler are: <br>
+    </p>
+<ul class="mdl-list">
+      
+        <li class="mdl-list__item">
+          <span class="mdl-list__item-primary-content">scheduling algorithms</span>
+        </li>
+      
+        <li class="mdl-list__item">
+          <span class="mdl-list__item-primary-content">preemptive vs non-preemptive</span>
+        </li>
+      
+        <li class="mdl-list__item">
+          <span class="mdl-list__item-primary-content">Relating the different algorithms with a priority queue</span>
+        </li>
+      
+    </ul>
+</div></div></div>
+</div></div>
+<div class="pad"><div class="card">
+<div class="title"><h2 id="suggested-readings" class="title-text">Suggested Readings<a class="anchor title-text" href="#suggested-readings">#</a>
+</h2></div>
+  
+  
+
+<div class="container-fluid"><div class="row"><div class="content col-sm-11 .col-sm-offset-1">
+<p>
+    We suggest you read the following from the
+    <a href="https://github.com/angrave/SystemProgramming/wiki" class="fancy-link wiki-link">wikibook</a>
+    before starting Savvy Scheduler: <br>
+    </p>
+<ul>
+      
+        <li>
+          <a href="/wikibook/scheduling-part-1-scheduling-processes.html#" target="_blank" class="fancy-link wiki-link">Scheduling, Part 1: Scheduling Processes
+          </a>
+        </li>
+      
+        <li>
+          <a href="/wikibook/scheduling-part-2-scheduling-processes-algorithms.html#" target="_blank" class="fancy-link wiki-link">Scheduling, Part 2: Scheduling Processes: Algorithms
+          </a>
+        </li>
+      
+    </ul>
+</div></div></div>
+</div></div>
+</div>
+        <div class="wrapper">
+<div class="pad"><div class="card">
+<div class="title"><h2 id="introduction" class="title-text">Introduction<a class="anchor title-text" href="#introduction">#</a>
+</h2></div>
+
+
+
+<div class="container-fluid"><div class="row"><div class="content col-sm-11 .col-sm-offset-1"><p>In this lab you’ll be writing a scheduler. Rather than interacting directly with the operating system, the benevolent CS241 course staff has provided you a simulator; we will simulate quantized and discrete time, jobs arriving, and jobs running. Your library will inform the scheduler which job should run next.</p></div></div></div>
+</div></div>
+<div class="pad"><div class="card">
+<div class="title"><h2 id="alternative-lab" class="title-text">Alternative lab<a class="anchor title-text" href="#alternative-lab">#</a>
+</h2></div>
+
+
+
+
+
+
+
+<div class="container-fluid"><div class="row"><div class="content col-sm-11 .col-sm-offset-1">
+<p>This semester, we have developed a beta version of this lab that we hope to use in future semesters. You can find it <a href="http://cs241.cs.illinois.edu/savvy_scheduler_beta.html" class="fancy-link wiki-link">here</a>. As such, your grade for this lab will be the max of your grade on this version and the beta version. That is, you can do one or both version and will only recieve credit for whichever lab you have a higher score after the final autograder run! So essentially there are 4 cases.</p>
+<ul>
+  <li>You attempt the beta but not this version and recieve whatever grade you obtain on the beta</li>
+  <li>You attempt this version but not the beta and recieve whatever grade you obtain on this version</li>
+  <li>You attempt both and perform better on beta version and recieve the grade you make on beta version</li>
+  <li>You attempt both and perform better on this version and recieve the grade you make on this version</li>
+</ul>
+<p>The beta version features a interesting model of threading known as green threads that you are not required to understand. The implementaion of scheduling for both versions is roughly the same code.</p>
+</div></div></div>
+</div></div>
+<div class="pad"><div class="card">
+<div class="title"><h2 id="lab-scheduler" class="title-text">Lab Scheduler<a class="anchor title-text" href="#lab-scheduler">#</a>
+</h2></div>
+
+
+
+
+
+<div class="container-fluid"><div class="row"><div class="content col-sm-11 .col-sm-offset-1">
+<p>You will find several files:</p>
+<ul>
+  <li>Programming files:
+    <ul>
+      <li>
+<code class="highlighter-rouge">simulator.c</code>: <strong>You should not edit this file.</strong> This file is the discrete event simulator that, when run, will interact with your library. You can find more information on how to run this at the end of this web page. This file will be replaced by the autograder, so any changes you make will be ignored.</li>
+      <li>
+<code class="highlighter-rouge">libpriqueue.h</code>: <strong>You should not edit this file.</strong> Files related to the priority queue.</li>
+      <li>
+<code class="highlighter-rouge">libscheduler.h</code>: <strong>You should not edit this file.</strong> Header file for libscheduler.</li>
+      <li>
+<code class="highlighter-rouge">libscheduler.c</code>: Files related to the scheduler. Feel free to add any helper functions, but you must implement all the functions where we provide outlines.</li>
+      <li>
+<code class="highlighter-rouge">examples.sh</code>: A bash script of <code class="highlighter-rouge"><a href="https://linux.die.net/man/3/diff" class="fancy-link">diff</a></code> runs that tests your program against the 24 test output files. This file will output differences between your program and the examples.</li>
+    </ul>
+  </li>
+  <li>Files you need to edit and commit:
+    <ul>
+      <li><code class="highlighter-rouge">libscheduler.c</code></li>
+    </ul>
+  </li>
+  <li>Example input files:
+    <ul>
+      <li><code class="highlighter-rouge">examples/proc1.in</code></li>
+      <li><code class="highlighter-rouge">examples/proc2.in</code></li>
+      <li><code class="highlighter-rouge">examples/proc3.in</code></li>
+    </ul>
+
+    <p>Note the following column header definitions to read the files:</p>
+    <ul>
+      <li>Arrival time: It is the unit of time when the job is expected to arrive and needs to be “handled” by the scheduler.</li>
+      <li>Run time: Provides the total units of time for which the job is supposed to run.</li>
+      <li>Priority: Provides the priority of the job running, which is useful in case of pre-emptive scheduling.</li>
+    </ul>
+  </li>
+  <li>Example output files:
+    <ul>
+      <li>
+<code class="highlighter-rouge">examples/proc1-fcfs.out</code>: Sample output of the simulator, using proc1.in and FCFS scheduling.</li>
+      <li>
+<code class="highlighter-rouge">examples/proc2-fcfs.out</code>: Sample output of the simulator, using proc2.in and FCFS scheduling.</li>
+      <li>
+<code class="highlighter-rouge">examples/proc3-pri.out</code>: Sample output of the simulator, using proc3.in and PRI scheduling.</li>
+      <li>
+<code class="highlighter-rouge">...</code> <em>(View the example directory for the full set.)</em>
+</li>
+    </ul>
+
+    <p>Note that for each unit of time, the output files tell you state of priority queue and the job that is currently running. It will also provide information about any jobs that arrive, are scheduled or finished.</p>
+  </li>
+</ul>
+</div></div></div>
+</div></div>
+<div class="pad"><div class="card">
+<div class="title"><h2 id="before-you-start" class="title-text">Before you start<a class="anchor title-text" href="#before-you-start">#</a>
+</h2></div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="container-fluid"><div class="row"><div class="content col-sm-11 .col-sm-offset-1">
+<p><strong>Think about how to implement a scheduler!</strong></p>
+<p>Try to answer these questions…</p>
+<ol>
+  <li>What do you do for incoming jobs?</li>
+  <li>How do you sort your job so that you can find the next job according to different scheme?</li>
+  <li>What kind of data structures do you need?</li>
+</ol>
+<p>What a scheduler does is to put all the jobs it gets in a queue and then sort them in some order (related to scheme). Scheduler gives them to CPU one by one. The key in scheduler is the scheme it use, and the choice of scheduling algorithm depends on many factors. For example, First Come First Serve (FCFS) is really easy to implement but might keep a short job waiting really long for a long process at the front.</p>
+<p>So now we know that a scheduler puts jobs in a queue, sort them, and give them to CPU in some order. Then what will be the best data structure to store these jobs? Priority queue can do this job really well! A priority queue is a queue with a really nice feature. It puts every incoming node in correct position so that the queue is always ordered. Therefore, you don’t need to call <code class="highlighter-rouge">sort()</code> every time you get a new node (job). And you can simply give them out by pulling out the first element of the queue.</p>
+<p>An important question now is: “What do you mean by <strong>ordered</strong>?” Let’s take FCFS scheduling for example. Ideally, scheduler should be able to:</p>
+<ul>
+  <li>Receive a job.</li>
+  <li>Put it in a queue.
+    <ul>
+      <li>Queue sort the job.</li>
+    </ul>
+  </li>
+  <li>Give it out to CPU.</li>
+</ul>
+<p>And since we are doing FCFS, we want the element that comes first to be at the front of the queue. So you should give jobs arriving earlier higher priority and jobs arriving afterwards lower priority.</p>
+<p>Take Shortest Job First (SJF) for another example. You can give those jobs that can be finished faster higher priority. As you can see here, the key to implement a scheduler is to decide <strong>PRIORITY</strong>. And the way to decide priority in a priority queue is by giving a comparator function. By defining a job A is better than a job B in a priority queue, we mean that A has higher priority than B.</p>
+<p>So basically, half of your job in this lab is simply writing a comparator function that helps you decide which job has higher priority.</p>
+</div></div></div>
+</div></div>
+<div class="pad"><div class="card">
+<div class="title"><h2 id="mission" class="title-text">Mission<a class="anchor title-text" href="#mission">#</a>
+</h2></div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="container-fluid"><div class="row"><div class="content col-sm-11 .col-sm-offset-1">
+<h3 id="part-1-priority-queue" class="title-text"><del>[Part 1]: Priority Queue</del></h3>
+<p>To build a scheduler, a fundamental data structure is a priority queue. The first part of this lab requires you to <del>implement</del> read and understand <code class="highlighter-rouge">libpriqueue</code>, our priority queue library. You will be using this library in your scheduler.</p>
+<h3 id="part-2-scheduler" class="title-text">[Part 2]: Scheduler</h3>
+<p>You will need to implement a single-core scheduler in a simulated computer. You will be provided with a uni-core processor to schedule a set of tasks on, much like a real Linux scheduler.</p>
+<p>The scheduling algorithms you are going to implement are:</p>
+<ul>
+  <li>First Come First Served (FCFS)</li>
+  <li>Preemptive Priority (PPRI)</li>
+  <li>Priority (PRI)</li>
+  <li>Preemptive Shortest Remaining Time First (PSRTF)</li>
+  <li>Round Robin (RR)</li>
+  <li>Shortest Job First (SJF)</li>
+</ul>
+<p>You can read up on scheduling in the wikibook: <a href="/wikibook/scheduling-part-1-scheduling-processes.html#" class="fancy-link wiki-link">Scheduling Part 1</a> and <a href="/wikibook/scheduling-part-2-scheduling-processes-algorithms.html#" class="fancy-link wiki-link">Scheduling Part 2</a></p>
+<p><strong>You should use the priority queue that <del>you</del> we wrote to help you complete this part of the lab.</strong></p>
+<p>To complete this lab, you must implement the six comparator functions and eight scheduler functions (and one optional one) defined in <code class="highlighter-rouge">libscheduler.c</code>. These functions are self-descriptive, but a full function outline for each function is provided for you in the SVN files. These functions will be utilized by <code class="highlighter-rouge">simulator.c</code>.</p>
+<p>You might want to understand how scheduler works. So we put a detailed explanation in the bottom of this webpage.</p>
+</div></div></div>
+</div></div>
+<div class="pad"><div class="card">
+<div class="title"><h2 id="directions" class="title-text">Directions<a class="anchor title-text" href="#directions">#</a>
+</h2></div>
+
+
+
+
+
+
+
+
+
+
+
+<div class="container-fluid"><div class="row"><div class="content col-sm-11 .col-sm-offset-1">
+<p>To help you finish this lab efficiently, we recommend you to follow these steps:</p>
+<ol>
+  <li>Understand when your function will be called.</li>
+  <li>Try to write pseudocode for each comparator first and see what kind of information you will need. For example, you probably need the arrival time of each job so you can implement FCFS by setting priority according to time.</li>
+  <li>Create data members in <code class="highlighter-rouge">struct _job_t</code> you need for step 2.</li>
+  <li>Go back and complete your comparator functions.</li>
+</ol>
+<p>The second part of the lab is to set up scheduler itself and manage incoming jobs and completed jobs. Now you should implement those functions related to the CPU (like <code class="highlighter-rouge">scheduler_start_up()</code>, <code class="highlighter-rouge">scheduler_new_job()</code>, <code class="highlighter-rouge">scheduler_job_finished()</code>, <code class="highlighter-rouge">scheduler_quantum_expired()</code>).</p>
+<ol>
+  <li>Take a look at all these functions, write some pseudocode to realize your thoughts.</li>
+  <li>You must have some questions now, so take a look at the <code class="highlighter-rouge">simulator.c</code> and the explanation section to have a better idea about how to implement it.</li>
+  <li>You might need to implement some helper functions to help you write these functions.</li>
+  <li>Finish these functions.</li>
+</ol>
+<p>The last part of your job is computing stats and clean-up, which is fairly trivial. You may need some extra variables to help you keep track of these stats.</p>
+</div></div></div>
+</div></div>
+<div class="pad"><div class="card">
+<div class="title"><h2 id="compile-and-run" class="title-text">Compile and Run<a class="anchor title-text" href="#compile-and-run">#</a>
+</h2></div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="container-fluid"><div class="row"><div class="content col-sm-11 .col-sm-offset-1">
+<p>To compile this lab, run:</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>make clean
+make
+</code></pre></div></div>
+<p>To run the simulator, run:</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>./simulator -s &lt;scheme&gt; &lt;input file&gt;
+</code></pre></div></div>
+<p>For example:</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>./simulator -s FCFS examples/proc1.in
+</code></pre></div></div>
+<p>The acceptable (case-insensitive) values for <code class="highlighter-rouge">scheme</code> (outlined above) are:</p>
+<ul>
+  <li><code class="highlighter-rouge">FCFS</code></li>
+  <li><code class="highlighter-rouge">PPRI</code></li>
+  <li><code class="highlighter-rouge">PRI</code></li>
+  <li><code class="highlighter-rouge">PSRTF</code></li>
+  <li>
+<code class="highlighter-rouge">RR#</code>, where # indicates any numeric value (e.g. RR1, RR2, RR18)</li>
+  <li><code class="highlighter-rouge">SJF</code></li>
+</ul>
+<p>We provide three sample schedules: <code class="highlighter-rouge">examples/proc1.in</code>, <code class="highlighter-rouge">examples/proc2.in</code> and <code class="highlighter-rouge">examples/proc3.in</code>. We also provide the expected output of those schedules in the <code class="highlighter-rouge">examples</code> directory. <strong>It’s only important that lines starting with <code class="highlighter-rouge">FINAL TIMING DIAGRAM</code> match.</strong> We will not grade any output except the last few lines, as <code class="highlighter-rouge">show_queue()</code> is not required to be implemented in the same way as we did.
+To test your program against all the test cases in an automated way, we provide a simple bash script. To run all 24 tests, simply run:</p>
+<blockquote>
+  <p>./examples.sh</p>
+</blockquote>
+<p>Only failures will be printed. Having no output means all the testcases passed. Your output may look like the following:</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Failed examples/proc1-plrtf.out
+Failed examples/proc1-rr1.out
+Failed examples/proc1-rr2.out
+Failed examples/proc1-rr4.out
+Failed examples/proc1-sjf.out
+</code></pre></div></div>
+</div></div></div>
+</div></div>
+<hr>
+
+<div class="pad"><div class="card">
+
+
+
+<div class="container-fluid"><div class="row"><div class="content col-sm-11 .col-sm-offset-1">
+<h1 id="examples">Examples</h1>
+<ul>
+  <li><a href="scheduler_example1.html" class="fancy-link wiki-link">Example 1</a></li>
+  <li><a href="scheduler_example2.html" class="fancy-link wiki-link">Example 2</a></li>
+  <li><a href="scheduler_example3.html" class="fancy-link wiki-link">Example 3</a></li>
+</ul>
+</div></div></div>
+</div></div>
+<hr>
+
+<div class="pad"><div class="card">
+<div class="title"><h2 id="how-simulatorc-works" class="title-text">How simulator.c works:<a class="anchor title-text" href="#how-simulatorc-works">#</a>
+</h2></div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="container-fluid"><div class="row"><div class="content col-sm-11 .col-sm-offset-1">
+<p>In libscheduler.c, you’ll implement a bunch of methods that we’ll call as follows:</p>
+<ol>
+  <li>To start things off, we’ll call <code class="highlighter-rouge">scheduler_start_up(...)</code> exactly once.</li>
+  <li>Then, we’ll run through all the time units from the beginning to the end.
+    <ul>
+      <li>If there’s a job that just ended during this time unit, we’ll make a call to <code class="highlighter-rouge">scheduler_job_finished(...)</code>.</li>
+      <li>If we’re using <code class="highlighter-rouge">RR</code> and a time quantum expires during this time unit, we’ll call <code class="highlighter-rouge">scheduler_quantum_expired(...)</code>.</li>
+      <li>If there’s a job that begins at this time unit, we’ll add this job using one call to <code class="highlighter-rouge">scheduler_new_job(...)</code>. This is specified in the files in <code class="highlighter-rouge">examples/proc1.in</code>, <code class="highlighter-rouge">examples/proc2.in</code>, and <code class="highlighter-rouge">examples/proc3.in</code>.</li>
+      <li>Then we’ll run the next time unit and repeat.</li>
+    </ul>
+  </li>
+</ol>
+<h3 id="scheduler-details" class="title-text">Scheduler Details</h3>
+<p>The simulator will always follow a few, very specific rules. It’s not important to understand the specifics of the simulator, but we provide these to help you with debugging:</p>
+<ul>
+  <li>All execution of tasks will happen <strong>at the very end of a time unit</strong>.</li>
+  <li>The events in a time unit will occur in this order:
+    <ol>
+      <li>If a job’s last unit of execution occurred in the previous time unit, a <code class="highlighter-rouge">scheduler_job_finished()</code> call will be made as the first call in the new time unit.</li>
+      <li><em>If a job has finished, the quantum timer will also be reset. (Therefore, <code class="highlighter-rouge">scheduler_quantum_expired()</code> will never be called at the same unit that a job has finished, no matter what scheme)</em></li>
+      <li>In <code class="highlighter-rouge">RR</code>, if the quantum timer has expired, a <code class="highlighter-rouge">scheduler_quantum_expired()</code> will be called. Please notice that if the job finished at the same time unit its quantum expired, this function will NOT be called. This is because its quantum is reset when the job finishes, and <code class="highlighter-rouge">scheduler_job_finished()</code> is always called in the first place.</li>
+      <li>If any job arrives at the time unit, the <code class="highlighter-rouge">scheduler_new_job()</code> function will be called.</li>
+      <li>Finally, the processor will execute the active job.</li>
+    </ol>
+  </li>
+</ul>
+<p>There are a few specific cases where a scheduler needs to define behavior based on the scheduling policy provided. In this lab, you should apply the following rules:</p>
+<ul>
+  <li>In <code class="highlighter-rouge">PSRTF</code>, if the job has been partially executed, schedule the job based on its <strong>remaining time</strong> (not the full running time).</li>
+  <li>In <code class="highlighter-rouge">RR</code>, when a new job arrives, it must be placed at the end of the cycle of jobs. Every existing job must run some amount of time before the new job should run.</li>
+  <li>In all schemes except <code class="highlighter-rouge">RR</code>, if two or more jobs are tied (e.g., if in <code class="highlighter-rouge">PRI</code> multiple jobs have the priority of <code class="highlighter-rouge">1</code>), use the job with the <strong>earliest arrival time</strong>. In <code class="highlighter-rouge">scheduler_new_job()</code>, we provided the assumption that all jobs will have a unique arrival time. In <code class="highlighter-rouge">RR</code>, when a job is unscheduled as a result of the quantum timer expiring, it must always be placed at the end of the queue.</li>
+  <li>In all non-preemptive schemes, a new job can never swap out any job that has already been put onto the processor. Consider a schedule running <code class="highlighter-rouge">PRI</code>. After some amount of time:
+    <ul>
+      <li>A job finished in the last time unit, resulting in a <code class="highlighter-rouge">scheduler_job_finished()</code> call to be made to your scheduler. The scheduler returns that job(id=4) should run. job(id=4) has priority 3.</li>
+      <li>In this time unit, a new job(id=5, priority 1) also arrived. This results in a <code class="highlighter-rouge">scheduler_new_job()</code> call to be made to your scheduler. Even though the new job(id=5) has greater priority(priority 1), it will NOT swap out job(id=4), which was already scheduled by <code class="highlighter-rouge">scheduler_job_finished()</code>. Now, job(id=4) is scheduled to run.</li>
+    </ul>
+  </li>
+  <li><strong>When calculating response time, you should not consider a job as responded until it runs a CPU cycle.</strong></li>
+</ul>
+</div></div></div>
+</div></div>
+</div>
+        
+        <div class="wrapper">
+<div class="pad"><div class="card">
+<div class="title"><h2 id="submission-instructions" class="title-text">Submission Instructions<a class="anchor title-text" href="#submission-instructions">#</a>
+</h2></div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="container-fluid"><div class="row"><div class="content col-sm-11 .col-sm-offset-1">
+<p>Please read details on <a href="http://illinois-cs241.github.io/#academic-integrity" class="fancy-link wiki-link">Academic Integrity</a> fully. These are shared by all assignments in CS 241.</p>
+<p>We will be using Subversion as our hand-in system this semester. Our grading system will checkout your most recent (pre-deadline) commit for grading. Therefore, to hand in your code, all you have to do is commit it to your Subversion repository.</p>
+<p>To check out the provided code for <code class="highlighter-rouge">savvy_scheduler</code> from the class repository, go to your cs241 directory (the one you checked out for “know your tools”) and run:</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>svn up
+</code></pre></div></div>
+<p>If you run <code class="highlighter-rouge"><a href="https://linux.die.net/man/1/ls" class="fancy-link">ls</a></code> you will now see a <code class="highlighter-rouge">savvy_scheduler</code> folder, where you can find this assignment! To commit your changes (send them to us), type:</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>svn ci -m "savvy_scheduler submission"
+</code></pre></div></div>
+<p>Your repository directory can be viewed from a web browser from the following URL: <a href="https://subversion.ews.illinois.edu/svn/fa17-cs241/NETID/savvy_scheduler" class="fancy-link wiki-link">https://subversion.ews.illinois.edu/svn/fa17-cs241/NETID/savvy_scheduler</a>, where NETID is your University NetID. It is important to check that the files you expect to be graded are present and up to date in your SVN copy.</p>
+</div></div></div>
+</div></div>
+<div class="pad"><div class="card">
+<div class="title"><h2 id="assignment-feedback" class="title-text">Assignment Feedback<a class="anchor title-text" href="#assignment-feedback">#</a>
+</h2></div>
+
+
+
+
+
+
+
+<div class="container-fluid"><div class="row"><div class="content col-sm-11 .col-sm-offset-1">
+<p>We strive to provide the best assignments that we can for this course, and we would like your feedback on them!</p>
+<p>This is the form we will use to evaluate our assignments. We appreciate the time you take to give us your honest feedback and we promise to keep improving the course to make your experience in CS 241 the best it can be.</p>
+<p><a href="https://goo.gl/forms/hREf0ojFWumYfQF12" class="fancy-link wiki-link">https://goo.gl/forms/hREf0ojFWumYfQF12</a></p>
+</div></div></div>
+</div></div>
+</div>
+      </div>
+      <div class="col-md-2 col-sm-1 col-xs-0"></div>
+    </div>
+  </div>
+  <script>
+    var github_repo = "illinois-cs241/illinois-cs241.github.io";
+    var github_path = "_docs/savvy_scheduler.md";
+  </script>
+  <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML" integrity="sha384-Ra6zh6uYMmH5ydwCqqMoykyf1T/+ZcnOQfFPhDrp2kI4OIxadnhsvvA2vv9A7xYv" crossorigin="anonymous"></script>
+<script src="/lib/bootstrap-3.3.7/dist/js/bootstrap.min.js"></script>
+<script src="/js/main.js"></script>
+
+<script>
+$(document).ready(function(){
+    $('[data-toggle="popover"]').popover({
+      trigger: 'manual',
+        container: $(this).attr('id'),
+        placement: 'top',
+        content: function () {
+            return '<div class="hover-hovercard"></div>';
+        }
+    }).on("mouseenter", function () {
+        var _this = this;
+        $(this).popover("show");
+        $(this).siblings(".popover").on("mouseleave", function () {
+            $(_this).popover('hide');
+        });
+    }).on("mouseleave", function () {
+        var _this = this;
+        setTimeout(function () {
+            if (!$(".popover:hover").length) {
+               $(_this).popover("hide")
+            }
+        }, 100);
+    });
+
+    $('[data-toggle="tooltip"]').tooltip();
+});
+/*
+$('[data-toggle="popover"]').on('shown.bs.popover', function () {
+    var $pop = $(this);
+    setTimeout(function () {
+        $pop.popover('hide');
+    }, 2000);
+});*/
+</script>
+<script src="/js/analytics.js"></script>
+<footer class="">
+
+<div class="container-fluid">
+<div class="shadow"></div>
+<!--<div class="row">
+  <h4 class="col-md-3">CS 241: System Programming</h4>
+  
+    <div class="col-md-3">
+    <a href="https://github.com/illinois-cs241"><span class="icon icon--github"><svg viewBox="0 0 16 16"><path fill="#828282" d="M7.999,0.431c-4.285,0-7.76,3.474-7.76,7.761 c0,3.428,2.223,6.337,5.307,7.363c0.388,0.071,0.53-0.168,0.53-0.374c0-0.184-0.007-0.672-0.01-1.32 c-2.159,0.469-2.614-1.04-2.614-1.04c-0.353-0.896-0.862-1.135-0.862-1.135c-0.705-0.481,0.053-0.472,0.053-0.472 c0.779,0.055,1.189,0.8,1.189,0.8c0.692,1.186,1.816,0.843,2.258,0.645c0.071-0.502,0.271-0.843,0.493-1.037 C4.86,11.425,3.049,10.76,3.049,7.786c0-0.847,0.302-1.54,0.799-2.082C3.768,5.507,3.501,4.718,3.924,3.65 c0,0,0.652-0.209,2.134,0.796C6.677,4.273,7.34,4.187,8,4.184c0.659,0.003,1.323,0.089,1.943,0.261 c1.482-1.004,2.132-0.796,2.132-0.796c0.423,1.068,0.157,1.857,0.077,2.054c0.497,0.542,0.798,1.235,0.798,2.082 c0,2.981-1.814,3.637-3.543,3.829c0.279,0.24,0.527,0.713,0.527,1.437c0,1.037-0.01,1.874-0.01,2.129 c0,0.208,0.14,0.449,0.534,0.373c3.081-1.028,5.302-3.935,5.302-7.362C15.76,3.906,12.285,0.431,7.999,0.431z"/></svg>
+</span><span class="username">illinois-cs241</span></a>
+
+    </div>
+  
+  
+</div>
+
+<div class="row">
+  <div class="col-md-12 col-sm-12">
+    <p>Webpage for CS 241: System Programming at the University of Illinois Urbana-Champaign. All documentation and information about the course can be found here.
+</p>
+  </div>
+</div> -->
+</div>
+
+</footer>
+
+</body>
+</html>

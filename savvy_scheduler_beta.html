@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- Favicons -->
+  <link rel="apple-touch-icon" sizes="180x180" href="images/favicons/apple-touch-icon.png">
+  <link rel="icon" type="image/png" href="images/favicons/favicon-32x32.png" sizes="32x32">
+  <link rel="icon" type="image/png" href="images/favicons/favicon-16x16.png" sizes="16x16">
+  <link rel="manifest" href="images/favicons/manifest.json">
+  <link rel="mask-icon" href="images/favicons/safari-pinned-tab.svg" color="#5bbad5">
+  <meta name="theme-color" content="#ffffff">
+
+  <title>Savvy Scheduler Beta</title>
+
+  <link async rel="stylesheet" href="/lib/bootstrap-3.3.7/dist/css/bootstrap.min.css">
+  <link async rel="stylesheet" href="/css/code-style.css">
+  <link async rel="stylesheet" href="/css/main.css">
+
+</head>
+
+<body>
+<!-- Always shows a header, even in smaller screens. -->
+<nav class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <div class="container">
+        <div class="navbar-header">
+
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target=".navbar-collapse" aria-expanded="false" aria-controls="navbar">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            </button>
+
+            <a class="navbar-brand navbar-link normal" href="/">CS 241: System Programming</a>
+            <a class="navbar-brand navbar-link small" href="/">CS 241</a>
+        </div>
+
+        <div id="navbar" class="navbar-collapse collapse">
+          <ul class="nav navbar-nav">
+            <li>
+            <a class="navbar-link" href="/mps.html">MPs</a>
+            </li>
+            <li>
+            <a class="navbar-link" href="/labs.html">Labs</a>
+            </li>
+            <li>
+            <a class="navbar-link" href="/help.html">Help!</a>
+            </li>
+            <li>
+            <a class="navbar-link" href="/schedule.html">Schedule</a>
+            </li>
+            <li>
+            <a class="navbar-link" href="/honors.html">Honors</a>
+            </li>
+            <li>
+            <a class="navbar-link" href="/staff.html">The Crew</a>
+            </li>
+            <li>
+            <a class="navbar-link" href="/search.html">Search</a>
+            </li>
+            <li>
+            <a class="navbar-link" href="/wikibook/home.html">Wikibook</a>
+            </li>
+          </ul>
+        </div>
+        </div>
+</nav>
+
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-md-2 col-sm-1 col-xs-0"></div>
+    <div class="col-md-8 col-sm-10 col-xs-12">
+      <div class="wrapper">
+        <div class="pad"><div class="card">
+          <div class="title">
+            <div class="speaker-wrapper">
+              <button onclick="speak()" class="speaker" alt="Read Page"></button>
+            </div>
+            <h1>
+              Savvy Scheduler Beta
+              
+                <a class="github-link hidden-xs" href="https://github.com/illinois-cs241/illinois-cs241.github.io/blob/develop/_docs/savvy_scheduler_beta.md">Edit on Github</a>
+              
+            </h1>
+          </div>
+          <div class="container-fluid"><div class="row"><div class="content col-sm-11 .col-sm-offset-1">
+            
+              <div class="submission-wrapper">
+                
+                  <b>Entire Assignment</b> due <b>11/09 11:59pm</b><br/>
+                  
+                    <b>Graded files:</b>
+                    <ul>
+                      
+                        <li>libscheduler.c</li>
+                      
+                        <li>libscheduler.h</li>
+                      
+                    </ul>
+                  
+                
+              </div>
+            
+          </div></div></div>
+        </div></div>
+      </div>
+      <div class="toc-wrapper">
+<h4>Content</h4>
+<ul class="toc">
+<li><a id="toc_scheduler-beta" href="#scheduler-beta" class="fancy-link">Scheduler Beta</a></li>
+<li><a id="toc_job-struct" href="#job-struct" class="fancy-link">job struct</a></li>
+<li><a id="toc_changes-in-scheduler_quantum_expired" href="#changes-in-scheduler_quantum_expired" class="fancy-link">changes in scheduler_quantum_expired</a></li>
+<li><a id="toc_changes-in-various-types" href="#changes-in-various-types" class="fancy-link">changes in various types</a></li>
+<li><a id="toc_testing" href="#testing" class="fancy-link">Testing</a></li>
+<li><a id="toc_spooky-bugs" href="#spooky-bugs" class="fancy-link">Spooky bugs</a></li>
+<li><a id="toc_the-threading-model---gthreads" href="#the-threading-model---gthreads" class="fancy-link">The threading model - gthreads</a></li>
+<li><a id="toc_constants" href="#constants" class="fancy-link">Constants</a></li>
+<li><a id="toc_functions" href="#functions" class="fancy-link">Functions</a></li>
+<li><a id="toc_okay-so-how-does-this-work" href="#okay-so-how-does-this-work" class="fancy-link">Okay, so how does this work?</a></li>
+</ul>
+</div>
+      <div id="content">
+        
+        <div class="wrapper">
+  <div class="pad"><div class="card">
+<div class="title"><h2 id="learning-objectives" class="title-text">Learning Objectives<a class="anchor title-text" href="#learning-objectives">#</a>
+</h2></div>
+  
+  
+
+
+  <div class="container-fluid"><div class="row"><div class="content col-sm-11 .col-sm-offset-1">
+<p>
+    The learning objectives for Savvy Scheduler Beta are: <br>
+    </p>
+<ul class="mdl-list">
+      
+        <li class="mdl-list__item">
+          <span class="mdl-list__item-primary-content">scheduling algorithms</span>
+        </li>
+      
+        <li class="mdl-list__item">
+          <span class="mdl-list__item-primary-content">preemptive vs non-preemptive</span>
+        </li>
+      
+        <li class="mdl-list__item">
+          <span class="mdl-list__item-primary-content">Relating the different algorithms with a priority queue</span>
+        </li>
+      
+    </ul>
+</div></div></div>
+</div></div>
+<div class="pad"><div class="card">
+<div class="title"><h2 id="suggested-readings" class="title-text">Suggested Readings<a class="anchor title-text" href="#suggested-readings">#</a>
+</h2></div>
+  
+  
+
+<div class="container-fluid"><div class="row"><div class="content col-sm-11 .col-sm-offset-1">
+<p>
+    We suggest you read the following from the
+    <a href="https://github.com/angrave/SystemProgramming/wiki" class="fancy-link wiki-link">wikibook</a>
+    before starting Savvy Scheduler Beta: <br>
+    </p>
+<ul>
+      
+        <li>
+          <a href="/wikibook/scheduling-part-1-scheduling-processes.html#" target="_blank" class="fancy-link wiki-link">Scheduling, Part 1: Scheduling Processes
+          </a>
+        </li>
+      
+        <li>
+          <a href="/wikibook/scheduling-part-2-scheduling-processes-algorithms.html#" target="_blank" class="fancy-link wiki-link">Scheduling, Part 2: Scheduling Processes: Algorithms
+          </a>
+        </li>
+      
+    </ul>
+</div></div></div>
+</div></div>
+</div>
+        <div class="wrapper">
+<div class="pad"><div class="card">
+<div class="title"><h2 id="scheduler-beta" class="title-text">Scheduler Beta<a class="anchor title-text" href="#scheduler-beta">#</a>
+</h2></div>
+
+
+
+
+
+<div class="container-fluid"><div class="row"><div class="content col-sm-11 .col-sm-offset-1">
+<p>This lab is an experimental version of scheduler that uses green threads (see below for details). There are a few differences in the scheduler interface, but most of the logic remains the same. Note that your final grade for this lab will be the max of your grade from scheduler and scheduler beta (you don’t need to attempt both, if you get a 0 in one of them, you will automatically recieve the grade for the other).</p>
+<p>Since everything is almost the same, these docs will detail the differences and the model of threading explored in this lab. We strongly recommend that you go back and read through the orignal version’s docs (at least briefly) to get an idea of how scheduling work conceptually before attempting this lab.</p>
+</div></div></div>
+</div></div>
+<div class="pad"><div class="card">
+<div class="title"><h2 id="job-struct" class="title-text">job struct<a class="anchor title-text" href="#job-struct">#</a>
+</h2></div>
+
+
+
+<div class="container-fluid"><div class="row"><div class="content col-sm-11 .col-sm-offset-1"><p>We have provided a job struct defined in libscheduler.h. You do not need to modify the <strong>state</strong>, <strong>ctx</strong>, or <strong>stack_start</strong> fields. The only field you will be using or modifying is <strong>metadata</strong>, where you can insert your <strong>job_info</strong> struct that you will define in <strong>libscheduler.c</strong>.</p></div></div></div>
+</div></div>
+<div class="pad"><div class="card">
+<div class="title"><h2 id="changes-in-scheduler_quantum_expired" class="title-text">changes in scheduler_quantum_expired<a class="anchor title-text" href="#changes-in-scheduler_quantum_expired">#</a>
+</h2></div>
+
+
+
+<div class="container-fluid"><div class="row"><div class="content col-sm-11 .col-sm-offset-1"><p>This function might recieve a <strong>NULL</strong> pointer if there is no running job, or the last running job has finished.</p></div></div></div>
+</div></div>
+<div class="pad"><div class="card">
+<div class="title"><h2 id="changes-in-various-types" class="title-text">changes in various types<a class="anchor title-text" href="#changes-in-various-types">#</a>
+</h2></div>
+
+
+
+<div class="container-fluid"><div class="row"><div class="content col-sm-11 .col-sm-offset-1"><p>Various types have been changed, for example, time is no longer an <strong>unsigned int</strong>, but a <strong>double</strong>. Some functions that returned a job in the original lab no longer return anything, etc. For the most part, the actual code between the labs should be fairly similar.</p></div></div></div>
+</div></div>
+<div class="pad"><div class="card">
+<div class="title"><h2 id="testing" class="title-text">Testing<a class="anchor title-text" href="#testing">#</a>
+</h2></div>
+
+
+
+
+
+
+
+
+
+
+
+<div class="container-fluid"><div class="row"><div class="content col-sm-11 .col-sm-offset-1">
+<p>We have provided three interfaces to testing this lab. The first is in <strong>main.c</strong> which you will not be able to edit. The outputs for the various scheduling algorithms are stored in <strong>examples/</strong> and you will be able to diff your output to see if you have it right. There is an example below.</p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>./main fcfs <span class="o">&gt;</span> temp
+diff temp examples/output_fcfs.txt
+</code></pre></div></div>
+<p>Note that for a few schedulers the outputs may not match exactly but will be similar (i.e. if you’re only off by a few lines, don’t worry about it, the only exception is round robin which suffers from a strange amount of non-determinism even when implemented correctly).</p>
+<p>To allow to write your own tests similar to the ones in <strong>main.c</strong> you can use <strong>gtest.c</strong>.</p>
+<p>The final testing interface is <strong>scheduler_test.c</strong>. This file allows you to directly test the functions you’ve implemented in libscheduler.c.</p>
+</div></div></div>
+</div></div>
+<div class="pad"><div class="card">
+<div class="title"><h2 id="spooky-bugs" class="title-text">Spooky bugs<a class="anchor title-text" href="#spooky-bugs">#</a>
+</h2></div>
+
+
+
+
+
+
+
+<div class="container-fluid"><div class="row"><div class="content col-sm-11 .col-sm-offset-1">
+<p>In the spirit of Halloween we have some spooky bugs in this lab!</p>
+<p>Just kidding! This lab is still in beta which means we might have some bugs and value your feedback to help us fix them if you find any! (Hopefully you won’t be able to!). If you do find any bugs, please make a piazza post ASAP and we’ll investigate.</p>
+<p>Since this lab is new and in beta, all of our course staff may not be completely prepared to answer questions about the internals of scheduler_beta. However, they will be more than capable of answering any questions about scheduling in general and conceptual doubts.</p>
+</div></div></div>
+</div></div>
+<div class="pad"><div class="card">
+<div class="title"><h2 id="the-threading-model---gthreads" class="title-text">The threading model - gthreads<a class="anchor title-text" href="#the-threading-model---gthreads">#</a>
+</h2></div>
+
+
+
+
+
+
+
+<div class="container-fluid"><div class="row"><div class="content col-sm-11 .col-sm-offset-1">
+<p>Initial idea and code from <a href="https://c9x.me/articles/gthreads/code0.html" class="fancy-link wiki-link">here</a>.</p>
+<p>Gthreads is an implementation of green threads in c! It uses libscheduler to schedule the threads.</p>
+<p>NOTE: The green thread scheduler uses alarms and a SIGALRM handler, it is an error to use some other handler for SIGALRM with gthreads.</p>
+</div></div></div>
+</div></div>
+<div class="pad"><div class="card">
+<div class="title"><h2 id="constants" class="title-text">Constants<a class="anchor title-text" href="#constants">#</a>
+</h2></div>
+
+
+
+<div class="container-fluid"><div class="row"><div class="content col-sm-11 .col-sm-offset-1"><p>There are two constants defined as enums in gthread.h, MaxGThreads (not used, remove) and StackSize. Stack size determines the size of the stack for each green thread spawned.</p></div></div></div>
+</div></div>
+<div class="pad"><div class="card">
+<div class="title"><h2 id="functions" class="title-text">Functions<a class="anchor title-text" href="#functions">#</a>
+</h2></div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="container-fluid"><div class="row"><div class="content col-sm-11 .col-sm-offset-1">
+<h3 id="gtinit" class="title-text">gtinit</h3>
+<p><em>This function should be called before anything else</em></p>
+<p>This function sets up the scheduler and a signal handler for SIGALRM. It is undefined behavior to call any other function in gthread before this one.</p>
+<p>Takes in a scheme_t detailing what scheduling algorithm to be used.</p>
+<h3 id="gtgo" class="title-text">gtgo</h3>
+<p>This is like pthread_create. It spawns a new green thread (won’t start until it’s actually scheduled).</p>
+<p>It takes in the function to execute and a scheduler_info* to get it’s scheduler attributes.</p>
+<h3 id="gtstart" class="title-text">gtstart</h3>
+<p>This function starts off the scheduling process with a call to ualarm.</p>
+<h3 id="gtret" class="title-text">gtret</h3>
+<p>This function should be called from a thread to clean up and exit. If called from main it will wait for all other threads to finish before exiting with the status as the argument to gtret. If any other thread calls this function, it is equivalent to calling return.</p>
+<h3 id="gtsleep" class="title-text">gtsleep</h3>
+<p>This function will sleep for at least the number of seconds specified by the argument. Unlike sleep(2), this function will also call yield and allow another thread to run (if there is one on the queue).</p>
+<h3 id="gtdoyield" class="title-text">gtdoyield</h3>
+<p>This function is a wrapper around the internal function gtyield and might perform a context switch to another thread. The return value will be true if a context switch occured and false otherwise. The argument is not important, so long as it is not -1 or SIGALRM.</p>
+<h3 id="gtcurrjob" class="title-text">gtcurrjob</h3>
+<p>Returns a job* indicating the current running job</p>
+</div></div></div>
+</div></div>
+<div class="pad"><div class="card">
+<div class="title"><h2 id="okay-so-how-does-this-work" class="title-text">Okay, so how does this work?<a class="anchor title-text" href="#okay-so-how-does-this-work">#</a>
+</h2></div>
+
+
+
+
+
+
+
+
+<div class="container-fluid"><div class="row"><div class="content col-sm-11 .col-sm-offset-1">
+<p>The idea of green threads is essentially to have a user-space thread that is lighter than a pthread, but at the cost of not executing in parallel. Instead a green thread will switch between many “threads of execution” giving the illusion of parallel processing. As you might have guessed, this switch involves what we call a “context switch” that allows us to save the current state of the thread before moving to a different one.</p>
+<p>To learn more about the concept, read <a href="https://c9x.me/articles/gthreads/code0.html" class="fancy-link wiki-link">this</a> article that we used as a starting point.</p>
+<p>Now, let’s talk about what we’ve added on top of that very simple implmentation. We need a way to preempt threads. For our purposes, a signal is an accpetable solution to this problem. We have used the function ualarm(3) to schedule alarms on regular intervals. The handler then calls gtyield which will call scheduler_quantum_expired to select the next job to run.</p>
+<p>Note that almost all the scheduling magic is implemented in libscheduler! The only exception is that the main thread will never be sent to any of the functions in libscheduler. Instead, every 10 quanta, gtyield will store the current job do a context switch to main, and the next time gtyield is called from main, the process will switch back to the stored job.</p>
+</div></div></div>
+</div></div>
+</div>
+        
+        <div class="wrapper">
+<div class="pad"><div class="card">
+<div class="title"><h2 id="submission-instructions" class="title-text">Submission Instructions<a class="anchor title-text" href="#submission-instructions">#</a>
+</h2></div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="container-fluid"><div class="row"><div class="content col-sm-11 .col-sm-offset-1">
+<p>Please read details on <a href="http://illinois-cs241.github.io/#academic-integrity" class="fancy-link wiki-link">Academic Integrity</a> fully. These are shared by all assignments in CS 241.</p>
+<p>We will be using Subversion as our hand-in system this semester. Our grading system will checkout your most recent (pre-deadline) commit for grading. Therefore, to hand in your code, all you have to do is commit it to your Subversion repository.</p>
+<p>To check out the provided code for <code class="highlighter-rouge">savvy_scheduler_beta</code> from the class repository, go to your cs241 directory (the one you checked out for “know your tools”) and run:</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>svn up
+</code></pre></div></div>
+<p>If you run <code class="highlighter-rouge"><a href="https://linux.die.net/man/1/ls" class="fancy-link">ls</a></code> you will now see a <code class="highlighter-rouge">savvy_scheduler_beta</code> folder, where you can find this assignment! To commit your changes (send them to us), type:</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>svn ci -m "savvy_scheduler_beta submission"
+</code></pre></div></div>
+<p>Your repository directory can be viewed from a web browser from the following URL: <a href="https://subversion.ews.illinois.edu/svn/fa17-cs241/NETID/savvy_scheduler_beta" class="fancy-link wiki-link">https://subversion.ews.illinois.edu/svn/fa17-cs241/NETID/savvy_scheduler_beta</a>, where NETID is your University NetID. It is important to check that the files you expect to be graded are present and up to date in your SVN copy.</p>
+</div></div></div>
+</div></div>
+<div class="pad"><div class="card">
+<div class="title"><h2 id="assignment-feedback" class="title-text">Assignment Feedback<a class="anchor title-text" href="#assignment-feedback">#</a>
+</h2></div>
+
+
+
+
+
+
+
+<div class="container-fluid"><div class="row"><div class="content col-sm-11 .col-sm-offset-1">
+<p>We strive to provide the best assignments that we can for this course, and we would like your feedback on them!</p>
+<p>This is the form we will use to evaluate our assignments. We appreciate the time you take to give us your honest feedback and we promise to keep improving the course to make your experience in CS 241 the best it can be.</p>
+<p><a href="https://goo.gl/forms/hREf0ojFWumYfQF12" class="fancy-link wiki-link">https://goo.gl/forms/hREf0ojFWumYfQF12</a></p>
+</div></div></div>
+</div></div>
+</div>
+      </div>
+      <div class="col-md-2 col-sm-1 col-xs-0"></div>
+    </div>
+  </div>
+  <script>
+    var github_repo = "illinois-cs241/illinois-cs241.github.io";
+    var github_path = "_docs/savvy_scheduler_beta.md";
+  </script>
+  <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML" integrity="sha384-Ra6zh6uYMmH5ydwCqqMoykyf1T/+ZcnOQfFPhDrp2kI4OIxadnhsvvA2vv9A7xYv" crossorigin="anonymous"></script>
+<script src="/lib/bootstrap-3.3.7/dist/js/bootstrap.min.js"></script>
+<script src="/js/main.js"></script>
+
+<script>
+$(document).ready(function(){
+    $('[data-toggle="popover"]').popover({
+      trigger: 'manual',
+        container: $(this).attr('id'),
+        placement: 'top',
+        content: function () {
+            return '<div class="hover-hovercard"></div>';
+        }
+    }).on("mouseenter", function () {
+        var _this = this;
+        $(this).popover("show");
+        $(this).siblings(".popover").on("mouseleave", function () {
+            $(_this).popover('hide');
+        });
+    }).on("mouseleave", function () {
+        var _this = this;
+        setTimeout(function () {
+            if (!$(".popover:hover").length) {
+               $(_this).popover("hide")
+            }
+        }, 100);
+    });
+
+    $('[data-toggle="tooltip"]').tooltip();
+});
+/*
+$('[data-toggle="popover"]').on('shown.bs.popover', function () {
+    var $pop = $(this);
+    setTimeout(function () {
+        $pop.popover('hide');
+    }, 2000);
+});*/
+</script>
+<script src="/js/analytics.js"></script>
+<footer class="">
+
+<div class="container-fluid">
+<div class="shadow"></div>
+<!--<div class="row">
+  <h4 class="col-md-3">CS 241: System Programming</h4>
+  
+    <div class="col-md-3">
+    <a href="https://github.com/illinois-cs241"><span class="icon icon--github"><svg viewBox="0 0 16 16"><path fill="#828282" d="M7.999,0.431c-4.285,0-7.76,3.474-7.76,7.761 c0,3.428,2.223,6.337,5.307,7.363c0.388,0.071,0.53-0.168,0.53-0.374c0-0.184-0.007-0.672-0.01-1.32 c-2.159,0.469-2.614-1.04-2.614-1.04c-0.353-0.896-0.862-1.135-0.862-1.135c-0.705-0.481,0.053-0.472,0.053-0.472 c0.779,0.055,1.189,0.8,1.189,0.8c0.692,1.186,1.816,0.843,2.258,0.645c0.071-0.502,0.271-0.843,0.493-1.037 C4.86,11.425,3.049,10.76,3.049,7.786c0-0.847,0.302-1.54,0.799-2.082C3.768,5.507,3.501,4.718,3.924,3.65 c0,0,0.652-0.209,2.134,0.796C6.677,4.273,7.34,4.187,8,4.184c0.659,0.003,1.323,0.089,1.943,0.261 c1.482-1.004,2.132-0.796,2.132-0.796c0.423,1.068,0.157,1.857,0.077,2.054c0.497,0.542,0.798,1.235,0.798,2.082 c0,2.981-1.814,3.637-3.543,3.829c0.279,0.24,0.527,0.713,0.527,1.437c0,1.037-0.01,1.874-0.01,2.129 c0,0.208,0.14,0.449,0.534,0.373c3.081-1.028,5.302-3.935,5.302-7.362C15.76,3.906,12.285,0.431,7.999,0.431z"/></svg>
+</span><span class="username">illinois-cs241</span></a>
+
+    </div>
+  
+  
+</div>
+
+<div class="row">
+  <div class="col-md-12 col-sm-12">
+    <p>Webpage for CS 241: System Programming at the University of Illinois Urbana-Champaign. All documentation and information about the course can be found here.
+</p>
+  </div>
+</div> -->
+</div>
+
+</footer>
+
+</body>
+</html>

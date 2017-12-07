@@ -1,0 +1,598 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- Favicons -->
+  <link rel="apple-touch-icon" sizes="180x180" href="images/favicons/apple-touch-icon.png">
+  <link rel="icon" type="image/png" href="images/favicons/favicon-32x32.png" sizes="32x32">
+  <link rel="icon" type="image/png" href="images/favicons/favicon-16x16.png" sizes="16x16">
+  <link rel="manifest" href="images/favicons/manifest.json">
+  <link rel="mask-icon" href="images/favicons/safari-pinned-tab.svg" color="#5bbad5">
+  <meta name="theme-color" content="#ffffff">
+
+  <title>Super Shell</title>
+
+  <link async rel="stylesheet" href="/lib/bootstrap-3.3.7/dist/css/bootstrap.min.css">
+  <link async rel="stylesheet" href="/css/code-style.css">
+  <link async rel="stylesheet" href="/css/main.css">
+
+</head>
+
+<body>
+<!-- Always shows a header, even in smaller screens. -->
+<nav class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <div class="container">
+        <div class="navbar-header">
+
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target=".navbar-collapse" aria-expanded="false" aria-controls="navbar">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            </button>
+
+            <a class="navbar-brand navbar-link normal" href="/">CS 241: System Programming</a>
+            <a class="navbar-brand navbar-link small" href="/">CS 241</a>
+        </div>
+
+        <div id="navbar" class="navbar-collapse collapse">
+          <ul class="nav navbar-nav">
+            <li>
+            <a class="navbar-link" href="/mps.html">MPs</a>
+            </li>
+            <li>
+            <a class="navbar-link" href="/labs.html">Labs</a>
+            </li>
+            <li>
+            <a class="navbar-link" href="/help.html">Help!</a>
+            </li>
+            <li>
+            <a class="navbar-link" href="/schedule.html">Schedule</a>
+            </li>
+            <li>
+            <a class="navbar-link" href="/honors.html">Honors</a>
+            </li>
+            <li>
+            <a class="navbar-link" href="/staff.html">The Crew</a>
+            </li>
+            <li>
+            <a class="navbar-link" href="/search.html">Search</a>
+            </li>
+            <li>
+            <a class="navbar-link" href="/wikibook/home.html">Wikibook</a>
+            </li>
+          </ul>
+        </div>
+        </div>
+</nav>
+
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-md-2 col-sm-1 col-xs-0"></div>
+    <div class="col-md-8 col-sm-10 col-xs-12">
+      <div class="wrapper">
+        <div class="pad"><div class="card">
+          <div class="title">
+            <div class="speaker-wrapper">
+              <button onclick="speak()" class="speaker" alt="Read Page"></button>
+            </div>
+            <h1>
+              Super Shell
+              
+                <a class="github-link hidden-xs" href="https://github.com/illinois-cs241/illinois-cs241.github.io/blob/develop/_docs/super_shell.md">Edit on Github</a>
+              
+            </h1>
+          </div>
+          <div class="container-fluid"><div class="row"><div class="content col-sm-11 .col-sm-offset-1">
+            
+              <div class="submission-wrapper">
+                
+                  <b>Entire Assignment</b> due <b>10/2/2017 11:59pm</b><br>
+                  
+                    <b>Graded files:</b>
+                    <ul>
+                      
+                        <li>super_shell.c</li>
+                      
+                    </ul>
+                  
+                
+              </div>
+            
+          </div></div></div>
+        </div></div>
+      </div>
+      <div class="toc-wrapper">
+<h4>Content</h4>
+<ul class="toc">
+<li><a id="toc_warning" href="#warning" class="fancy-link">WARNING</a></li>
+<li><a id="toc_backstory" href="#backstory" class="fancy-link">Backstory</a></li>
+<li><a id="toc_formath" href="#formath" class="fancy-link">format.h</a></li>
+<li><a id="toc_overview" href="#overview" class="fancy-link">Overview</a></li>
+<li><a id="toc_backgrounding" href="#backgrounding" class="fancy-link">Backgrounding</a></li>
+<li><a id="toc_new-built-ins" href="#new-built-ins" class="fancy-link">New Built-ins</a></li>
+<li><a id="toc_process-groups" href="#process-groups" class="fancy-link">Process Groups</a></li>
+<li><a id="toc_escape-sequences" href="#escape-sequences" class="fancy-link">Escape Sequences</a></li>
+<li><a id="toc_memory" href="#memory" class="fancy-link">Memory</a></li>
+<li><a id="toc_grading" href="#grading" class="fancy-link">Grading</a></li>
+</ul>
+</div>
+      <div id="content">
+        
+        <div class="wrapper">
+  <div class="pad"><div class="card">
+<div class="title"><h2 id="learning-objectives" class="title-text">Learning Objectives<a class="anchor title-text" href="#learning-objectives">#</a>
+</h2></div>
+  
+  
+
+
+  <div class="container-fluid"><div class="row"><div class="content col-sm-11 .col-sm-offset-1">
+<p>
+    The learning objectives for Super Shell are: <br>
+    </p>
+<ul class="mdl-list">
+      
+        <li class="mdl-list__item">
+          <span class="mdl-list__item-primary-content">Processes</span>
+        </li>
+      
+        <li class="mdl-list__item">
+          <span class="mdl-list__item-primary-content">Fork, Exec, Wait</span>
+        </li>
+      
+        <li class="mdl-list__item">
+          <span class="mdl-list__item-primary-content">More Signals</span>
+        </li>
+      
+        <li class="mdl-list__item">
+          <span class="mdl-list__item-primary-content">Zombie Processes</span>
+        </li>
+      
+    </ul>
+</div></div></div>
+</div></div>
+<div class="pad"><div class="card">
+<div class="title"><h2 id="suggested-readings" class="title-text">Suggested Readings<a class="anchor title-text" href="#suggested-readings">#</a>
+</h2></div>
+  
+  
+
+<div class="container-fluid"><div class="row"><div class="content col-sm-11 .col-sm-offset-1">
+<p>
+    We suggest you read the following from the
+    <a href="https://github.com/angrave/SystemProgramming/wiki" class="fancy-link wiki-link">wikibook</a>
+    before starting Super Shell: <br>
+    </p>
+<ul>
+      
+        <li>
+          <a href="/wikibook/forking-part-1-introduction.html#" target="_blank" class="fancy-link wiki-link">Forking, Part 1: Introduction
+          </a>
+        </li>
+      
+        <li>
+          <a href="/wikibook/forking-part-2-fork-exec-wait.html#" target="_blank" class="fancy-link wiki-link">Forking, Part 2: Fork, Exec, Wait
+          </a>
+        </li>
+      
+        <li>
+          <a href="/wikibook/process-control-part-1-wait-macros-using-signals.html#" target="_blank" class="fancy-link wiki-link">Process Control, Part 1: Wait macros, using signals
+          </a>
+        </li>
+      
+    </ul>
+</div></div></div>
+</div></div>
+</div>
+        <div class="wrapper">
+<div class="pad"><div class="card">
+<div class="title"><h2 id="warning" class="title-text">WARNING<a class="anchor title-text" href="#warning">#</a>
+</h2></div>
+
+
+
+
+
+
+
+
+
+<div class="container-fluid"><div class="row"><div class="content col-sm-11 .col-sm-offset-1">
+<p><img class="emoji" title=":fork_and_knife:" alt=":fork_and_knife:" src="https://assets-cdn.github.com/images/icons/emoji/unicode/1f374.png" height="20" width="20"> <img class="emoji" title=":bomb:" alt=":bomb:" src="https://assets-cdn.github.com/images/icons/emoji/unicode/1f4a3.png" height="20" width="20"> <img class="emoji" title=":bangbang:" alt=":bangbang:" src="https://assets-cdn.github.com/images/icons/emoji/unicode/203c.png" height="20" width="20"></p>
+<p>If your code fork-bombs on <em>any</em> autograde, then you will automatically fail this MP. Please make sure that your <code class="highlighter-rouge"><a href="https://linux.die.net/man/3/fork" class="fancy-link">fork</a></code> code is correct before committing your code for the nightly autograder.</p>
+<p>To prevent you from fork bombing your own VM, we recommend looking into <a href="https://ss64.com/bash/ulimit.html" class="fancy-link wiki-link"><code class="highlighter-rouge">ulimit</code></a>. This will allow you to set a limit for how many times you can fork.</p>
+<p>Since a learning objective of this assignment is to use the fork-exec-wait pattern, if you use <code class="highlighter-rouge"><a href="https://linux.die.net/man/3/system" class="fancy-link">system</a></code>, you will automatically fail this MP.</p>
+</div></div></div>
+</div></div>
+<div class="pad"><div class="card">
+<div class="title"><h2 id="backstory" class="title-text">Backstory<a class="anchor title-text" href="#backstory">#</a>
+</h2></div>
+
+
+
+<div class="container-fluid"><div class="row"><div class="content col-sm-11 .col-sm-offset-1"><p>We showed your boss the shell you wrote. She didn’t rule out bringing you back on board, but we can’t say she was as impressed as we had hoped. Not to worry! We came up with some more features that will show off your systems knowledge. If you can get them implemented, we think your new shell will make her want to see you developing at <em>insert hot tech company here</em> again.</p></div></div></div>
+</div></div>
+<div class="pad"><div class="card">
+<div class="title"><h2 id="formath" class="title-text">format.h<a class="anchor title-text" href="#formath">#</a>
+</h2></div>
+
+
+
+
+
+<div class="container-fluid"><div class="row"><div class="content col-sm-11 .col-sm-offset-1">
+<p>The rules from before about <code class="highlighter-rouge">format.h</code> and <code class="highlighter-rouge">format.c</code> still apply. You should not be printing out to stdout and stderr at all; instead, all output and errors should be printed using the functions provided in <code class="highlighter-rouge">format.c</code> and <code class="highlighter-rouge">format.h</code>.</p>
+<p><strong>Note</strong>: this means that your debugging prints to stdout/stderr <em>will</em> cause you to lose points.</p>
+</div></div></div>
+</div></div>
+<div class="pad"><div class="card">
+<div class="title"><h2 id="overview" class="title-text">Overview<a class="anchor title-text" href="#overview">#</a>
+</h2></div>
+
+
+
+
+
+<div class="container-fluid"><div class="row"><div class="content col-sm-11 .col-sm-offset-1">
+<p>You will be expanding on the basic shell you wrote last week to include a few extra features: executing programs in the background, sending signals to processes, environment variables, and more!</p>
+<p>Your Super Shell will be contained in <code class="highlighter-rouge">super_shell.c</code>. You will probably want to copy your Part 1 solution from <code class="highlighter-rouge">shell.c</code> as a starting point.</p>
+</div></div></div>
+</div></div>
+<div class="pad"><div class="card">
+<div class="title"><h2 id="backgrounding" class="title-text">Backgrounding<a class="anchor title-text" href="#backgrounding">#</a>
+</h2></div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="container-fluid"><div class="row"><div class="content col-sm-11 .col-sm-offset-1">
+<p>An <em>external</em> command suffixed with <code class="highlighter-rouge">&amp;</code> should be run in the background. In other words, the shell should be ready to take the next command before the given command has finished running. There is no limit on the number of background processes you can have running at one time (aside from any limits set by the system).</p>
+<p>There may or may not be a single space between the rest of the command and <code class="highlighter-rouge">&amp;</code>. For example, <code class="highlighter-rouge">pwd&amp;</code> and <code class="highlighter-rouge">pwd &amp;</code> are both valid.</p>
+<p>Since spawning a background process introduces a race condition, it is okay if the prompt gets misaligned as in the following example:</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>(pid=1873)/home/user$ pwd &amp;
+Command executed by pid=1874
+(pid=1873)/home/user$
+/home/user
+When I type, it shows up on this line
+</code></pre></div></div>
+<p>While the shell should be usable after calling the command, after the process finishes, the parent is still responsible for waiting on the child (hint: catch a signal). Avoid creating zombies! Think about what happens when multiple children finish around the same time.</p>
+<p>Backgrounding will <strong>not</strong> be chained with the logical operators.</p>
+</div></div></div>
+</div></div>
+<div class="pad"><div class="card">
+<div class="title"><h2 id="new-built-ins" class="title-text">New Built-ins<a class="anchor title-text" href="#new-built-ins">#</a>
+</h2></div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="container-fluid"><div class="row"><div class="content col-sm-11 .col-sm-offset-1">
+<p>Beyond the built-ins you implemented last week, you should implement the following functionality.</p>
+<h3 id="ps" class="title-text"><code class="highlighter-rouge"><a href="https://linux.die.net/man/1/ps" class="fancy-link">ps</a></code></h3>
+<p>Like our good old <code class="highlighter-rouge"><a href="https://linux.die.net/man/1/ps" class="fancy-link">ps</a></code>, your shell should print out information about all currently executing processes. You should include the shell and its immediate children, but don’t worry about grandchildren or other processes. Make sure you use <code class="highlighter-rouge">print_process_info()</code>!</p>
+<p><em>Note:</em> while <code class="highlighter-rouge"><a href="https://linux.die.net/man/1/ps" class="fancy-link">ps</a></code> is normally a separate binary, it is a built-in command for your shell. (This is not “execing <code class="highlighter-rouge"><a href="https://linux.die.net/man/1/ps" class="fancy-link">ps</a></code>”, this is you implementing it in the code. Thus you have to keep track of process statuses and such.)</p>
+<p>Some things to keep in mind:</p>
+<ul>
+  <li>The order in which you print the processes does not matter.</li>
+  <li>The ‘command’ for <code class="highlighter-rouge">print_process_info</code> should be the full command you executed, with escape sequences and environment variables expanded. (This is <em>different</em> from what gets stored in the history!) The <code class="highlighter-rouge">&amp;</code> for background processes is optional. For the main shell process <em>only</em>, you do not need to include the command-line flags.</li>
+</ul>
+<h3 id="kill-pid" class="title-text"><code class="highlighter-rouge">kill &lt;pid&gt;</code></h3>
+<p>The ever-useful panic button. Send <code class="highlighter-rouge">SIGTERM</code> to the specified process.</p>
+<p>Use the appropriate prints from <code class="highlighter-rouge">format.h</code> for:</p>
+<ul>
+  <li>Successfully sending <code class="highlighter-rouge">SIGTERM</code> to process</li>
+  <li>No process with <code class="highlighter-rouge">pid</code> exists</li>
+  <li>
+<code class="highlighter-rouge"><a href="https://linux.die.net/man/3/kill" class="fancy-link">kill</a></code> was ran without a <code class="highlighter-rouge">pid</code>
+</li>
+</ul>
+<h3 id="stop-pid" class="title-text"><code class="highlighter-rouge">stop &lt;pid&gt;</code></h3>
+<p>This command will allow your shell to stop a currently executing process by sending it the <code class="highlighter-rouge">SIGTSTP</code> signal. It may be resumed by using the command <code class="highlighter-rouge">cont</code>.</p>
+<p>Use the appropriate prints from <code class="highlighter-rouge">format.h</code> for:</p>
+<ul>
+  <li>Process was successfully sent <code class="highlighter-rouge">SIGTSTP</code>
+</li>
+  <li>No such process exists</li>
+  <li>
+<code class="highlighter-rouge">stop</code> was ran without a <code class="highlighter-rouge">pid</code>
+</li>
+</ul>
+<h3 id="cont-pid" class="title-text"><code class="highlighter-rouge">cont &lt;pid&gt;</code></h3>
+<p>This command resumes the specified process by sending it <code class="highlighter-rouge">SIGCONT</code>.</p>
+<p>Use the appropriate prints from <code class="highlighter-rouge">format.h</code> for:</p>
+<ul>
+  <li>No such process exists</li>
+  <li>
+<code class="highlighter-rouge">cont</code> was ran without a <code class="highlighter-rouge">pid</code>
+</li>
+</ul>
+<p><strong>Any <code class="highlighter-rouge">&lt;pid&gt;</code> used in <code class="highlighter-rouge"><a href="https://linux.die.net/man/3/kill" class="fancy-link">kill</a></code>, <code class="highlighter-rouge">stop</code>, or, <code class="highlighter-rouge">cont</code> will either be a process that is a direct child of your shell or a non-existent process. You do not have to worry about killing other processes.</strong></p>
+<h3 id="export-varvalue" class="title-text"><code class="highlighter-rouge">export &lt;var=value&gt;</code></h3>
+<p>This command adds variables with their corresponding values to the environment. The values must be expanded prior to calling <code class="highlighter-rouge"><a href="https://linux.die.net/man/3/setenv" class="fancy-link">setenv</a></code> (they may contain references to other variables). Similarly, for <em>any</em> command that references environment variables, the environment variable must be expanded <strong>first</strong>. All variable names must be at least one character long, and composed of numbers, letters, or underscores. All other cases are undefined behavior and not in the scope of this assignment.</p>
+<p>For example:</p>
+<p><code class="highlighter-rouge">export FOO=123</code></p>
+<p><code class="highlighter-rouge">export BAR=$FOO:456</code> `</p>
+<p><code class="highlighter-rouge">export BAZ=$BAR:7890 // BAZ will be 123:456:7890</code></p>
+<p><code class="highlighter-rouge">echo $BAR:hello // should print 123:456:hello</code></p>
+<p><strong>Any</strong> input to your shell might reference an environment variable, so be sure to get the value first!</p>
+<h3 id="exit" class="title-text"><code class="highlighter-rouge"><a href="https://linux.die.net/man/3/exit" class="fancy-link">exit</a></code></h3>
+<p>Last week, you implemented <code class="highlighter-rouge"><a href="https://linux.die.net/man/3/exit" class="fancy-link">exit</a></code> without having to worry about any processes except for the one running in the foreground. This week, you’ll need to think about cleaning up any running/stopped background processes as well.</p>
+<p>If there are currently stopped or running background processes when your shell receives <code class="highlighter-rouge"><a href="https://linux.die.net/man/3/exit" class="fancy-link">exit</a></code> or <code class="highlighter-rouge">Control-D</code> (EOF), you should kill and cleanup each of those children before your shell exits. You do not need to worry about SIGTERM. (Think, what function lets you cleanup information about child processes?)</p>
+<p><strong>You should not let your shell’s children be zombies</strong>, but your children’s children might turn into zombies. You don’t have to handle those.</p>
+<p><strong><code class="highlighter-rouge"><a href="https://linux.die.net/man/3/exit" class="fancy-link">exit</a></code></strong> should <em>not</em> be stored in history.</p>
+<h3 id="invalid-built-ins" class="title-text">Invalid Built-ins</h3>
+<p>You should be printing the appropriate errors in cases where built-in commands fail, for instance, if the user tries to kill/stop/cont a nonexistent process.</p>
+</div></div></div>
+</div></div>
+<div class="pad"><div class="card">
+<div class="title"><h2 id="process-groups" class="title-text">Process Groups<a class="anchor title-text" href="#process-groups">#</a>
+</h2></div>
+
+
+
+
+
+<div class="container-fluid"><div class="row"><div class="content col-sm-11 .col-sm-offset-1">
+<p>Signals sent to the foreground process should not be sent to backgrounded processes. You will want to use <a href="http://man7.org/linux/man-pages/man2/setpgid.2.html" class="fancy-link wiki-link"><code class="highlighter-rouge">setpgid</code></a> to assign each background process to its own process group:</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>pid_t pid = fork();
+if (pid &gt; 0) {
+  // ...
+
+  // assign the child's process group id to be its pid
+  if (setpgid(pid, pid) == -1) {
+    print_setpgid_failed();
+    exit(1);
+  }
+
+  // ...
+} else if ( ... ) {
+  // ...
+}
+</code></pre></div></div>
+</div></div></div>
+</div></div>
+<div class="pad"><div class="card">
+<div class="title"><h2 id="escape-sequences" class="title-text">Escape Sequences<a class="anchor title-text" href="#escape-sequences">#</a>
+</h2></div>
+
+
+
+
+
+
+
+
+
+<div class="container-fluid"><div class="row"><div class="content col-sm-11 .col-sm-offset-1">
+<p>Your shell already supports <code class="highlighter-rouge">&amp;&amp;</code>, <code class="highlighter-rouge">||</code>, and <code class="highlighter-rouge">;</code>. However, what if we want to print <code class="highlighter-rouge">||</code> directly? If any of these special sequences are escaped in the input, you should treat them as literals. For example:</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>(pid=1337)/home/user$ echo \|\|
+||
+(pid=1337)/home/user$ echo \$
+$
+(pid=1337)/home/user$ echo \;
+;
+(pid=1337)/home/user$ echo \&amp; 
+&amp;
+</code></pre></div></div>
+<p>Notice how the last command <strong>isn’t</strong> backgrounded, since the <code class="highlighter-rouge">&amp;</code> is escaped and treated as a literal.</p>
+<p><strong>Note</strong>: this applies to <code class="highlighter-rouge">$</code>, <code class="highlighter-rouge">&amp;</code>, <code class="highlighter-rouge">&amp;&amp;</code>, <code class="highlighter-rouge">||</code>, and <code class="highlighter-rouge">;</code>. We will only test <code class="highlighter-rouge">&amp;</code>, <code class="highlighter-rouge">&amp;&amp;</code>, <code class="highlighter-rouge">||</code>, and <code class="highlighter-rouge">;</code> in external commands for this MP, but <code class="highlighter-rouge">$</code> can be escaped anywhere.</p>
+</div></div></div>
+</div></div>
+<div class="pad"><div class="card">
+<div class="title"><h2 id="memory" class="title-text">Memory<a class="anchor title-text" href="#memory">#</a>
+</h2></div>
+
+
+
+<div class="container-fluid"><div class="row"><div class="content col-sm-11 .col-sm-offset-1"><p>As usual, you may not have any memory leaks or errors.</p></div></div></div>
+</div></div>
+<div class="pad"><div class="card">
+<div class="title"><h2 id="grading" class="title-text">Grading<a class="anchor title-text" href="#grading">#</a>
+</h2></div>
+
+
+<div class="container-fluid"><div class="row"><div class="content col-sm-11 .col-sm-offset-1"><p>Your boss still wants the old functionality, so make sure you don’t break any of the features of the old shell! As a result, <strong>all</strong> tests from Shell carry over to Super Shell.</p></div></div></div>
+</div></div>
+</div>
+        
+        <div class="wrapper">
+<div class="pad"><div class="card">
+<div class="title"><h2 id="submission-instructions" class="title-text">Submission Instructions<a class="anchor title-text" href="#submission-instructions">#</a>
+</h2></div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="container-fluid"><div class="row"><div class="content col-sm-11 .col-sm-offset-1">
+<p>Please read details on <a href="http://illinois-cs241.github.io/#academic-integrity" class="fancy-link wiki-link">Academic Integrity</a> fully. These are shared by all assignments in CS 241.</p>
+<p>We will be using Subversion as our hand-in system this semester. Our grading system will checkout your most recent (pre-deadline) commit for grading. Therefore, to hand in your code, all you have to do is commit it to your Subversion repository.</p>
+<p>To check out the provided code for <code class="highlighter-rouge">super_shell</code> from the class repository, go to your cs241 directory (the one you checked out for “know your tools”) and run:</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>svn up
+</code></pre></div></div>
+<p>If you run <code class="highlighter-rouge"><a href="https://linux.die.net/man/1/ls" class="fancy-link">ls</a></code> you will now see a <code class="highlighter-rouge"><a href="https://linux.die.net/man/3/shell" class="fancy-link">shell</a></code> folder, where you can find this assignment! To commit your changes (send them to us), type:</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>svn ci -m "super_shell submission"
+</code></pre></div></div>
+<p>Your repository directory can be viewed from a web browser from the following URL: <a href="https://subversion.ews.illinois.edu/svn/fa17-cs241/NETID/shell" class="fancy-link wiki-link">https://subversion.ews.illinois.edu/svn/fa17-cs241/NETID/shell</a>, where NETID is your University NetID. It is important to check that the files you expect to be graded are present and up to date in your SVN copy.</p>
+</div></div></div>
+</div></div>
+<div class="pad"><div class="card">
+<div class="title"><h2 id="assignment-feedback" class="title-text">Assignment Feedback<a class="anchor title-text" href="#assignment-feedback">#</a>
+</h2></div>
+
+
+
+
+
+
+
+<div class="container-fluid"><div class="row"><div class="content col-sm-11 .col-sm-offset-1">
+<p>We strive to provide the best assignments that we can for this course, and we would like your feedback on them!</p>
+<p>This is the form we will use to evaluate our assignments. We appreciate the time you take to give us your honest feedback and we promise to keep improving the course to make your experience in CS 241 the best it can be.</p>
+<p><a href="https://goo.gl/forms/hREf0ojFWumYfQF12" class="fancy-link wiki-link">https://goo.gl/forms/hREf0ojFWumYfQF12</a></p>
+</div></div></div>
+</div></div>
+</div>
+      </div>
+      <div class="col-md-2 col-sm-1 col-xs-0"></div>
+    </div>
+  </div>
+  <script>
+    var github_repo = "illinois-cs241/illinois-cs241.github.io";
+    var github_path = "_docs/super_shell.md";
+  </script>
+  <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML" integrity="sha384-Ra6zh6uYMmH5ydwCqqMoykyf1T/+ZcnOQfFPhDrp2kI4OIxadnhsvvA2vv9A7xYv" crossorigin="anonymous"></script>
+<script src="/lib/bootstrap-3.3.7/dist/js/bootstrap.min.js"></script>
+<script src="/js/main.js"></script>
+
+<script>
+$(document).ready(function(){
+    $('[data-toggle="popover"]').popover({
+      trigger: 'manual',
+        container: $(this).attr('id'),
+        placement: 'top',
+        content: function () {
+            return '<div class="hover-hovercard"></div>';
+        }
+    }).on("mouseenter", function () {
+        var _this = this;
+        $(this).popover("show");
+        $(this).siblings(".popover").on("mouseleave", function () {
+            $(_this).popover('hide');
+        });
+    }).on("mouseleave", function () {
+        var _this = this;
+        setTimeout(function () {
+            if (!$(".popover:hover").length) {
+               $(_this).popover("hide")
+            }
+        }, 100);
+    });
+
+    $('[data-toggle="tooltip"]').tooltip();
+});
+/*
+$('[data-toggle="popover"]').on('shown.bs.popover', function () {
+    var $pop = $(this);
+    setTimeout(function () {
+        $pop.popover('hide');
+    }, 2000);
+});*/
+</script>
+<script src="/js/analytics.js"></script>
+<footer class="">
+
+<div class="container-fluid">
+<div class="shadow"></div>
+<!--<div class="row">
+  <h4 class="col-md-3">CS 241: System Programming</h4>
+  
+    <div class="col-md-3">
+    <a href="https://github.com/illinois-cs241"><span class="icon icon--github"><svg viewBox="0 0 16 16"><path fill="#828282" d="M7.999,0.431c-4.285,0-7.76,3.474-7.76,7.761 c0,3.428,2.223,6.337,5.307,7.363c0.388,0.071,0.53-0.168,0.53-0.374c0-0.184-0.007-0.672-0.01-1.32 c-2.159,0.469-2.614-1.04-2.614-1.04c-0.353-0.896-0.862-1.135-0.862-1.135c-0.705-0.481,0.053-0.472,0.053-0.472 c0.779,0.055,1.189,0.8,1.189,0.8c0.692,1.186,1.816,0.843,2.258,0.645c0.071-0.502,0.271-0.843,0.493-1.037 C4.86,11.425,3.049,10.76,3.049,7.786c0-0.847,0.302-1.54,0.799-2.082C3.768,5.507,3.501,4.718,3.924,3.65 c0,0,0.652-0.209,2.134,0.796C6.677,4.273,7.34,4.187,8,4.184c0.659,0.003,1.323,0.089,1.943,0.261 c1.482-1.004,2.132-0.796,2.132-0.796c0.423,1.068,0.157,1.857,0.077,2.054c0.497,0.542,0.798,1.235,0.798,2.082 c0,2.981-1.814,3.637-3.543,3.829c0.279,0.24,0.527,0.713,0.527,1.437c0,1.037-0.01,1.874-0.01,2.129 c0,0.208,0.14,0.449,0.534,0.373c3.081-1.028,5.302-3.935,5.302-7.362C15.76,3.906,12.285,0.431,7.999,0.431z"/></svg>
+</span><span class="username">illinois-cs241</span></a>
+
+    </div>
+  
+  
+</div>
+
+<div class="row">
+  <div class="col-md-12 col-sm-12">
+    <p>Webpage for CS 241: System Programming at the University of Illinois Urbana-Champaign. All documentation and information about the course can be found here.
+</p>
+  </div>
+</div> -->
+</div>
+
+</footer>
+
+</div>
+</body>
+</html>

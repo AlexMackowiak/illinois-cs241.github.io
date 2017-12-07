@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- Favicons -->
+  <link rel="apple-touch-icon" sizes="180x180" href="images/favicons/apple-touch-icon.png">
+  <link rel="icon" type="image/png" href="images/favicons/favicon-32x32.png" sizes="32x32">
+  <link rel="icon" type="image/png" href="images/favicons/favicon-16x16.png" sizes="16x16">
+  <link rel="manifest" href="images/favicons/manifest.json">
+  <link rel="mask-icon" href="images/favicons/safari-pinned-tab.svg" color="#5bbad5">
+  <meta name="theme-color" content="#ffffff">
+
+  <title>Signals, Part 2: Pending Signals and Signal Masks</title>
+
+  <link async rel="stylesheet" href="/lib/bootstrap-3.3.7/dist/css/bootstrap.min.css">
+  <link async rel="stylesheet" href="/css/code-style.css">
+  <link async rel="stylesheet" href="/css/main.css">
+
+</head>
+
+<body>
+<!-- Always shows a header, even in smaller screens. -->
+<nav class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <div class="container">
+        <div class="navbar-header">
+
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target=".navbar-collapse" aria-expanded="false" aria-controls="navbar">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            </button>
+
+            <a class="navbar-brand navbar-link normal" href="/">CS 241: System Programming</a>
+            <a class="navbar-brand navbar-link small" href="/">CS 241</a>
+        </div>
+
+        <div id="navbar" class="navbar-collapse collapse">
+          <ul class="nav navbar-nav">
+            <li>
+            <a class="navbar-link" href="/mps.html">MPs</a>
+            </li>
+            <li>
+            <a class="navbar-link" href="/labs.html">Labs</a>
+            </li>
+            <li>
+            <a class="navbar-link" href="/help.html">Help!</a>
+            </li>
+            <li>
+            <a class="navbar-link" href="/schedule.html">Schedule</a>
+            </li>
+            <li>
+            <a class="navbar-link" href="/honors.html">Honors</a>
+            </li>
+            <li>
+            <a class="navbar-link" href="/staff.html">The Crew</a>
+            </li>
+            <li>
+            <a class="navbar-link" href="/search.html">Search</a>
+            </li>
+            <li>
+            <a class="navbar-link" href="/wikibook/home.html">Wikibook</a>
+            </li>
+          </ul>
+        </div>
+        </div>
+</nav>
+
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-md-2 col-sm-1 col-xs-0"></div>
+    <div class="col-md-8 col-sm-10 col-xs-12">
+      <div class="wrapper">
+        <div class="pad"><div class="card">
+          <div class="title">
+            <div class="speaker-wrapper">
+              <button onclick="speak()" class="speaker" alt="Read Page"></button>
+            </div>
+            <h1>
+              Signals, Part 2: Pending Signals and Signal Masks
+              
+                <a class="github-link hidden-xs" href="https://github.com/angrave/SystemProgramming/wiki//Signals,-Part-2:-Pending-Signals-and-Signal-Masks">Edit on Github</a>
+              
+            </h1>
+          </div>
+          <div class="container-fluid"><div class="row"><div class="content col-sm-11 .col-sm-offset-1">
+            
+          </div></div></div>
+        </div></div>
+      </div>
+      <div class="toc-wrapper">
+<h4>Content</h4>
+<ul class="toc">
+<li><a id="toc_how-can-i-learn-more-about-signals" href="#how-can-i-learn-more-about-signals" class="fancy-link">How can I learn more about signals?</a></li>
+<li><a id="toc_signal-terminology" href="#signal-terminology" class="fancy-link">Signal Terminology</a></li>
+<li><a id="toc_what-is-a-processs-signal-disposition" href="#what-is-a-processs-signal-disposition" class="fancy-link">What is a process’s signal disposition?</a></li>
+<li><a id="toc_can-multiple-signals-be-queued" href="#can-multiple-signals-be-queued" class="fancy-link">Can multiple signals be queued?</a></li>
+<li><a id="toc_how-do-i-block-signals" href="#how-do-i-block-signals" class="fancy-link">How do I block signals?</a></li>
+<li><a id="toc_what-happens-when-creating-a-new-thread" href="#what-happens-when-creating-a-new-thread" class="fancy-link">What happens when creating a new thread?</a></li>
+<li><a id="toc_what-happens-when-forking" href="#what-happens-when-forking" class="fancy-link">What happens when forking?</a></li>
+<li><a id="toc_what-happens-during-exec-" href="#what-happens-during-exec-" class="fancy-link">What happens during exec ?</a></li>
+<li><a id="toc_what-happens-during-fork-" href="#what-happens-during-fork-" class="fancy-link">What happens during fork ?</a></li>
+<li><a id="toc_how-do-i-block-signals-in-a-single-threaded-program" href="#how-do-i-block-signals-in-a-single-threaded-program" class="fancy-link">How do I block signals in a single-threaded program?</a></li>
+<li><a id="toc_how-do-i-block-signals-in-a-multi-threaded-program" href="#how-do-i-block-signals-in-a-multi-threaded-program" class="fancy-link">How do I block signals in a multi-threaded program?</a></li>
+<li><a id="toc_how-are-pending-signals-delivered-in-a-multi-threaded-program" href="#how-are-pending-signals-delivered-in-a-multi-threaded-program" class="fancy-link">How are pending signals delivered in a multi-threaded program?</a></li>
+</ul>
+</div>
+      <div id="content">
+        
+        <div class="wrapper">
+
+</div>
+        <div class="wrapper">
+<div class="pad"><div class="card">
+
+<div class="container-fluid"><div class="row"><div class="content col-sm-11 .col-sm-offset-1">
+<h1 id="signals-in-depth">Signals In Depth</h1>
+<div class="pad"><div class="card">
+<div class="title"><h2 id="how-can-i-learn-more-about-signals" class="title-text">How can I learn more about signals?<a class="anchor title-text" href="#how-can-i-learn-more-about-signals">#</a>
+</h2></div>
+
+<p>The linux man pages discusses signal system calls in section 2. There is also a longer article in section 7 (though not in OSX/BSD):</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>man -s7 signal
+</code></pre></div></div>
+
+</div></div>
+<div class="pad"><div class="card">
+<div class="title"><h2 id="signal-terminology" class="title-text">Signal Terminology<a class="anchor title-text" href="#signal-terminology">#</a>
+</h2></div>
+<ul>
+  <li>Generated - The signal is being created in the kernel by the kill system call.</li>
+  <li>Pending - Not delivered yet but soon to be delivered</li>
+  <li>Blocked - Not delivered because no signal disposition lets the signal be delivered</li>
+  <li>Delivered - Delivered to the process, the action described is being taken</li>
+  <li>Caught - When the process stops a signal from destroying it and does something else with it instead</li>
+</ul>
+
+</div></div>
+<div class="pad"><div class="card">
+<div class="title"><h2 id="what-is-a-processs-signal-disposition" class="title-text">What is a process’s signal disposition?<a class="anchor title-text" href="#what-is-a-processs-signal-disposition">#</a>
+</h2></div>
+<p>For each process, each signal has a disposition which means what action will occur when a signal is delivered to the process. For example, the default disposition SIGINT is to terminate it. The signal disposition can be changed by calling signal() (which is simple but not portable as there are subtle variations in its implementation on different POSIX architectures and also not recommended for multi-threaded programs) or <code class="highlighter-rouge"><a href="https://linux.die.net/man/3/sigaction" class="fancy-link">sigaction</a></code> (discussed later). You can imagine the processes’ disposition to all possible signals as a table of function pointers entries (one for each possible signal).</p>
+
+<p>The default disposition for signals can be to ignore the signal, stop the process, continue a stopped process, terminate the process, or terminate the process and also dump a ‘core’ file. Note a core file is a representation of the processes’ memory state that can be inspected using a debugger.</p>
+
+</div></div>
+<div class="pad"><div class="card">
+<div class="title"><h2 id="can-multiple-signals-be-queued" class="title-text">Can multiple signals be queued?<a class="anchor title-text" href="#can-multiple-signals-be-queued">#</a>
+</h2></div>
+
+<p>No - however it is possible to have signals that are in a pending state. If a signal is pending, it means it has not yet been delivered to the process. The most common reason for a signal to be pending is that the process (or thread) has currently blocked that particular signal.</p>
+
+<p>If a particular signal, e.g. SIGINT, is pending then it is not possible to queue up the same signal again.</p>
+
+<p>It <em>is</em> possible to have more than one signal of a different type in a pending state. For example SIGINT and SIGTERM signals may be pending (i.e. not yet delivered to the target process)</p>
+
+</div></div>
+<div class="pad"><div class="card">
+<div class="title"><h2 id="how-do-i-block-signals" class="title-text">How do I block signals?<a class="anchor title-text" href="#how-do-i-block-signals">#</a>
+</h2></div>
+<p>Signals can be blocked (meaning they will stay in the pending state) by setting the process signal mask or, when you are writing a multi-threaded program, the thread signal mask.</p>
+
+</div></div>
+</div></div></div>
+</div></div>
+<div class="pad"><div class="card">
+
+<div class="container-fluid"><div class="row"><div class="content col-sm-11 .col-sm-offset-1">
+<h1 id="disposition-in-threadschildren">Disposition in Threads/Children</h1>
+<div class="pad"><div class="card">
+<div class="title"><h2 id="what-happens-when-creating-a-new-thread" class="title-text">What happens when creating a new thread?<a class="anchor title-text" href="#what-happens-when-creating-a-new-thread">#</a>
+</h2></div>
+<p>The new thread inherits a copy of the calling thread’s mask</p>
+<pre><code class="language-C"><a class="code-copy" rel="code-copy-0" onclick="onCopy(this);">Copy</a><span class="n">pthread_sigmask</span><span class="p">(</span> <span class="p">...</span> <span class="p">);</span> <span class="c1">// set my mask to block delivery of some signals
+</span><span class="n">pthread_create</span><span class="p">(</span> <span class="p">...</span> <span class="p">);</span> <span class="c1">// new thread will start with a copy of the same mask
+</span><textarea id="code-copy-0" class="code-copy-textarea" value="pthread_sigmask( ... ); // set my mask to block delivery of some signals
+pthread_create( ... ); // new thread will start with a copy of the same mask
+"></textarea></code></pre>
+
+</div></div>
+<div class="pad"><div class="card">
+<div class="title"><h2 id="what-happens-when-forking" class="title-text">What happens when forking?<a class="anchor title-text" href="#what-happens-when-forking">#</a>
+</h2></div>
+
+<p>The child process inherits a copy of the parent’s signal dispositions. In other words, if you have installed a SIGINT handler before forking, then the child process will also call the handler if a SIGINT is delivered to the child.</p>
+
+<p>Note pending signals for the child are <em>not</em> inherited during forking.</p>
+
+</div></div>
+<div class="pad"><div class="card">
+<div class="title"><h2 id="what-happens-during-exec-" class="title-text">What happens during exec ?<a class="anchor title-text" href="#what-happens-during-exec-">#</a>
+</h2></div>
+<p>Both the signal mask and the signal disposition carries over to the exec-ed program. <a href="Source" class="fancy-link wiki-link">https://www.gnu.org/software/libc/manual/html_node/Executing-a-File.html#Executing-a-File</a> Pending signals are preserved as well.  Signal handlers are reset, because the original handler code has disappeared along with the old process.</p>
+
+</div></div>
+<div class="pad"><div class="card">
+<div class="title"><h2 id="what-happens-during-fork-" class="title-text">What happens during fork ?<a class="anchor title-text" href="#what-happens-during-fork-">#</a>
+</h2></div>
+<p>The child process inherits a copy of the parent process’s signal disposition and a copy of the parent’s signal mask.</p>
+
+<p>For example if <code class="highlighter-rouge">SIGINT</code> is blocked in the parent it will be blocked in the child too.
+For example if the parent installed a handler (call-back function) for SIG-INT then the child will also perform the same behavior.</p>
+
+<p>Pending signals however are not inherited by the child.</p>
+
+</div></div>
+<div class="pad"><div class="card">
+<div class="title"><h2 id="how-do-i-block-signals-in-a-single-threaded-program" class="title-text">How do I block signals in a single-threaded program?<a class="anchor title-text" href="#how-do-i-block-signals-in-a-single-threaded-program">#</a>
+</h2></div>
+<p>Use <code class="highlighter-rouge"><a href="https://linux.die.net/man/3/sigprocmask" class="fancy-link">sigprocmask</a></code>! With sigprocmask you can set the new mask, add new signals to be blocked to the process mask, and unblock currently blocked signals. You can also determine the existing mask (and use it for later) by passing in a non-null value for oldset.</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>int sigprocmask(int how, const sigset_t *set, sigset_t *oldset);`
+</code></pre></div></div>
+
+<p>From the Linux man page of sigprocmask,</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>SIG_BLOCK: The set of blocked signals is the union of the current set and the set argument.
+SIG_UNBLOCK: The signals in set are removed from the current set of blocked signals. It is permissible to attempt to unblock a signal which is not blocked.
+SIG_SETMASK: The set of blocked signals is set to the argument set.
+
+</code></pre></div></div>
+<p>The sigset type behaves as a bitmap, except functions are used rather than explicitly setting and unsetting bits using &amp; and |.</p>
+
+<p>It is a common error to forget to initialize the signal set before modifying one bit. For example,</p>
+<pre><code class="language-C"><a class="code-copy" rel="code-copy-1" onclick="onCopy(this);">Copy</a><span class="n">sigset_t</span> <span class="n">set</span><span class="p">,</span> <span class="n">oldset</span><span class="p">;</span>
+<span class="n">sigaddset</span><span class="p">(</span><span class="o">&amp;</span><span class="n">set</span><span class="p">,</span> <span class="n">SIGINT</span><span class="p">);</span> <span class="c1">// Ooops!
+</span><span class="n">sigprocmask</span><span class="p">(</span><span class="n">SIG_SETMASK</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">set</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">oldset</span><span class="p">)</span>
+<textarea id="code-copy-1" class="code-copy-textarea" value="sigset_t set, oldset;
+sigaddset(&amp;amp;set, SIGINT); // Ooops!
+sigprocmask(SIG_SETMASK, &amp;amp;set, &amp;amp;oldset)
+"></textarea></code></pre>
+<p>Correct code initializes the set to be all on or all off. For example,</p>
+<pre><code class="language-C"><a class="code-copy" rel="code-copy-2" onclick="onCopy(this);">Copy</a><span class="n">sigfillset</span><span class="p">(</span><span class="o">&amp;</span><span class="n">set</span><span class="p">);</span> <span class="c1">// all signals
+</span><span class="n">sigprocmask</span><span class="p">(</span><span class="n">SIG_SETMASK</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">set</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">);</span> <span class="c1">// Block all the signals!
+// (Actually SIGKILL or SIGSTOP cannot be blocked...)
+</span>
+<span class="n">sigemptyset</span><span class="p">(</span><span class="o">&amp;</span><span class="n">set</span><span class="p">);</span> <span class="c1">// no signals 
+</span><span class="n">sigprocmask</span><span class="p">(</span><span class="n">SIG_SETMASK</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">set</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">);</span> <span class="c1">// set the mask to be empty again
+</span><textarea id="code-copy-2" class="code-copy-textarea" value="sigfillset(&amp;amp;set); // all signals
+sigprocmask(SIG_SETMASK, &amp;amp;set, NULL); // Block all the signals!
+// (Actually SIGKILL or SIGSTOP cannot be blocked...)
+
+sigemptyset(&amp;amp;set); // no signals 
+sigprocmask(SIG_SETMASK, &amp;amp;set, NULL); // set the mask to be empty again
+"></textarea></code></pre>
+
+</div></div>
+<div class="pad"><div class="card">
+<div class="title"><h2 id="how-do-i-block-signals-in-a-multi-threaded-program" class="title-text">How do I block signals in a multi-threaded program?<a class="anchor title-text" href="#how-do-i-block-signals-in-a-multi-threaded-program">#</a>
+</h2></div>
+<p>Blocking signals is similar in multi-threaded programs to single-threaded programs:</p>
+<ul>
+  <li>Use pthread_sigmask instead of sigprocmask</li>
+  <li>Block a signal in all threads to prevent its asynchronous delivery</li>
+</ul>
+
+<p>The easiest method to ensure a signal is blocked in all threads is to set the signal mask in the main thread before new threads are created</p>
+
+<pre><code class="language-C"><a class="code-copy" rel="code-copy-3" onclick="onCopy(this);">Copy</a><span class="n">sigemptyset</span><span class="p">(</span><span class="o">&amp;</span><span class="n">set</span><span class="p">);</span>
+<span class="n">sigaddset</span><span class="p">(</span><span class="o">&amp;</span><span class="n">set</span><span class="p">,</span> <span class="n">SIGQUIT</span><span class="p">);</span>
+<span class="n">sigaddset</span><span class="p">(</span><span class="o">&amp;</span><span class="n">set</span><span class="p">,</span> <span class="n">SIGINT</span><span class="p">);</span>
+<span class="n">pthread_sigmask</span><span class="p">(</span><span class="n">SIG_BLOCK</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">set</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">);</span>
+
+<span class="c1">// this thread and the new thread will block SIGQUIT and SIGINT
+</span><span class="n">pthread_create</span><span class="p">(</span><span class="o">&amp;</span><span class="n">thread_id</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">,</span> <span class="n">myfunc</span><span class="p">,</span> <span class="n">funcparam</span><span class="p">);</span>
+<textarea id="code-copy-3" class="code-copy-textarea" value="sigemptyset(&amp;amp;set);
+sigaddset(&amp;amp;set, SIGQUIT);
+sigaddset(&amp;amp;set, SIGINT);
+pthread_sigmask(SIG_BLOCK, &amp;amp;set, NULL);
+
+// this thread and the new thread will block SIGQUIT and SIGINT
+pthread_create(&amp;amp;thread_id, NULL, myfunc, funcparam);
+"></textarea></code></pre>
+
+<p>Just as we saw with sigprocmask, pthread_sigmask includes a ‘how’ parameter that defines how the signal set is to be used:</p>
+<pre><code class="language-C"><a class="code-copy" rel="code-copy-4" onclick="onCopy(this);">Copy</a><span class="n">pthread_sigmask</span><span class="p">(</span><span class="n">SIG_SETMASK</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">set</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">)</span> <span class="o">-</span> <span class="n">replace</span> <span class="n">the</span> <span class="kr">thread</span><span class="err">'</span><span class="n">s</span> <span class="n">mask</span> <span class="n">with</span> <span class="n">given</span> <span class="n">signal</span> <span class="n">set</span>
+<span class="n">pthread_sigmask</span><span class="p">(</span><span class="n">SIG_BLOCK</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">set</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">)</span> <span class="o">-</span> <span class="n">add</span> <span class="n">the</span> <span class="n">signal</span> <span class="n">set</span> <span class="n">to</span> <span class="n">the</span> <span class="kr">thread</span><span class="err">'</span><span class="n">s</span> <span class="n">mask</span>
+<span class="n">pthread_sigmask</span><span class="p">(</span><span class="n">SIG_UNBLOCK</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">set</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">)</span> <span class="o">-</span> <span class="n">remove</span> <span class="n">the</span> <span class="n">signal</span> <span class="n">set</span> <span class="n">from</span> <span class="n">the</span> <span class="kr">thread</span><span class="err">'</span><span class="n">s</span> <span class="n">mask</span>
+<textarea id="code-copy-4" class="code-copy-textarea" value="pthread_sigmask(SIG_SETMASK, &amp;amp;set, NULL) - replace the thread's mask with given signal set
+pthread_sigmask(SIG_BLOCK, &amp;amp;set, NULL) - add the signal set to the thread's mask
+pthread_sigmask(SIG_UNBLOCK, &amp;amp;set, NULL) - remove the signal set from the thread's mask
+"></textarea></code></pre>
+
+</div></div>
+<div class="pad"><div class="card">
+<div class="title"><h2 id="how-are-pending-signals-delivered-in-a-multi-threaded-program" class="title-text">How are pending signals delivered in a multi-threaded program?<a class="anchor title-text" href="#how-are-pending-signals-delivered-in-a-multi-threaded-program">#</a>
+</h2></div>
+<p>A signal is delivered to any signal thread that is not blocking that signal.</p>
+
+<p>If the two or more threads can receive the signal then which thread will be interrupted is arbitrary!</p>
+</div></div>
+</div></div></div>
+</div></div>
+</div>
+        
+        <div class="wrapper">
+</div>
+      </div>
+      <div class="col-md-2 col-sm-1 col-xs-0"></div>
+    </div>
+  </div>
+  <script>
+    var github_repo = "illinois-cs241/illinois-cs241.github.io";
+    var github_path = "_wikibook/signals-part-2-pending-signals-and-signal-masks.md";
+  </script>
+  <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML" integrity="sha384-Ra6zh6uYMmH5ydwCqqMoykyf1T/+ZcnOQfFPhDrp2kI4OIxadnhsvvA2vv9A7xYv" crossorigin="anonymous"></script>
+<script src="/lib/bootstrap-3.3.7/dist/js/bootstrap.min.js"></script>
+<script src="/js/main.js"></script>
+
+<script>
+$(document).ready(function(){
+    $('[data-toggle="popover"]').popover({
+      trigger: 'manual',
+        container: $(this).attr('id'),
+        placement: 'top',
+        content: function () {
+            return '<div class="hover-hovercard"></div>';
+        }
+    }).on("mouseenter", function () {
+        var _this = this;
+        $(this).popover("show");
+        $(this).siblings(".popover").on("mouseleave", function () {
+            $(_this).popover('hide');
+        });
+    }).on("mouseleave", function () {
+        var _this = this;
+        setTimeout(function () {
+            if (!$(".popover:hover").length) {
+               $(_this).popover("hide")
+            }
+        }, 100);
+    });
+
+    $('[data-toggle="tooltip"]').tooltip();
+});
+/*
+$('[data-toggle="popover"]').on('shown.bs.popover', function () {
+    var $pop = $(this);
+    setTimeout(function () {
+        $pop.popover('hide');
+    }, 2000);
+});*/
+</script>
+<script src="/js/analytics.js"></script>
+<footer class="">
+
+<div class="container-fluid">
+<div class="shadow"></div>
+<!--<div class="row">
+  <h4 class="col-md-3">CS 241: System Programming</h4>
+  
+    <div class="col-md-3">
+    <a href="https://github.com/illinois-cs241"><span class="icon icon--github"><svg viewBox="0 0 16 16"><path fill="#828282" d="M7.999,0.431c-4.285,0-7.76,3.474-7.76,7.761 c0,3.428,2.223,6.337,5.307,7.363c0.388,0.071,0.53-0.168,0.53-0.374c0-0.184-0.007-0.672-0.01-1.32 c-2.159,0.469-2.614-1.04-2.614-1.04c-0.353-0.896-0.862-1.135-0.862-1.135c-0.705-0.481,0.053-0.472,0.053-0.472 c0.779,0.055,1.189,0.8,1.189,0.8c0.692,1.186,1.816,0.843,2.258,0.645c0.071-0.502,0.271-0.843,0.493-1.037 C4.86,11.425,3.049,10.76,3.049,7.786c0-0.847,0.302-1.54,0.799-2.082C3.768,5.507,3.501,4.718,3.924,3.65 c0,0,0.652-0.209,2.134,0.796C6.677,4.273,7.34,4.187,8,4.184c0.659,0.003,1.323,0.089,1.943,0.261 c1.482-1.004,2.132-0.796,2.132-0.796c0.423,1.068,0.157,1.857,0.077,2.054c0.497,0.542,0.798,1.235,0.798,2.082 c0,2.981-1.814,3.637-3.543,3.829c0.279,0.24,0.527,0.713,0.527,1.437c0,1.037-0.01,1.874-0.01,2.129 c0,0.208,0.14,0.449,0.534,0.373c3.081-1.028,5.302-3.935,5.302-7.362C15.76,3.906,12.285,0.431,7.999,0.431z"/></svg>
+</span><span class="username">illinois-cs241</span></a>
+
+    </div>
+  
+  
+</div>
+
+<div class="row">
+  <div class="col-md-12 col-sm-12">
+    <p>Webpage for CS 241: System Programming at the University of Illinois Urbana-Champaign. All documentation and information about the course can be found here.
+</p>
+  </div>
+</div> -->
+</div>
+
+</footer>
+
+</body>
+</html>

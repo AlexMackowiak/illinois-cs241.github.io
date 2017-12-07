@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- Favicons -->
+  <link rel="apple-touch-icon" sizes="180x180" href="images/favicons/apple-touch-icon.png">
+  <link rel="icon" type="image/png" href="images/favicons/favicon-32x32.png" sizes="32x32">
+  <link rel="icon" type="image/png" href="images/favicons/favicon-16x16.png" sizes="16x16">
+  <link rel="manifest" href="images/favicons/manifest.json">
+  <link rel="mask-icon" href="images/favicons/safari-pinned-tab.svg" color="#5bbad5">
+  <meta name="theme-color" content="#ffffff">
+
+  <title>SSHFS Workflow Tutorial</title>
+
+  <link async rel="stylesheet" href="/lib/bootstrap-3.3.7/dist/css/bootstrap.min.css">
+  <link async rel="stylesheet" href="/css/code-style.css">
+  <link async rel="stylesheet" href="/css/main.css">
+
+</head>
+
+<body>
+<!-- Always shows a header, even in smaller screens. -->
+<nav class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <div class="container">
+        <div class="navbar-header">
+
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target=".navbar-collapse" aria-expanded="false" aria-controls="navbar">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            </button>
+
+            <a class="navbar-brand navbar-link normal" href="/">CS 241: System Programming</a>
+            <a class="navbar-brand navbar-link small" href="/">CS 241</a>
+        </div>
+
+        <div id="navbar" class="navbar-collapse collapse">
+          <ul class="nav navbar-nav">
+            <li>
+            <a class="navbar-link" href="/mps.html">MPs</a>
+            </li>
+            <li>
+            <a class="navbar-link" href="/labs.html">Labs</a>
+            </li>
+            <li>
+            <a class="navbar-link" href="/help.html">Help!</a>
+            </li>
+            <li>
+            <a class="navbar-link" href="/schedule.html">Schedule</a>
+            </li>
+            <li>
+            <a class="navbar-link" href="/honors.html">Honors</a>
+            </li>
+            <li>
+            <a class="navbar-link" href="/staff.html">The Crew</a>
+            </li>
+            <li>
+            <a class="navbar-link" href="/search.html">Search</a>
+            </li>
+            <li>
+            <a class="navbar-link" href="/wikibook/home.html">Wikibook</a>
+            </li>
+          </ul>
+        </div>
+        </div>
+</nav>
+
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-md-2 col-sm-1 col-xs-0"></div>
+    <div class="col-md-8 col-sm-10 col-xs-12">
+      <div class="wrapper">
+        <div class="pad"><div class="card">
+          <div class="title">
+            <div class="speaker-wrapper">
+              <button onclick="speak()" class="speaker" alt="Read Page"></button>
+            </div>
+            <h1>
+              SSHFS Workflow Tutorial
+              
+            </h1>
+          </div>
+          <div class="container-fluid"><div class="row"><div class="content col-sm-11 .col-sm-offset-1">
+            
+          </div></div></div>
+        </div></div>
+      </div>
+      <div class="toc-wrapper">
+<h4>Content</h4>
+<ul class="toc">
+<li><a id="toc_sshfs" href="#sshfs" class="fancy-link">SSHFS?</a></li>
+<li><a id="toc_installation" href="#installation" class="fancy-link">Installation</a></li>
+<li><a id="toc_using-sshfs" href="#using-sshfs" class="fancy-link">Using SSHFS</a></li>
+<li><a id="toc_other-useful-links" href="#other-useful-links" class="fancy-link">Other Useful Links</a></li>
+</ul>
+</div>
+      <div id="content">
+        
+        <div class="wrapper">
+
+</div>
+        <div class="wrapper">
+<div class="pad"><div class="card">
+<div class="title"><h2 id="sshfs" class="title-text">SSHFS?<a class="anchor title-text" href="#sshfs">#</a>
+</h2></div>
+
+
+
+
+
+<div class="container-fluid"><div class="row"><div class="content col-sm-11 .col-sm-offset-1">
+<p>SSHFS is a tool that allows you to mount any directory from a remote machine on your local machine, and consequently use your favorite text editor/IDE/code editing environment and still be able to compile and run your code on the remote machine.</p>
+<p>Using SSHFS means that you don’t have to include a <code class="highlighter-rouge">svn ci -m "asdf"</code> and <code class="highlighter-rouge">svn up</code> in between every small change, ad your machine can cache the files so you don’t have to deal with network lag. Essentially, SSHFS will allow you to directly edit any files that exist on a remote machine.</p>
+</div></div></div>
+</div></div>
+<div class="pad"><div class="card">
+<div class="title"><h2 id="installation" class="title-text">Installation<a class="anchor title-text" href="#installation">#</a>
+</h2></div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="container-fluid"><div class="row"><div class="content col-sm-11 .col-sm-offset-1">
+<p>You need to install SSHFS on your own machine (Windows, Linux, or MacOS).</p>
+<h3 id="ubuntudebian" class="title-text">Ubuntu/Debian</h3>
+<p>You can easily install SSHFS using apt-get as follows:</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>sudo apt-get install sshfs
+</code></pre></div></div>
+<h3 id="macos" class="title-text">MacOS</h3>
+<p>On MacOS, you can install SSHFS via FUSE and SSHFS from the <a href="https://osxfuse.github.io" class="fancy-link wiki-link">osxfuse site.</a>. You will want to download both packages.</p>
+<p>Alternativey, if you have <a href="http://brew.sh" class="fancy-link wiki-link">Homebrew</a> installed, you can also install it using these two commands:</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brew cask install osxfuse           # installs osxfuse
+brew install homebrew/fuse/sshfs    # installs sshfs
+</code></pre></div></div>
+<h3 id="windows" class="title-text">Windows</h3>
+<p>For Windows, you can either install it in the Ubuntu subsystem using apt-get, or download the <a href="https://win-sshfs.googlecode.com/files/win-sshfs-0.0.1.5-setup.exe" class="fancy-link wiki-link">win-sshfs</a> package.</p>
+</div></div></div>
+</div></div>
+<div class="pad"><div class="card">
+<div class="title"><h2 id="using-sshfs" class="title-text">Using SSHFS<a class="anchor title-text" href="#using-sshfs">#</a>
+</h2></div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="container-fluid"><div class="row"><div class="content col-sm-11 .col-sm-offset-1">
+<p>If you are trying to mount your CS241 virtual machine, you <strong>do</strong> need to be on the campus network or VPN to be able to connect. These instructions apply to Linux and MacOS. Windows will be later.</p>
+<h3 id="mounting-the-remote-filesystem" class="title-text">Mounting the Remote Filesystem</h3>
+<p>You’ll want to make a directory to mount the remote file system on. Basically, sshfs will make it a “portal” from your machine to the remote machine. The directory you make will be used in the next step.</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>mkdir ~/remote
+</code></pre></div></div>
+<p>Then, you can use sshfs to mount the file system locally. You can also specify what the entry point is on the remote machine, rather than just starting at the root of the drive (/), you can have it start in your home folder (~) or any folder, really. replace <mount_point> with the entry point you would like, or leave it empty to mount the root of the drive.</mount_point></p>
+<p>Mount point? The mount point is the directory that sshfs will give you access to. You can use the whole machine as that directory, or just your CS241 directory that contains all of your code.</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>sudo sshfs NETID@fa17--???.cs.illinois.edu:/&lt;MOUNT_POINT&gt; ~/remote
+</code></pre></div></div>
+<p>After running this command, you will be asked for your password, and then the filesystem will be mounted locally. You can test this by doing <code class="highlighter-rouge">ls ~/remote</code> to see the contents of the remote filesystem.</p>
+<p>Now, you can open any file that exists on the remote machine with any program you have installed on your own machine (Atom/Sublime Text/etc). Enjoy!</p>
+<h3 id="unmounting-the-filesystem" class="title-text">Unmounting the Filesystem</h3>
+<p>Once you’re done, you can unmount it with</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>sudo umount ~/remote
+</code></pre></div></div>
+<p>(Note: depending on where you made the mount point, you may not need sudo to unmount the remote filesystem.)</p>
+<p><strong>WARNING</strong>: When you unmount, your changes will no longer be saved, so make sure you have closed any remote files <em>before</em> unmounting the remote machine. In fact, if you have a file open in Sublime Text, and then unmount, the open file will become red, because Sublime will notice that it no longer has access to that file. You also do need to unmount before logging out or shutting down your machine, or potentially disconnecting from the Internet.</p>
+<h3 id="windows-1" class="title-text">Windows</h3>
+<p>On Windows, after sucessful installation of win-sshfs, you can open it to configure the remote filesystem. You will need to be on the campus network or VPN for this to work as well.</p>
+<p>You’ll want to add a new remote, and you can name it whatever you would like. Then, you enter the IP of the remote (for the VM’s, it is <code class="highlighter-rouge">fa17-cs241-???.cs.illinois.edu</code>). Then, enter your NETID and password in their respective boxes, and fill out the mount point you would like. You can specify / to mount at the root of the drive, and you can specify any other directory you would like. Select the drive letter, and click mount to finish the process of mounting the remote filesystem.</p>
+<p>To unmount, you can right-click the drive letter you chose earlier in My Computer and click eject.</p>
+</div></div></div>
+</div></div>
+<div class="pad"><div class="card">
+<div class="title"><h2 id="other-useful-links" class="title-text">Other Useful Links<a class="anchor title-text" href="#other-useful-links">#</a>
+</h2></div>
+
+<div class="container-fluid"><div class="row"><div class="content col-sm-11 .col-sm-offset-1"><p>I recommend that you set up SSH keys so that you don’t have to type in your password everytime you want to mount the remote filesystem or simply ssh into the remote machine. Read more <a href="https://www.digitalocean.com/community/tutorials/how-to-set-up-ssh-keys--2" class="fancy-link wiki-link">setting up SSH keys</a>. DigitalOcean also has a lot more community tutorials that cover a wide range of useful topics when using Linux-based machines.</p></div></div></div>
+</div></div>
+</div>
+        
+        <div class="wrapper">
+</div>
+      </div>
+      <div class="col-md-2 col-sm-1 col-xs-0"></div>
+    </div>
+  </div>
+  <script>
+    var github_repo = "illinois-cs241/illinois-cs241.github.io";
+    var github_path = "_tutorials/sshfs.md";
+  </script>
+  <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML" integrity="sha384-Ra6zh6uYMmH5ydwCqqMoykyf1T/+ZcnOQfFPhDrp2kI4OIxadnhsvvA2vv9A7xYv" crossorigin="anonymous"></script>
+<script src="/lib/bootstrap-3.3.7/dist/js/bootstrap.min.js"></script>
+<script src="/js/main.js"></script>
+
+<script>
+$(document).ready(function(){
+    $('[data-toggle="popover"]').popover({
+      trigger: 'manual',
+        container: $(this).attr('id'),
+        placement: 'top',
+        content: function () {
+            return '<div class="hover-hovercard"></div>';
+        }
+    }).on("mouseenter", function () {
+        var _this = this;
+        $(this).popover("show");
+        $(this).siblings(".popover").on("mouseleave", function () {
+            $(_this).popover('hide');
+        });
+    }).on("mouseleave", function () {
+        var _this = this;
+        setTimeout(function () {
+            if (!$(".popover:hover").length) {
+               $(_this).popover("hide")
+            }
+        }, 100);
+    });
+
+    $('[data-toggle="tooltip"]').tooltip();
+});
+/*
+$('[data-toggle="popover"]').on('shown.bs.popover', function () {
+    var $pop = $(this);
+    setTimeout(function () {
+        $pop.popover('hide');
+    }, 2000);
+});*/
+</script>
+<script src="/js/analytics.js"></script>
+<footer class="">
+
+<div class="container-fluid">
+<div class="shadow"></div>
+<!--<div class="row">
+  <h4 class="col-md-3">CS 241: System Programming</h4>
+  
+    <div class="col-md-3">
+    <a href="https://github.com/illinois-cs241"><span class="icon icon--github"><svg viewBox="0 0 16 16"><path fill="#828282" d="M7.999,0.431c-4.285,0-7.76,3.474-7.76,7.761 c0,3.428,2.223,6.337,5.307,7.363c0.388,0.071,0.53-0.168,0.53-0.374c0-0.184-0.007-0.672-0.01-1.32 c-2.159,0.469-2.614-1.04-2.614-1.04c-0.353-0.896-0.862-1.135-0.862-1.135c-0.705-0.481,0.053-0.472,0.053-0.472 c0.779,0.055,1.189,0.8,1.189,0.8c0.692,1.186,1.816,0.843,2.258,0.645c0.071-0.502,0.271-0.843,0.493-1.037 C4.86,11.425,3.049,10.76,3.049,7.786c0-0.847,0.302-1.54,0.799-2.082C3.768,5.507,3.501,4.718,3.924,3.65 c0,0,0.652-0.209,2.134,0.796C6.677,4.273,7.34,4.187,8,4.184c0.659,0.003,1.323,0.089,1.943,0.261 c1.482-1.004,2.132-0.796,2.132-0.796c0.423,1.068,0.157,1.857,0.077,2.054c0.497,0.542,0.798,1.235,0.798,2.082 c0,2.981-1.814,3.637-3.543,3.829c0.279,0.24,0.527,0.713,0.527,1.437c0,1.037-0.01,1.874-0.01,2.129 c0,0.208,0.14,0.449,0.534,0.373c3.081-1.028,5.302-3.935,5.302-7.362C15.76,3.906,12.285,0.431,7.999,0.431z"/></svg>
+</span><span class="username">illinois-cs241</span></a>
+
+    </div>
+  
+  
+</div>
+
+<div class="row">
+  <div class="col-md-12 col-sm-12">
+    <p>Webpage for CS 241: System Programming at the University of Illinois Urbana-Champaign. All documentation and information about the course can be found here.
+</p>
+  </div>
+</div> -->
+</div>
+
+</footer>
+
+</body>
+</html>

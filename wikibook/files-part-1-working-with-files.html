@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- Favicons -->
+  <link rel="apple-touch-icon" sizes="180x180" href="images/favicons/apple-touch-icon.png">
+  <link rel="icon" type="image/png" href="images/favicons/favicon-32x32.png" sizes="32x32">
+  <link rel="icon" type="image/png" href="images/favicons/favicon-16x16.png" sizes="16x16">
+  <link rel="manifest" href="images/favicons/manifest.json">
+  <link rel="mask-icon" href="images/favicons/safari-pinned-tab.svg" color="#5bbad5">
+  <meta name="theme-color" content="#ffffff">
+
+  <title>Files, Part 1: Working with files</title>
+
+  <link async rel="stylesheet" href="/lib/bootstrap-3.3.7/dist/css/bootstrap.min.css">
+  <link async rel="stylesheet" href="/css/code-style.css">
+  <link async rel="stylesheet" href="/css/main.css">
+
+</head>
+
+<body>
+<!-- Always shows a header, even in smaller screens. -->
+<nav class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <div class="container">
+        <div class="navbar-header">
+
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target=".navbar-collapse" aria-expanded="false" aria-controls="navbar">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            </button>
+
+            <a class="navbar-brand navbar-link normal" href="/">CS 241: System Programming</a>
+            <a class="navbar-brand navbar-link small" href="/">CS 241</a>
+        </div>
+
+        <div id="navbar" class="navbar-collapse collapse">
+          <ul class="nav navbar-nav">
+            <li>
+            <a class="navbar-link" href="/mps.html">MPs</a>
+            </li>
+            <li>
+            <a class="navbar-link" href="/labs.html">Labs</a>
+            </li>
+            <li>
+            <a class="navbar-link" href="/help.html">Help!</a>
+            </li>
+            <li>
+            <a class="navbar-link" href="/schedule.html">Schedule</a>
+            </li>
+            <li>
+            <a class="navbar-link" href="/honors.html">Honors</a>
+            </li>
+            <li>
+            <a class="navbar-link" href="/staff.html">The Crew</a>
+            </li>
+            <li>
+            <a class="navbar-link" href="/search.html">Search</a>
+            </li>
+            <li>
+            <a class="navbar-link" href="/wikibook/home.html">Wikibook</a>
+            </li>
+          </ul>
+        </div>
+        </div>
+</nav>
+
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-md-2 col-sm-1 col-xs-0"></div>
+    <div class="col-md-8 col-sm-10 col-xs-12">
+      <div class="wrapper">
+        <div class="pad"><div class="card">
+          <div class="title">
+            <div class="speaker-wrapper">
+              <button onclick="speak()" class="speaker" alt="Read Page"></button>
+            </div>
+            <h1>
+              Files, Part 1: Working with files
+              
+                <a class="github-link hidden-xs" href="https://github.com/angrave/SystemProgramming/wiki//Files,-Part-1:-Working-with-files">Edit on Github</a>
+              
+            </h1>
+          </div>
+          <div class="container-fluid"><div class="row"><div class="content col-sm-11 .col-sm-offset-1">
+            
+          </div></div></div>
+        </div></div>
+      </div>
+      <div class="toc-wrapper">
+<h4>Content</h4>
+<ul class="toc">
+<li><a id="toc_two-types-of-files" href="#two-types-of-files" class="fancy-link">Two types of files</a></li>
+<li><a id="toc_how-do-i-tell-how-large-a-file-is" href="#how-do-i-tell-how-large-a-file-is" class="fancy-link">How do I tell how large a file is?</a></li>
+<li><a id="toc_but-try-not-to-do-this" href="#but-try-not-to-do-this" class="fancy-link">But try not to do this</a></li>
+<li><a id="toc_what-happens-if-a-child-process-closes-a-filestream-using-fclose-or-close" href="#what-happens-if-a-child-process-closes-a-filestream-using-fclose-or-close" class="fancy-link">What happens if a child process closes a filestream using <code class="highlighter-rouge">fclose</code> or <code class="highlighter-rouge">close</code>?</a></li>
+<li><a id="toc_how-about-mmap-for-files" href="#how-about-mmap-for-files" class="fancy-link">How about mmap for files?</a></li>
+<li><a id="toc_for-every-mmap" href="#for-every-mmap" class="fancy-link">For every mmap</a></li>
+</ul>
+</div>
+      <div id="content">
+        
+        <div class="wrapper">
+
+</div>
+        <div class="wrapper">
+<div class="pad"><div class="card">
+<div class="title"><h2 id="two-types-of-files" class="title-text">Two types of files<a class="anchor title-text" href="#two-types-of-files">#</a>
+</h2></div>
+
+
+
+
+
+
+
+
+
+
+
+<div class="container-fluid"><div class="row"><div class="content col-sm-11 .col-sm-offset-1">
+<p>On linux, there are two abstractions with files. The first is the linux <code class="highlighter-rouge"><a href="https://linux.die.net/man/4/fd" class="fancy-link">fd</a></code> level abstraction that means you can use</p>
+<ul>
+  <li><code class="highlighter-rouge"><a href="https://linux.die.net/man/3/open" class="fancy-link">open</a></code></li>
+  <li><code class="highlighter-rouge"><a href="https://linux.die.net/man/3/read" class="fancy-link">read</a></code></li>
+  <li><code class="highlighter-rouge"><a href="https://linux.die.net/man/3/write" class="fancy-link">write</a></code></li>
+  <li><code class="highlighter-rouge"><a href="https://linux.die.net/man/3/close" class="fancy-link">close</a></code></li>
+  <li><code class="highlighter-rouge"><a href="https://linux.die.net/man/3/lseek" class="fancy-link">lseek</a></code></li>
+  <li>
+<code class="highlighter-rouge"><a href="https://linux.die.net/man/3/fcntl" class="fancy-link">fcntl</a></code>
+…</li>
+</ul>
+<p>And so on. The linux interface is very powerful and expressive, but sometimes we need portability (for example if we are writing for a mac or windows). This is where C’s abstraction comes into play. On different operating systems, C uses the low level functions to create a wrapper around files you can use everywhere, meaning that C on linux uses the above calls. C has a few of the following</p>
+<ul>
+  <li><code class="highlighter-rouge"><a href="https://linux.die.net/man/3/fopen" class="fancy-link">fopen</a></code></li>
+  <li>
+<code class="highlighter-rouge"><a href="https://linux.die.net/man/3/fread" class="fancy-link">fread</a></code> or <code class="highlighter-rouge">fgetc/fgets</code> or <code class="highlighter-rouge"><a href="https://linux.die.net/man/3/fscanf" class="fancy-link">fscanf</a></code>
+</li>
+  <li>
+<code class="highlighter-rouge"><a href="https://linux.die.net/man/3/fwrite" class="fancy-link">fwrite</a></code> or <code class="highlighter-rouge"><a href="https://linux.die.net/man/3/fprintf" class="fancy-link">fprintf</a></code>
+</li>
+  <li><code class="highlighter-rouge"><a href="https://linux.die.net/man/3/fclose" class="fancy-link">fclose</a></code></li>
+  <li><code class="highlighter-rouge"><a href="https://linux.die.net/man/3/fflush" class="fancy-link">fflush</a></code></li>
+</ul>
+<p>But you don’t get the expressiveness that linux gives you with system calls you can convert back and forth between them with <code class="highlighter-rouge">int fileno(FILE* stream)</code> and <code class="highlighter-rouge">FILE* fdopen(int fd...)</code>.</p>
+<p>Another important aspect to note is the C files are <strong>buffered</strong> meaning that their contents may not be written right away by default. You can can change that with C options.</p>
+</div></div></div>
+</div></div>
+<div class="pad"><div class="card">
+<div class="title"><h2 id="how-do-i-tell-how-large-a-file-is" class="title-text">How do I tell how large a file is?<a class="anchor title-text" href="#how-do-i-tell-how-large-a-file-is">#</a>
+</h2></div>
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="container-fluid"><div class="row"><div class="content col-sm-11 .col-sm-offset-1">
+<p>For files less than the size of a long, using fseek and ftell is a simple way to accomplish this:</p>
+<p>Move to the end of the file and find out the current position.</p>
+<pre><code class="language-C"><a class="code-copy" rel="code-copy-0" onclick="onCopy(this);">Copy</a><span class="n">fseek</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">SEEK_END</span><span class="p">);</span>
+<span class="kt">long</span> <span class="n">pos</span> <span class="o">=</span> <span class="n">ftell</span><span class="p">(</span><span class="n">f</span><span class="p">);</span>
+<textarea id="code-copy-0" class="code-copy-textarea" value="fseek(f, 0, SEEK_END);
+long pos = ftell(f);
+"></textarea></code></pre>
+<p>This tells us the current position in the file in bytes - i.e. the length of the file!</p>
+<p><code class="highlighter-rouge"><a href="https://linux.die.net/man/3/fseek" class="fancy-link">fseek</a></code> can also be used to set the absolute position.</p>
+<pre><code class="language-C"><a class="code-copy" rel="code-copy-1" onclick="onCopy(this);">Copy</a><span class="n">fseek</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">SEEK_SET</span><span class="p">);</span> <span class="c1">// Move to the start of the file 
+</span><span class="n">fseek</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">posn</span><span class="p">,</span> <span class="n">SEEK_SET</span><span class="p">);</span>  <span class="c1">// Move to 'posn' in the file.
+</span><textarea id="code-copy-1" class="code-copy-textarea" value="fseek(f, 0, SEEK_SET); // Move to the start of the file 
+fseek(f, posn, SEEK_SET);  // Move to 'posn' in the file.
+"></textarea></code></pre>
+<p>All future reads and writes in the parent or child processes will honor this position.
+Note writing or reading from the file will change the current position.</p>
+<p>See the man pages for fseek and ftell for more information.</p>
+</div></div></div>
+</div></div>
+<div class="pad"><div class="card">
+<div class="title"><h2 id="but-try-not-to-do-this" class="title-text">But try not to do this<a class="anchor title-text" href="#but-try-not-to-do-this">#</a>
+</h2></div>
+
+
+
+
+<div class="container-fluid"><div class="row"><div class="content col-sm-11 .col-sm-offset-1">
+<p><strong>Note: This is not recommended in the usual case because of a quirk with the C language</strong>. That quirk is that longs only need to be <strong>4 Bytes big</strong> meaning that the maximum size that ftell can return is a little under 2 Gigabytes (which we know nowadays our files could be hundreds of gigabytes or even terabytes on a distributed file system). What should we do instead? Use <code class="highlighter-rouge"><a href="https://linux.die.net/man/3/stat" class="fancy-link">stat</a></code>! We will cover stat in a later part but here is some code that will tell you the size of the file</p>
+<pre><code class="language-C"><a class="code-copy" rel="code-copy-2" onclick="onCopy(this);">Copy</a><span class="k">struct</span> <span class="n">stat</span> <span class="n">buf</span><span class="p">;</span>
+<span class="k">if</span><span class="p">(</span><span class="n">stat</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">buf</span><span class="p">)</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="p">){</span>
+	<span class="k">return</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="k">return</span> <span class="p">(</span><span class="kt">ssize_t</span><span class="p">)</span><span class="n">buf</span><span class="p">.</span><span class="n">st_size</span><span class="p">;</span>
+<textarea id="code-copy-2" class="code-copy-textarea" value="struct stat buf;
+if(stat(filename, &amp;amp;buf) == -1){
+	return -1;
+}
+return (ssize_t)buf.st_size;
+"></textarea></code></pre>
+<p>buf.st_size is of type off_t which is big enough for <em>insanely</em> large files.</p>
+</div></div></div>
+</div></div>
+<div class="pad"><div class="card">
+<div class="title"><h2 id="what-happens-if-a-child-process-closes-a-filestream-using-fclose-or-close" class="title-text">What happens if a child process closes a filestream using <code class="highlighter-rouge"><a href="https://linux.die.net/man/3/fclose" class="fancy-link">fclose</a></code> or <code class="highlighter-rouge"><a href="https://linux.die.net/man/3/close" class="fancy-link">close</a></code>?<a class="anchor title-text" href="#what-happens-if-a-child-process-closes-a-filestream-using-fclose-or-close">#</a>
+</h2></div>
+
+
+<div class="container-fluid"><div class="row"><div class="content col-sm-11 .col-sm-offset-1"><p>Closing a file stream is unique to each process. Other processes can continue to use their own file-handle. Remember, everything is copied over when a child is created, even the relative positions of the files.</p></div></div></div>
+</div></div>
+<div class="pad"><div class="card">
+<div class="title"><h2 id="how-about-mmap-for-files" class="title-text">How about mmap for files?<a class="anchor title-text" href="#how-about-mmap-for-files">#</a>
+</h2></div>
+
+
+
+
+
+
+<div class="container-fluid"><div class="row"><div class="content col-sm-11 .col-sm-offset-1">
+<p>One of the general uses for mmap is to map a file to memory. This does not mean that the file is malloc’ed to memory right away. Take the following code for example.</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>int fd = open(...); //File is 2 Pages
+char* addr = mmap(..fd..);
+addr[0] = 'l';
+</code></pre></div></div>
+<p>The kernel may say, “okay I see that you want to mmap the file into memory, so I’ll reserve some space in your address space that is the length of the file”. That means when you write to addr[0] that you are actually writing to the first byte of the file. The kernel can actually do some optimizations too. Instead of loading the file into memory, it may only load pages at a time because if the file is 1024 pages; you may only access 3 or 4 pages making loading the entire file a waste of time (that is why page faults are so powerful! They let the operating system take control of how much you use your files).</p>
+</div></div></div>
+</div></div>
+<div class="pad"><div class="card">
+<div class="title"><h2 id="for-every-mmap" class="title-text">For every mmap<a class="anchor title-text" href="#for-every-mmap">#</a>
+</h2></div>
+
+
+
+<div class="container-fluid"><div class="row"><div class="content col-sm-11 .col-sm-offset-1"><p>Remember that once you are done <code class="highlighter-rouge"><a href="https://linux.die.net/man/3/mmap" class="fancy-link">mmap</a></code>ping that you <code class="highlighter-rouge"><a href="https://linux.die.net/man/3/munmap" class="fancy-link">munmap</a></code> to tell the operating system that you are no longer using the pages allocated, so the OS can write it back to disk and give you the addresses back in case you need to malloc later.</p></div></div></div>
+</div></div>
+</div>
+        
+        <div class="wrapper">
+</div>
+      </div>
+      <div class="col-md-2 col-sm-1 col-xs-0"></div>
+    </div>
+  </div>
+  <script>
+    var github_repo = "illinois-cs241/illinois-cs241.github.io";
+    var github_path = "_wikibook/files-part-1-working-with-files.md";
+  </script>
+  <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML" integrity="sha384-Ra6zh6uYMmH5ydwCqqMoykyf1T/+ZcnOQfFPhDrp2kI4OIxadnhsvvA2vv9A7xYv" crossorigin="anonymous"></script>
+<script src="/lib/bootstrap-3.3.7/dist/js/bootstrap.min.js"></script>
+<script src="/js/main.js"></script>
+
+<script>
+$(document).ready(function(){
+    $('[data-toggle="popover"]').popover({
+      trigger: 'manual',
+        container: $(this).attr('id'),
+        placement: 'top',
+        content: function () {
+            return '<div class="hover-hovercard"></div>';
+        }
+    }).on("mouseenter", function () {
+        var _this = this;
+        $(this).popover("show");
+        $(this).siblings(".popover").on("mouseleave", function () {
+            $(_this).popover('hide');
+        });
+    }).on("mouseleave", function () {
+        var _this = this;
+        setTimeout(function () {
+            if (!$(".popover:hover").length) {
+               $(_this).popover("hide")
+            }
+        }, 100);
+    });
+
+    $('[data-toggle="tooltip"]').tooltip();
+});
+/*
+$('[data-toggle="popover"]').on('shown.bs.popover', function () {
+    var $pop = $(this);
+    setTimeout(function () {
+        $pop.popover('hide');
+    }, 2000);
+});*/
+</script>
+<script src="/js/analytics.js"></script>
+<footer class="">
+
+<div class="container-fluid">
+<div class="shadow"></div>
+<!--<div class="row">
+  <h4 class="col-md-3">CS 241: System Programming</h4>
+  
+    <div class="col-md-3">
+    <a href="https://github.com/illinois-cs241"><span class="icon icon--github"><svg viewBox="0 0 16 16"><path fill="#828282" d="M7.999,0.431c-4.285,0-7.76,3.474-7.76,7.761 c0,3.428,2.223,6.337,5.307,7.363c0.388,0.071,0.53-0.168,0.53-0.374c0-0.184-0.007-0.672-0.01-1.32 c-2.159,0.469-2.614-1.04-2.614-1.04c-0.353-0.896-0.862-1.135-0.862-1.135c-0.705-0.481,0.053-0.472,0.053-0.472 c0.779,0.055,1.189,0.8,1.189,0.8c0.692,1.186,1.816,0.843,2.258,0.645c0.071-0.502,0.271-0.843,0.493-1.037 C4.86,11.425,3.049,10.76,3.049,7.786c0-0.847,0.302-1.54,0.799-2.082C3.768,5.507,3.501,4.718,3.924,3.65 c0,0,0.652-0.209,2.134,0.796C6.677,4.273,7.34,4.187,8,4.184c0.659,0.003,1.323,0.089,1.943,0.261 c1.482-1.004,2.132-0.796,2.132-0.796c0.423,1.068,0.157,1.857,0.077,2.054c0.497,0.542,0.798,1.235,0.798,2.082 c0,2.981-1.814,3.637-3.543,3.829c0.279,0.24,0.527,0.713,0.527,1.437c0,1.037-0.01,1.874-0.01,2.129 c0,0.208,0.14,0.449,0.534,0.373c3.081-1.028,5.302-3.935,5.302-7.362C15.76,3.906,12.285,0.431,7.999,0.431z"/></svg>
+</span><span class="username">illinois-cs241</span></a>
+
+    </div>
+  
+  
+</div>
+
+<div class="row">
+  <div class="col-md-12 col-sm-12">
+    <p>Webpage for CS 241: System Programming at the University of Illinois Urbana-Champaign. All documentation and information about the course can be found here.
+</p>
+  </div>
+</div> -->
+</div>
+
+</footer>
+
+</body>
+</html>

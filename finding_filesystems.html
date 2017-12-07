@@ -1,0 +1,698 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- Favicons -->
+  <link rel="apple-touch-icon" sizes="180x180" href="images/favicons/apple-touch-icon.png">
+  <link rel="icon" type="image/png" href="images/favicons/favicon-32x32.png" sizes="32x32">
+  <link rel="icon" type="image/png" href="images/favicons/favicon-16x16.png" sizes="16x16">
+  <link rel="manifest" href="images/favicons/manifest.json">
+  <link rel="mask-icon" href="images/favicons/safari-pinned-tab.svg" color="#5bbad5">
+  <meta name="theme-color" content="#ffffff">
+
+  <title>Finding Filesystems</title>
+
+  <link async rel="stylesheet" href="/lib/bootstrap-3.3.7/dist/css/bootstrap.min.css">
+  <link async rel="stylesheet" href="/css/code-style.css">
+  <link async rel="stylesheet" href="/css/main.css">
+
+</head>
+
+<body>
+<!-- Always shows a header, even in smaller screens. -->
+<nav class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <div class="container">
+        <div class="navbar-header">
+
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target=".navbar-collapse" aria-expanded="false" aria-controls="navbar">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            </button>
+
+            <a class="navbar-brand navbar-link normal" href="/">CS 241: System Programming</a>
+            <a class="navbar-brand navbar-link small" href="/">CS 241</a>
+        </div>
+
+        <div id="navbar" class="navbar-collapse collapse">
+          <ul class="nav navbar-nav">
+            <li>
+            <a class="navbar-link" href="/mps.html">MPs</a>
+            </li>
+            <li>
+            <a class="navbar-link" href="/labs.html">Labs</a>
+            </li>
+            <li>
+            <a class="navbar-link" href="/help.html">Help!</a>
+            </li>
+            <li>
+            <a class="navbar-link" href="/schedule.html">Schedule</a>
+            </li>
+            <li>
+            <a class="navbar-link" href="/honors.html">Honors</a>
+            </li>
+            <li>
+            <a class="navbar-link" href="/staff.html">The Crew</a>
+            </li>
+            <li>
+            <a class="navbar-link" href="/search.html">Search</a>
+            </li>
+            <li>
+            <a class="navbar-link" href="/wikibook/home.html">Wikibook</a>
+            </li>
+          </ul>
+        </div>
+        </div>
+</nav>
+
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-md-2 col-sm-1 col-xs-0"></div>
+    <div class="col-md-8 col-sm-10 col-xs-12">
+      <div class="wrapper">
+        <div class="pad"><div class="card">
+          <div class="title">
+            <div class="speaker-wrapper">
+              <button onclick="speak()" class="speaker" alt="Read Page"></button>
+            </div>
+            <h1>
+              Finding Filesystems
+              
+                <a class="github-link hidden-xs" href="https://github.com/illinois-cs241/illinois-cs241.github.io/blob/develop/_docs/finding_filesystems.md">Edit on Github</a>
+              
+            </h1>
+          </div>
+          <div class="container-fluid"><div class="row"><div class="content col-sm-11 .col-sm-offset-1">
+            
+              <div class="submission-wrapper">
+                
+                  <b>Entire Assignment</b> due <b>11/29/2017 11:59pm</b><br/>
+                  
+                    <b>Graded files:</b>
+                    <ul>
+                      
+                        <li>fs.c</li>
+                      
+                    </ul>
+                  
+                
+              </div>
+            
+          </div></div></div>
+        </div></div>
+      </div>
+      <div class="toc-wrapper">
+<h4>Content</h4>
+<ul class="toc">
+<li><a id="toc_overview" href="#overview" class="fancy-link">Overview</a></li>
+<li><a id="toc_minixfs" href="#minixfs" class="fancy-link">minixfs</a></li>
+<li><a id="toc_helper-functionsmacros" href="#helper-functionsmacros" class="fancy-link">Helper Functions/Macros</a></li>
+<li><a id="toc_cat" href="#cat" class="fancy-link"><code class="highlighter-rouge">cat</code></a></li>
+<li><a id="toc_ls" href="#ls" class="fancy-link"><code class="highlighter-rouge">ls</code></a></li>
+<li><a id="toc_testing" href="#testing" class="fancy-link">Testing</a></li>
+<li><a id="toc_other-edge-cases" href="#other-edge-cases" class="fancy-link">Other Edge Cases</a></li>
+<li><a id="toc_helpful-hints-and-notes" href="#helpful-hints-and-notes" class="fancy-link">Helpful Hints and Notes</a></li>
+<li><a id="toc_graded-files" href="#graded-files" class="fancy-link">Graded Files</a></li>
+</ul>
+</div>
+      <div id="content">
+        
+        <div class="wrapper">
+  <div class="pad"><div class="card">
+<div class="title"><h2 id="learning-objectives" class="title-text">Learning Objectives<a class="anchor title-text" href="#learning-objectives">#</a>
+</h2></div>
+  
+  
+
+
+  <div class="container-fluid"><div class="row"><div class="content col-sm-11 .col-sm-offset-1">
+<p>
+    The learning objectives for Finding Filesystems are: <br>
+    </p>
+<ul class="mdl-list">
+      
+        <li class="mdl-list__item">
+          <span class="mdl-list__item-primary-content">Learn how inodes are represented in the kernel</span>
+        </li>
+      
+        <li class="mdl-list__item">
+          <span class="mdl-list__item-primary-content">How to write commands like `ls` and `cat`</span>
+        </li>
+      
+        <li class="mdl-list__item">
+          <span class="mdl-list__item-primary-content">Traverse singly indirect blocks</span>
+        </li>
+      
+    </ul>
+</div></div></div>
+</div></div>
+<div class="pad"><div class="card">
+<div class="title"><h2 id="suggested-readings" class="title-text">Suggested Readings<a class="anchor title-text" href="#suggested-readings">#</a>
+</h2></div>
+  
+  
+
+<div class="container-fluid"><div class="row"><div class="content col-sm-11 .col-sm-offset-1">
+<p>
+    We suggest you read the following from the
+    <a href="https://github.com/angrave/SystemProgramming/wiki" class="fancy-link wiki-link">wikibook</a>
+    before starting Finding Filesystems: <br>
+    </p>
+<ul>
+      
+        <li>
+          <a href="/wikibook/file-system-part-1-introduction.html#" target="_blank" class="fancy-link wiki-link">File System, Part 1: Introduction
+          </a>
+        </li>
+      
+        <li>
+          <a href="/wikibook/file-system-part-2-files-are-inodes-(everything-else-is-just-data...).html#" target="_blank" class="fancy-link wiki-link">File System, Part 2: Files are inodes (everything else is just data...)
+          </a>
+        </li>
+      
+        <li>
+          <a href="/wikibook/file-system-part-3-permissions.html#" target="_blank" class="fancy-link wiki-link">File System, Part 3: Permissions
+          </a>
+        </li>
+      
+        <li>
+          <a href="/wikibook/file-system-part-4-working-with-directories.html#" target="_blank" class="fancy-link wiki-link">File System, Part 4: Working with directories
+          </a>
+        </li>
+      
+    </ul>
+</div></div></div>
+</div></div>
+</div>
+        <div class="wrapper">
+<div class="pad"><div class="card">
+<div class="title"><h2 id="overview" class="title-text">Overview<a class="anchor title-text" href="#overview">#</a>
+</h2></div>
+
+
+
+
+
+<div class="container-fluid"><div class="row"><div class="content col-sm-11 .col-sm-offset-1">
+<p>Your friendly neighborhood 241 course staff asked themselves, <em>“What’s the best way to learn filesystems?”</em> Write one!</p>
+<p>In this lab, you will be implementing two utilities, <code class="highlighter-rouge"><a href="https://linux.die.net/man/1/ls" class="fancy-link">ls</a></code> and <code class="highlighter-rouge"><a href="https://linux.die.net/man/1/cat" class="fancy-link">cat</a></code>, on the filesystem level. Normally, these commands make system calls to do work for them, but now they are going under the hood. You will be exploring how metadata is stored in the inode and how data is stored in the data blocks.</p>
+</div></div></div>
+</div></div>
+<div class="pad"><div class="card">
+<div class="title"><h2 id="minixfs" class="title-text">minixfs<a class="anchor title-text" href="#minixfs">#</a>
+</h2></div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="container-fluid"><div class="row"><div class="content col-sm-11 .col-sm-offset-1">
+<p>ext2 is good filesystem, but to keep things simple, we will be using a modified version of its predecessor (the <a href="https://en.wikipedia.org/wiki/MINIX_file_system" class="fancy-link wiki-link">MINIX filesystem</a>) in this lab.</p>
+<h3 id="superblock" class="title-text">Superblock</h3>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+typedef struct {
+	uint64_t size;
+	uint64_t inode_count;
+	uint64_t dblock_count;
+	char data_map[0];
+} superblock;
+
+</code></pre></div></div>
+<p>The superblock stores information like the size of the filesystem, the number of inodes and data blocks, and whether those data blocks are being used. Remember from class that inodes become free when their hard link count reaches zero, but data blocks need some kind of bitmap or sentinel to indicate if they are being used. <code class="highlighter-rouge">data_map</code> is a variable-sized array that holds this information. <strong>You don’t need to worry about these abstractions, they are taken care of for you</strong>.</p>
+<h3 id="inodes" class="title-text">Inodes</h3>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+typedef struct {
+	uint8_t 	uid;				/* user ID of owner */
+	uint8_t 	gid;				/* group ID of owner */
+	uint16_t 	mode;				/* &lt;d,f,c,p&gt;rwxrwxrwx */
+	uint32_t 	nlink;				/* number of hard links, reference count, when hit 0 */
+	time_t 		atim;				/* time of last access */
+	time_t 		mtim;				/* time of last modification */
+	time_t 		ctim;				/* time of last status change */
+	uint64_t 	size;				/* total size, in bytes */
+	data_block_number direct[NUM_DIRECT_INODES], /* data_blocks */
+			  indirect;		/* points to a singly indirect block */
+} inode;
+
+</code></pre></div></div>
+<p>This is the famous inode struct that you have been learning about! Here are a breakdown of the variables:</p>
+<ul>
+  <li>
+<code class="highlighter-rouge"><a href="https://linux.die.net/man/3/uid" class="fancy-link">uid</a></code> is the user ID of the inode owner.</li>
+  <li>
+<code class="highlighter-rouge">gid</code> is the ID of the inode group (does not have to include the owner).</li>
+  <li>
+<code class="highlighter-rouge">mode</code> is a bitmask. The bottom 9 bits are read-write-execute for owner-group-others. Bits 11-10 are the type of the file. <code class="highlighter-rouge">(mode &gt;&gt; 9)</code> corresponds to a particular type. We have given you two functions, <code class="highlighter-rouge">is_file</code> and <code class="highlighter-rouge">is_directory</code>, that tell you whether or not the inode represents a directory or file. There are no other types in our filesystem.</li>
+  <li>
+<code class="highlighter-rouge">nlink</code> is the hard link count which is the number of directories that the file is linked to from (directories can’t be hard linked).</li>
+  <li>
+<code class="highlighter-rouge">atim</code> is access time, which is the time of last access or the last time a file was <code class="highlighter-rouge">read(2)</code>. You don’t need to worry about changing this.</li>
+  <li>
+<code class="highlighter-rouge">mtim</code> is the last modification time, or in other words, the last time the file’s metadata was changed.</li>
+  <li>
+<code class="highlighter-rouge">ctim</code> is the last change time, or in other words, the last time the file was changed with <code class="highlighter-rouge">write(2)</code>.</li>
+  <li>
+<code class="highlighter-rouge"><a href="https://linux.die.net/man/1/size" class="fancy-link">size</a></code> is the size of the file in bytes</li>
+  <li>
+<code class="highlighter-rouge">direct</code> is an array where the <code class="highlighter-rouge">direct[i]</code> is the <code class="highlighter-rouge"><a href="https://linux.die.net/man/3/i" class="fancy-link">i</a></code>th data block’s offset from the <code class="highlighter-rouge">data_root</code>.</li>
+  <li>
+<code class="highlighter-rouge">indirect</code> is the offset number (<code class="highlighter-rouge">data_block_number</code>) of a data block, which contains <code class="highlighter-rouge">NUM_DIRECT_INODES</code> number of <code class="highlighter-rouge">data_block_number</code>’s.</li>
+</ul>
+<h3 id="data-blocks" class="title-text">Data blocks</h3>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>typedef struct {
+	char data[16 * KILOBYTE];
+} data_block;
+
+</code></pre></div></div>
+<p>Data blocks are currently defined to be 16 kilobytes. Nothing fancy here.</p>
+<h3 id="file_system-struct" class="title-text">file_system struct</h3>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+typedef struct {
+	superblock* meta;
+	inode* inode_root;
+	data_block* data_root;
+} file_system;
+
+</code></pre></div></div>
+<p><img src="http://cs241.cs.illinois.edu/images/map.png" alt=""></p>
+<p>The <code class="highlighter-rouge">file_system</code> struct keeps track of the metadata, the root inode (where <code class="highlighter-rouge">fs-&gt;inode_root[0]</code> is the root <code class="highlighter-rouge">"/"</code> inode), and the root of the <code class="highlighter-rouge">data_block</code>s.</p>
+<ul>
+  <li>The <code class="highlighter-rouge"><a href="https://linux.die.net/man/3/meta" class="fancy-link">meta</a></code> pointer points to the start of the file system, which includes the superblock and the <code class="highlighter-rouge">data_map</code>.</li>
+  <li>The <code class="highlighter-rouge">inode_root</code> points to the start of the inodes as in the picture, right after the <code class="highlighter-rouge">data_map</code>.</li>
+  <li>The <code class="highlighter-rouge">data_root</code> points to the start of the <code class="highlighter-rouge">data_blocks</code> as in the picture, right after the inodes.</li>
+</ul>
+<p>The inodes and data blocks are laid sequentially out so you can treat them like an array. Think about how you could get a pointer to the nth <code class="highlighter-rouge">data_block</code>.</p>
+</div></div></div>
+</div></div>
+<div class="pad"><div class="card">
+<div class="title"><h2 id="helper-functionsmacros" class="title-text">Helper Functions/Macros<a class="anchor title-text" href="#helper-functionsmacros">#</a>
+</h2></div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="container-fluid"><div class="row"><div class="content col-sm-11 .col-sm-offset-1">
+<p>There are some functions that you are going to need to know in order to finish this lab.</p>
+<h3 id="get_inode" class="title-text"><code class="highlighter-rouge">get_inode</code></h3>
+<p>This function takes a string name like <code class="highlighter-rouge">/path/to/file</code> and returns the inode corresponding to the file at end of that path. <code class="highlighter-rouge">get_inode</code> returns NULL when the intended file does not exist or the file is invalid.</p>
+<h3 id="print_no_file_or_directoryformat" class="title-text">
+<code class="highlighter-rouge">print_no_file_or_directory</code> (format)</h3>
+<p>Only call this when there is no file or directory, i.e. when <code class="highlighter-rouge">get_inode</code> returns NULL.</p>
+<h3 id="print_file--print_directory-format" class="title-text">
+<code class="highlighter-rouge">print_file</code> / <code class="highlighter-rouge">print_directory </code> (format)</h3>
+<p>You should pass in the filename (not the entire path). These methods will format the output for a terminal and add a forward slash if it is a directory.</p>
+<h3 id="is_file--is_directory" class="title-text">
+<code class="highlighter-rouge">is_file</code> / <code class="highlighter-rouge">is_directory</code>
+</h3>
+<p>Call <code class="highlighter-rouge">is_file</code> or <code class="highlighter-rouge">is_directory</code> on an inode to tell whether it is a directory or a file. You don’t need to consider other inode types.</p>
+<h3 id="num_direct_inodes" class="title-text"><code class="highlighter-rouge">NUM_DIRECT_INODES</code></h3>
+<p><code class="highlighter-rouge">NUM_DIRECT_INODES</code> is the number of direct <code class="highlighter-rouge">data_block</code> nodes in a single inode. The <code class="highlighter-rouge">indirect</code> array has only this many entries (for the sake of simplicity).</p>
+<h3 id="unassigned_node" class="title-text"><code class="highlighter-rouge">UNASSIGNED_NODE</code></h3>
+<p>You may not need to use this macro, but if you choose to, then any <code class="highlighter-rouge">data_block</code> or <code class="highlighter-rouge">inode</code> that is not currently being used will have this number.</p>
+</div></div></div>
+</div></div>
+<div class="pad"><div class="card">
+<div class="title"><h2 id="cat" class="title-text">
+<code class="highlighter-rouge"><a href="https://linux.die.net/man/1/cat" class="fancy-link">cat</a></code><a class="anchor title-text" href="#cat">#</a>
+</h2></div>
+
+
+
+
+
+<div class="container-fluid"><div class="row"><div class="content col-sm-11 .col-sm-offset-1">
+<p>So, each inode block has data blocks attached. Each data block’s address can be addressed like <code class="highlighter-rouge">file_system-&gt;data_root[inode-&gt;direct[0]]</code>, for example, for the 0th <code class="highlighter-rouge">data_block</code> of that inode. The <code class="highlighter-rouge">data_block</code>s run for <code class="highlighter-rouge">sizeof(data_block)</code> bytes. Your job is to write a function that loops through all of the data blocks in the node (possibly including indirect blocks) and prints out all of the bytes to standard out. Check out a simple, complex, and very complex example in the testing section.</p>
+<p>If <code class="highlighter-rouge">get_inode</code> indicates the inode doesn’t exist, then call <code class="highlighter-rouge">print_no_file_or_directory</code> and return.</p>
+</div></div></div>
+</div></div>
+<div class="pad"><div class="card">
+<div class="title"><h2 id="ls" class="title-text">
+<code class="highlighter-rouge"><a href="https://linux.die.net/man/1/ls" class="fancy-link">ls</a></code><a class="anchor title-text" href="#ls">#</a>
+</h2></div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="container-fluid"><div class="row"><div class="content col-sm-11 .col-sm-offset-1">
+<p><strong>For files/directories that don’t exist:</strong></p>
+<p>Call <code class="highlighter-rouge">print_no_file_or_directory</code> and return.</p>
+<p><strong>For files:</strong></p>
+<p>Print out the filename using <code class="highlighter-rouge">print_file(char*)</code></p>
+<p><strong>For directories:</strong></p>
+<p>Our directory <code class="highlighter-rouge">data_blocks</code> look like the following:</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+|--248 Byte Name String--||-8 Byte Inode Number-|
+|--248 Byte Name String--||-8 Byte Inode Number-|
+...
+
+</code></pre></div></div>
+<p>The filesystem guarantees that size of a directory is a multiple of 256. You need to loop through all of the directory entries and get the name of the entry, and print it out to standard out. You are going to need to call two different print functions based on whether the inode that you are pointing to is a directory or a file, which means you have to get the inode number and check that inode.</p>
+<p>Use <code class="highlighter-rouge">make_dirent_from_string</code>: it accepts a <code class="highlighter-rouge">char* ptr</code> to the start of a dirent block like this.</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+|--248 Byte Name String--||-8 Byte Inode Number-|
+^ -- Points here
+</code></pre></div></div>
+<p>The function then fills out a reference to the passed in struct with the name and the inode number as an <code class="highlighter-rouge">inode_num</code>.</p>
+<p>Again, if your inode doesn’t exist, just use the format function to print no file or directory and return.</p>
+</div></div></div>
+</div></div>
+<div class="pad"><div class="card">
+<div class="title"><h2 id="testing" class="title-text">Testing<a class="anchor title-text" href="#testing">#</a>
+</h2></div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="container-fluid"><div class="row"><div class="content col-sm-11 .col-sm-offset-1">
+<p><strong>Testing is ungraded, but highly recommended</strong></p>
+<p>You can grab the test filesystem using <code class="highlighter-rouge">make testfs</code>. <strong>Do not commit this file. If you overwrite it for any reason just <code class="highlighter-rouge">rm test.fs</code> and do <code class="highlighter-rouge">make testfs</code> again</strong></p>
+<p>Note: There’s a small chance that <code class="highlighter-rouge">make testfs</code> can fail - in this case <code class="highlighter-rouge">rm test.fs</code> and <code class="highlighter-rouge">make testfs</code> again.</p>
+<p>make will generate the minixfs executable that you can use for testing.
+The <code class="highlighter-rouge">goodies</code> directory is also included and can also be used to check against the /goodies directory in test.fs.
+For example, the output of:
+<code class="highlighter-rouge">./minixfs test.fs cat /goodies/hello.txt</code> should be the same as <code class="highlighter-rouge">cat ./goodies/hello.txt</code></p>
+<p>Here are some sample (and not comprehensive) testcases!</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ ./minixfs test.fs ls /
+you
+got
+ls!
+congrats
+[more stuff]
+$
+</code></pre></div></div>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ ./minixfs test.fs ls /directory
+nice
+recursion
+$
+</code></pre></div></div>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+$ ./minixfs test.fs ls /directory_alot
+file1
+file2
+...
+file70
+$
+</code></pre></div></div>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ ./minixfs test.fs ls /directory_alot_alot
+file1
+file2
+...
+file710
+$
+</code></pre></div></div>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ ./minixfs test.fs cat /goodies/hello.txt
+Hello World!
+$
+</code></pre></div></div>
+<p>You can even cat directories!</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ ./minixfs test.fs cat /
+you00000001got00000002ls!00000003congrats00000004 [...]
+$
+</code></pre></div></div>
+<p>So that’s what really is going on under the hood?</p>
+<p>Want something fun?</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+$ ./minixfs test.fs cat /goodies/dog.png &gt; dog.png
+$ xdg-open dog.png
+
+</code></pre></div></div>
+<p>You can store anything on filesystems. See what we hid around the testfs filesystem for you…</p>
+<p>You can also test by generating your own filesystems. To this end, we have included a script <code class="highlighter-rouge">./make_fs.sh</code> and the executable <code class="highlighter-rouge">minixfs-creator</code>. To make your own filesystem, create a directory, put some files in created directory, then run <code class="highlighter-rouge">./make_fs.sh [name of created directory] [outputfile]</code> where the outputfile is what you want for the generated filesystem to be named. This is useful if you want to test out something different than what’s provided in test.fs (e.g. ls when there’s only 1 file in the directory, or trying to cat files larger than what we’ve provided in test.fs).</p>
+</div></div></div>
+</div></div>
+<div class="pad"><div class="card">
+<div class="title"><h2 id="other-edge-cases" class="title-text">Other Edge Cases<a class="anchor title-text" href="#other-edge-cases">#</a>
+</h2></div>
+
+
+
+<div class="container-fluid"><div class="row"><div class="content col-sm-11 .col-sm-offset-1"><ul>
+  <li>You don’t need to update <code class="highlighter-rouge">atim</code> and the <code class="highlighter-rouge">ctim</code>.</li>
+  <li>You don’t need to worry about data corruption or checksums or anything fancy, the filesystem will be valid.</li>
+  <li>Make sure you can <code class="highlighter-rouge"><a href="https://linux.die.net/man/1/ls" class="fancy-link">ls</a></code> the <code class="highlighter-rouge">/directory_alot</code> and the <code class="highlighter-rouge">/directory_alot_alot</code>; these test if you go over multiple data blocks.</li>
+  <li>Make sure all the files you cat out in <code class="highlighter-rouge">/goodies</code> look correct when you <code class="highlighter-rouge"><a href="https://linux.die.net/man/1/xdg-open" class="fancy-link">xdg-open</a></code> them. Make sure you can get the PNGs and the PDFs to print out correctly.</li>
+</ul></div></div></div>
+</div></div>
+<div class="pad"><div class="card">
+<div class="title"><h2 id="helpful-hints-and-notes" class="title-text">Helpful Hints and Notes<a class="anchor title-text" href="#helpful-hints-and-notes">#</a>
+</h2></div>
+
+
+
+<div class="container-fluid"><div class="row"><div class="content col-sm-11 .col-sm-offset-1"><ul>
+  <li>Handle the edge conditions. You can assume that size will be valid. What is the code supposed to do when you get to a singly indirect block?</li>
+  <li>Draw pictures! Understand what each of the things in the structs mean.</li>
+  <li>Review your pointer arithmetic.</li>
+  <li>
+<strong>Only</strong> change<code class="highlighter-rouge">fs.c</code>.</li>
+</ul></div></div></div>
+</div></div>
+<div class="pad"><div class="card">
+<div class="title"><h2 id="graded-files" class="title-text">Graded Files<a class="anchor title-text" href="#graded-files">#</a>
+</h2></div>
+
+
+
+
+<div class="container-fluid"><div class="row"><div class="content col-sm-11 .col-sm-offset-1">
+<ul>
+  <li><code class="highlighter-rouge">fs.c</code></li>
+</ul>
+<p><strong>Anything not specified in these docs is considered undefined behavior, and we will not test it.</strong></p>
+</div></div></div>
+</div></div>
+</div>
+        
+        <div class="wrapper">
+<div class="pad"><div class="card">
+<div class="title"><h2 id="submission-instructions" class="title-text">Submission Instructions<a class="anchor title-text" href="#submission-instructions">#</a>
+</h2></div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="container-fluid"><div class="row"><div class="content col-sm-11 .col-sm-offset-1">
+<p>Please read details on <a href="http://illinois-cs241.github.io/#academic-integrity" class="fancy-link wiki-link">Academic Integrity</a> fully. These are shared by all assignments in CS 241.</p>
+<p>We will be using Subversion as our hand-in system this semester. Our grading system will checkout your most recent (pre-deadline) commit for grading. Therefore, to hand in your code, all you have to do is commit it to your Subversion repository.</p>
+<p>To check out the provided code for <code class="highlighter-rouge">finding_filesystems</code> from the class repository, go to your cs241 directory (the one you checked out for “know your tools”) and run:</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>svn up
+</code></pre></div></div>
+<p>If you run <code class="highlighter-rouge"><a href="https://linux.die.net/man/1/ls" class="fancy-link">ls</a></code> you will now see a <code class="highlighter-rouge">finding_filesystems</code> folder, where you can find this assignment! To commit your changes (send them to us), type:</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>svn ci -m "finding_filesystems submission"
+</code></pre></div></div>
+<p>Your repository directory can be viewed from a web browser from the following URL: <a href="https://subversion.ews.illinois.edu/svn/fa17-cs241/NETID/finding_filesystems" class="fancy-link wiki-link">https://subversion.ews.illinois.edu/svn/fa17-cs241/NETID/finding_filesystems</a>, where NETID is your University NetID. It is important to check that the files you expect to be graded are present and up to date in your SVN copy.</p>
+</div></div></div>
+</div></div>
+<div class="pad"><div class="card">
+<div class="title"><h2 id="assignment-feedback" class="title-text">Assignment Feedback<a class="anchor title-text" href="#assignment-feedback">#</a>
+</h2></div>
+
+
+
+
+
+
+
+<div class="container-fluid"><div class="row"><div class="content col-sm-11 .col-sm-offset-1">
+<p>We strive to provide the best assignments that we can for this course, and we would like your feedback on them!</p>
+<p>This is the form we will use to evaluate our assignments. We appreciate the time you take to give us your honest feedback and we promise to keep improving the course to make your experience in CS 241 the best it can be.</p>
+<p><a href="https://goo.gl/forms/hREf0ojFWumYfQF12" class="fancy-link wiki-link">https://goo.gl/forms/hREf0ojFWumYfQF12</a></p>
+</div></div></div>
+</div></div>
+</div>
+      </div>
+      <div class="col-md-2 col-sm-1 col-xs-0"></div>
+    </div>
+  </div>
+  <script>
+    var github_repo = "illinois-cs241/illinois-cs241.github.io";
+    var github_path = "_docs/finding_filesystems.md";
+  </script>
+  <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML" integrity="sha384-Ra6zh6uYMmH5ydwCqqMoykyf1T/+ZcnOQfFPhDrp2kI4OIxadnhsvvA2vv9A7xYv" crossorigin="anonymous"></script>
+<script src="/lib/bootstrap-3.3.7/dist/js/bootstrap.min.js"></script>
+<script src="/js/main.js"></script>
+
+<script>
+$(document).ready(function(){
+    $('[data-toggle="popover"]').popover({
+      trigger: 'manual',
+        container: $(this).attr('id'),
+        placement: 'top',
+        content: function () {
+            return '<div class="hover-hovercard"></div>';
+        }
+    }).on("mouseenter", function () {
+        var _this = this;
+        $(this).popover("show");
+        $(this).siblings(".popover").on("mouseleave", function () {
+            $(_this).popover('hide');
+        });
+    }).on("mouseleave", function () {
+        var _this = this;
+        setTimeout(function () {
+            if (!$(".popover:hover").length) {
+               $(_this).popover("hide")
+            }
+        }, 100);
+    });
+
+    $('[data-toggle="tooltip"]').tooltip();
+});
+/*
+$('[data-toggle="popover"]').on('shown.bs.popover', function () {
+    var $pop = $(this);
+    setTimeout(function () {
+        $pop.popover('hide');
+    }, 2000);
+});*/
+</script>
+<script src="/js/analytics.js"></script>
+<footer class="">
+
+<div class="container-fluid">
+<div class="shadow"></div>
+<!--<div class="row">
+  <h4 class="col-md-3">CS 241: System Programming</h4>
+  
+    <div class="col-md-3">
+    <a href="https://github.com/illinois-cs241"><span class="icon icon--github"><svg viewBox="0 0 16 16"><path fill="#828282" d="M7.999,0.431c-4.285,0-7.76,3.474-7.76,7.761 c0,3.428,2.223,6.337,5.307,7.363c0.388,0.071,0.53-0.168,0.53-0.374c0-0.184-0.007-0.672-0.01-1.32 c-2.159,0.469-2.614-1.04-2.614-1.04c-0.353-0.896-0.862-1.135-0.862-1.135c-0.705-0.481,0.053-0.472,0.053-0.472 c0.779,0.055,1.189,0.8,1.189,0.8c0.692,1.186,1.816,0.843,2.258,0.645c0.071-0.502,0.271-0.843,0.493-1.037 C4.86,11.425,3.049,10.76,3.049,7.786c0-0.847,0.302-1.54,0.799-2.082C3.768,5.507,3.501,4.718,3.924,3.65 c0,0,0.652-0.209,2.134,0.796C6.677,4.273,7.34,4.187,8,4.184c0.659,0.003,1.323,0.089,1.943,0.261 c1.482-1.004,2.132-0.796,2.132-0.796c0.423,1.068,0.157,1.857,0.077,2.054c0.497,0.542,0.798,1.235,0.798,2.082 c0,2.981-1.814,3.637-3.543,3.829c0.279,0.24,0.527,0.713,0.527,1.437c0,1.037-0.01,1.874-0.01,2.129 c0,0.208,0.14,0.449,0.534,0.373c3.081-1.028,5.302-3.935,5.302-7.362C15.76,3.906,12.285,0.431,7.999,0.431z"/></svg>
+</span><span class="username">illinois-cs241</span></a>
+
+    </div>
+  
+  
+</div>
+
+<div class="row">
+  <div class="col-md-12 col-sm-12">
+    <p>Webpage for CS 241: System Programming at the University of Illinois Urbana-Champaign. All documentation and information about the course can be found here.
+</p>
+  </div>
+</div> -->
+</div>
+
+</footer>
+
+</body>
+</html>

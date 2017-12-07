@@ -1,0 +1,22 @@
+language: ruby
+rvm:
+    - 2.2
+branches:
+    only:
+        develop
+before_install:
+    - sudo apt-get update
+    - sudo apt-get install python3 tidy pandoc oracle-java8-set-default
+before_script:
+    - $TRAVIS_BUILD_DIR/_scripts/before_script.sh
+after_success:
+    - $TRAVIS_BUILD_DIR/_scripts/after_success.sh
+deploy:
+    local_dir: _site
+    provider: pages
+    skip_cleanup: true
+    github_token: $GITHUB_TOKEN 
+    target_branch: master
+    fqdn: cs241.cs.illinois.edu
+    on:
+        branch: develop

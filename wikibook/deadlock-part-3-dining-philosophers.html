@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- Favicons -->
+  <link rel="apple-touch-icon" sizes="180x180" href="images/favicons/apple-touch-icon.png">
+  <link rel="icon" type="image/png" href="images/favicons/favicon-32x32.png" sizes="32x32">
+  <link rel="icon" type="image/png" href="images/favicons/favicon-16x16.png" sizes="16x16">
+  <link rel="manifest" href="images/favicons/manifest.json">
+  <link rel="mask-icon" href="images/favicons/safari-pinned-tab.svg" color="#5bbad5">
+  <meta name="theme-color" content="#ffffff">
+
+  <title>Deadlock, Part 3: Dining Philosophers</title>
+
+  <link async rel="stylesheet" href="/lib/bootstrap-3.3.7/dist/css/bootstrap.min.css">
+  <link async rel="stylesheet" href="/css/code-style.css">
+  <link async rel="stylesheet" href="/css/main.css">
+
+</head>
+
+<body>
+<!-- Always shows a header, even in smaller screens. -->
+<nav class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <div class="container">
+        <div class="navbar-header">
+
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target=".navbar-collapse" aria-expanded="false" aria-controls="navbar">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            </button>
+
+            <a class="navbar-brand navbar-link normal" href="/">CS 241: System Programming</a>
+            <a class="navbar-brand navbar-link small" href="/">CS 241</a>
+        </div>
+
+        <div id="navbar" class="navbar-collapse collapse">
+          <ul class="nav navbar-nav">
+            <li>
+            <a class="navbar-link" href="/mps.html">MPs</a>
+            </li>
+            <li>
+            <a class="navbar-link" href="/labs.html">Labs</a>
+            </li>
+            <li>
+            <a class="navbar-link" href="/help.html">Help!</a>
+            </li>
+            <li>
+            <a class="navbar-link" href="/schedule.html">Schedule</a>
+            </li>
+            <li>
+            <a class="navbar-link" href="/honors.html">Honors</a>
+            </li>
+            <li>
+            <a class="navbar-link" href="/staff.html">The Crew</a>
+            </li>
+            <li>
+            <a class="navbar-link" href="/search.html">Search</a>
+            </li>
+            <li>
+            <a class="navbar-link" href="/wikibook/home.html">Wikibook</a>
+            </li>
+          </ul>
+        </div>
+        </div>
+</nav>
+
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-md-2 col-sm-1 col-xs-0"></div>
+    <div class="col-md-8 col-sm-10 col-xs-12">
+      <div class="wrapper">
+        <div class="pad"><div class="card">
+          <div class="title">
+            <div class="speaker-wrapper">
+              <button onclick="speak()" class="speaker" alt="Read Page"></button>
+            </div>
+            <h1>
+              Deadlock, Part 3: Dining Philosophers
+              
+                <a class="github-link hidden-xs" href="https://github.com/angrave/SystemProgramming/wiki//Deadlock,-Part-3:-Dining-Philosophers">Edit on Github</a>
+              
+            </h1>
+          </div>
+          <div class="container-fluid"><div class="row"><div class="content col-sm-11 .col-sm-offset-1">
+            
+          </div></div></div>
+        </div></div>
+      </div>
+      <div class="toc-wrapper">
+<h4>Content</h4>
+<ul class="toc">
+<li><a id="toc_left-right-deadlock" href="#left-right-deadlock" class="fancy-link">Left-Right Deadlock</a></li>
+<li><a id="toc_trylock-more-like-livelock" href="#trylock-more-like-livelock" class="fancy-link">Trylock? More like livelock</a></li>
+<li><a id="toc_arbitrator-naive-and-advanced" href="#arbitrator-naive-and-advanced" class="fancy-link">Arbitrator (Naive and Advanced).</a></li>
+<li><a id="toc_leaving-the-table-stallings-solution" href="#leaving-the-table-stallings-solution" class="fancy-link">Leaving the Table (Stallings’ Solution)</a></li>
+<li><a id="toc_partial-ordering-dijkstras-solution" href="#partial-ordering-dijkstras-solution" class="fancy-link">Partial Ordering (Dijkstra’s Solution)</a></li>
+<li><a id="toc_advanced-solutions" href="#advanced-solutions" class="fancy-link">Advanced Solutions</a></li>
+</ul>
+</div>
+      <div id="content">
+        
+        <div class="wrapper">
+
+</div>
+        <div class="wrapper">
+<div class="pad"><div class="card">
+
+
+
+
+<div class="container-fluid"><div class="row"><div class="content col-sm-11 .col-sm-offset-1">
+<h1 id="backstory">Backstory</h1>
+<p><img src="https://upload.wikimedia.org/wikipedia/commons/7/7b/An_illustration_of_the_dining_philosophers_problem.png" height="500px" width="500px"></p>
+<p>So you have your philosophers sitting around a table all wanting to eat some pasta (or whatever that is) and they are really hungry. Each of the philosophers are essentially the same, meaning that each philosopher has the same instruction set based on the other philosopher ie you can’t tell every even philosopher to do one thing and every odd philosopher to do another thing.</p>
+</div></div></div>
+</div></div>
+<div class="pad"><div class="card">
+<div class="container-fluid"><div class="row"><div class="content col-sm-11 .col-sm-offset-1">
+<h1 id="failed-solutions">Failed Solutions</h1>
+<div class="pad"><div class="card">
+<div class="title"><h2 id="left-right-deadlock" class="title-text">Left-Right Deadlock<a class="anchor title-text" href="#left-right-deadlock">#</a>
+</h2></div>
+<p>What do we do? Let’s try a simple solution</p>
+
+<pre><code class="language-C"><a class="code-copy" rel="code-copy-0" onclick="onCopy(this);">Copy</a><span class="kt">void</span><span class="o">*</span> <span class="n">philosopher</span><span class="p">(</span><span class="kt">void</span><span class="o">*</span> <span class="n">forks</span><span class="p">){</span>
+     <span class="n">info</span> <span class="n">phil_info</span> <span class="o">=</span> <span class="n">forks</span><span class="p">;</span>
+     <span class="n">pthread_mutex_t</span><span class="o">*</span> <span class="n">left_fork</span> <span class="o">=</span> <span class="n">phil_info</span><span class="o">-&gt;</span><span class="n">left_fork</span><span class="p">;</span>
+     <span class="n">pthread_mutex_t</span><span class="o">*</span> <span class="n">right_fork</span> <span class="o">=</span> <span class="n">phil_info</span><span class="o">-&gt;</span><span class="n">right_fork</span><span class="p">;</span>
+     <span class="k">while</span><span class="p">(</span><span class="n">phil_info</span><span class="o">-&gt;</span><span class="n">simulation</span><span class="p">){</span>
+          <span class="n">pthread_mutex_lock</span><span class="p">(</span><span class="n">left_fork</span><span class="p">);</span>
+          <span class="n">pthread_mutex_lock</span><span class="p">(</span><span class="n">right_fork</span><span class="p">);</span>
+          <span class="n">eat</span><span class="p">(</span><span class="n">left_fork</span><span class="p">,</span> <span class="n">right_fork</span><span class="p">);</span>
+          <span class="n">pthread_mutex_unlock</span><span class="p">(</span><span class="n">left_fork</span><span class="p">);</span>
+          <span class="n">pthread_mutex_unlock</span><span class="p">(</span><span class="n">right_fork</span><span class="p">);</span>
+     <span class="p">}</span>
+<span class="p">}</span>
+<textarea id="code-copy-0" class="code-copy-textarea" value="void* philosopher(void* forks){
+     info phil_info = forks;
+     pthread_mutex_t* left_fork = phil_info-&amp;gt;left_fork;
+     pthread_mutex_t* right_fork = phil_info-&amp;gt;right_fork;
+     while(phil_info-&amp;gt;simulation){
+          pthread_mutex_lock(left_fork);
+          pthread_mutex_lock(right_fork);
+          eat(left_fork, right_fork);
+          pthread_mutex_unlock(left_fork);
+          pthread_mutex_unlock(right_fork);
+     }
+}
+"></textarea></code></pre>
+
+<p>But this runs into a problem! What if everyone picks up their left fork and is waiting on their right fork? We have deadlocked the program. It is important to note that deadlock doesn’t happen all the time and the probability that this solution deadlocks goes down as the number of philosophers goes up. What is really important to note is that eventually that this solution will deadlock, letting threads starve which is bad.</p>
+
+</div></div>
+<div class="pad"><div class="card">
+<div class="title"><h2 id="trylock-more-like-livelock" class="title-text">Trylock? More like livelock<a class="anchor title-text" href="#trylock-more-like-livelock">#</a>
+</h2></div>
+<p>So now you are thinking about breaking one of the coffman conditions. We have</p>
+<ul>
+  <li>Mutual Exclusion</li>
+  <li>No Preemption</li>
+  <li>Hold and wait</li>
+  <li>Circular Wait</li>
+</ul>
+
+<p>Well we can’t have two philosophers use a fork at the same time, mutual exclusion is out of the picture. In our current, simple model, we can’t have the philosopher let go of the mutex lock once he/she has a hold of it, so we will take this solution out right now – there are some notes at the bottom of the page about this solution. Let’s break Hold and Wait!</p>
+<pre><code class="language-C"><a class="code-copy" rel="code-copy-1" onclick="onCopy(this);">Copy</a><span class="kt">void</span><span class="o">*</span> <span class="n">philosopher</span><span class="p">(</span><span class="kt">void</span><span class="o">*</span> <span class="n">forks</span><span class="p">){</span>
+     <span class="n">info</span> <span class="n">phil_info</span> <span class="o">=</span> <span class="n">forks</span><span class="p">;</span>
+     <span class="n">pthread_mutex_t</span><span class="o">*</span> <span class="n">left_fork</span> <span class="o">=</span> <span class="n">phil_info</span><span class="o">-&gt;</span><span class="n">left_fork</span><span class="p">;</span>
+     <span class="n">pthread_mutex_t</span><span class="o">*</span> <span class="n">right_fork</span> <span class="o">=</span> <span class="n">phil_info</span><span class="o">-&gt;</span><span class="n">right_fork</span><span class="p">;</span>
+     <span class="k">while</span><span class="p">(</span><span class="n">phil_info</span><span class="o">-&gt;</span><span class="n">simulation</span><span class="p">){</span>
+          <span class="n">pthread_mutex_lock</span><span class="p">(</span><span class="n">left_fork</span><span class="p">);</span>
+          <span class="kt">int</span> <span class="n">failed</span> <span class="o">=</span> <span class="n">pthread_mutex_trylock</span><span class="p">(</span><span class="n">right_fork</span><span class="p">);</span>
+          <span class="k">if</span><span class="p">(</span><span class="o">!</span><span class="n">failed</span><span class="p">){</span>
+               <span class="n">eat</span><span class="p">(</span><span class="n">left_fork</span><span class="p">,</span> <span class="n">right_fork</span><span class="p">);</span>
+               <span class="n">pthread_mutex_unlock</span><span class="p">(</span><span class="n">right_fork</span><span class="p">);</span>
+          <span class="p">}</span>
+          <span class="n">pthread_mutex_unlock</span><span class="p">(</span><span class="n">left_fork</span><span class="p">);</span>
+     <span class="p">}</span>
+<span class="p">}</span>
+<textarea id="code-copy-1" class="code-copy-textarea" value="void* philosopher(void* forks){
+     info phil_info = forks;
+     pthread_mutex_t* left_fork = phil_info-&amp;gt;left_fork;
+     pthread_mutex_t* right_fork = phil_info-&amp;gt;right_fork;
+     while(phil_info-&amp;gt;simulation){
+          pthread_mutex_lock(left_fork);
+          int failed = pthread_mutex_trylock(right_fork);
+          if(!failed){
+               eat(left_fork, right_fork);
+               pthread_mutex_unlock(right_fork);
+          }
+          pthread_mutex_unlock(left_fork);
+     }
+}
+"></textarea></code></pre>
+
+<p>Now our philosopher picks up the left fork and tries to grab the right. If it’s available, they eat. If it’s not available, they put the left fork down and try again. No deadlock!</p>
+
+<p>But, there is a problem. What if all the philosophers pick up their left at the same time, try to grab their right, put their left down, pick up their left, try to grab their right…. We have now livelocked our solution! Our poor philosopher are still starving, so let’s give them some proper solutions.</p>
+
+</div></div>
+</div></div></div>
+</div></div>
+<div class="pad"><div class="card">
+
+<div class="container-fluid"><div class="row"><div class="content col-sm-11 .col-sm-offset-1">
+<h1 id="viable-solutions">Viable Solutions</h1>
+<div class="pad"><div class="card">
+<div class="title"><h2 id="arbitrator-naive-and-advanced" class="title-text">Arbitrator (Naive and Advanced).<a class="anchor title-text" href="#arbitrator-naive-and-advanced">#</a>
+</h2></div>
+
+<p>The naive arbitrator solution is have one arbitrator (a mutex for example). Have each of the philosopher ask the arbitrator for permission to eat. This solution allows one philosopher to eat at a time. When they are done, another philosopher can ask for permission to eat.</p>
+
+<p>This prevents deadlock because there is no circular wait! No philosopher has to wait on any other philosopher.</p>
+
+<p>The advanced arbitrator solution is to implement a class that determines if the philosopher’s forks are in the arbitrator’s possession. If they are, they give them to the philosopher, let him eat, and take the forks back. This has the added bonus of being able to have multiple philosopher eat at the same time.</p>
+
+<h3 id="problems" class="title-text">Problems:</h3>
+<ul>
+  <li>These solutions are slow</li>
+  <li>They have a single point of failure, the arbitrator making it a bottleneck</li>
+  <li>The arbitrator needs to also be fair, and be able to determine deadlock in the second solution</li>
+  <li>In practical systems, the arbitrator tends to give the forks repeatedly to philosophers that just ate because of process scheduling</li>
+</ul>
+
+</div></div>
+<div class="pad"><div class="card">
+<div class="title"><h2 id="leaving-the-table-stallings-solution" class="title-text">Leaving the Table (Stallings’ Solution)<a class="anchor title-text" href="#leaving-the-table-stallings-solution">#</a>
+</h2></div>
+<p>Why does the first solution deadlock? Well there are n philosophers and n chopsticks. What if there is only 1 philsopher at the table? Can we deadlock? No.</p>
+
+<p>How about 2 philsophers? 3? … You can see where this is going. Stallings’ solutions says to remove philosophers from the table until deadlock is not possible – think about what the magic number of philosophers at the table is. The way to do this in actual system is through semaphores and letting a certain number of philosopher through.</p>
+
+<h3 id="problems-1" class="title-text">Problems:</h3>
+<ul>
+  <li>The solution requires a lot of context switching which is very expensive for the CPU</li>
+  <li>You need to know about the number of resources before hand in order to only let that number of philosophers</li>
+  <li>Again priority is given to the processes who have already eaten.</li>
+</ul>
+
+</div></div>
+<div class="pad"><div class="card">
+<div class="title"><h2 id="partial-ordering-dijkstras-solution" class="title-text">Partial Ordering (Dijkstra’s Solution)<a class="anchor title-text" href="#partial-ordering-dijkstras-solution">#</a>
+</h2></div>
+<p>This is Dijkstra’s solution (he was the one to propose this problem on an exam). Why does the first solution deadlock? Dijkstra thought that the last philosopher who picks up his left fork (causing the solution to deadlock) should pick up his right. He accomplishes it by number the forks 1..n, and tells each of the philosopher to pick up his lower number fork.</p>
+
+<p>Let’s run through the deadlock condition again. Everyone tries to pick up their lower number fork first. Philosopher 1 gets fork 1, Philosopher 2 gets fork 2, and so on until we get to Philosopher n. They have to choose between fork 1 and n. fork 1 is already held up by philosopher 1, so they can’t pick up that fork, meaning he won’t pick up fork n. We have broken circular wait! Meaning deadlock isn’t possible.</p>
+
+<h3 id="problems-2" class="title-text">Problems:</h3>
+<ul>
+  <li>The philosopher needs to know the set of resources in order before grabbing any resources.</li>
+  <li>You need to define a partial order to all of the resources.</li>
+  <li>Prioritizes philosopher who have already eaten.</li>
+</ul>
+
+</div></div>
+<div class="pad"><div class="card">
+<div class="title"><h2 id="advanced-solutions" class="title-text">Advanced Solutions<a class="anchor title-text" href="#advanced-solutions">#</a>
+</h2></div>
+
+<p>There are many more advanced solutions a non-exhaustive list includes</p>
+<ul>
+  <li>Clean/Dirty Forks (Chandra/Misra Solution)</li>
+  <li>Actor Model (other Message passing models)</li>
+  <li>Super Arbitrators (Complicated pipelines)</li>
+</ul>
+
+</div></div>
+</div></div></div>
+</div></div>
+</div>
+        
+        <div class="wrapper">
+</div>
+      </div>
+      <div class="col-md-2 col-sm-1 col-xs-0"></div>
+    </div>
+  </div>
+  <script>
+    var github_repo = "illinois-cs241/illinois-cs241.github.io";
+    var github_path = "_wikibook/deadlock-part-3-dining-philosophers.md";
+  </script>
+  <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML" integrity="sha384-Ra6zh6uYMmH5ydwCqqMoykyf1T/+ZcnOQfFPhDrp2kI4OIxadnhsvvA2vv9A7xYv" crossorigin="anonymous"></script>
+<script src="/lib/bootstrap-3.3.7/dist/js/bootstrap.min.js"></script>
+<script src="/js/main.js"></script>
+
+<script>
+$(document).ready(function(){
+    $('[data-toggle="popover"]').popover({
+      trigger: 'manual',
+        container: $(this).attr('id'),
+        placement: 'top',
+        content: function () {
+            return '<div class="hover-hovercard"></div>';
+        }
+    }).on("mouseenter", function () {
+        var _this = this;
+        $(this).popover("show");
+        $(this).siblings(".popover").on("mouseleave", function () {
+            $(_this).popover('hide');
+        });
+    }).on("mouseleave", function () {
+        var _this = this;
+        setTimeout(function () {
+            if (!$(".popover:hover").length) {
+               $(_this).popover("hide")
+            }
+        }, 100);
+    });
+
+    $('[data-toggle="tooltip"]').tooltip();
+});
+/*
+$('[data-toggle="popover"]').on('shown.bs.popover', function () {
+    var $pop = $(this);
+    setTimeout(function () {
+        $pop.popover('hide');
+    }, 2000);
+});*/
+</script>
+<script src="/js/analytics.js"></script>
+<footer class="">
+
+<div class="container-fluid">
+<div class="shadow"></div>
+<!--<div class="row">
+  <h4 class="col-md-3">CS 241: System Programming</h4>
+  
+    <div class="col-md-3">
+    <a href="https://github.com/illinois-cs241"><span class="icon icon--github"><svg viewBox="0 0 16 16"><path fill="#828282" d="M7.999,0.431c-4.285,0-7.76,3.474-7.76,7.761 c0,3.428,2.223,6.337,5.307,7.363c0.388,0.071,0.53-0.168,0.53-0.374c0-0.184-0.007-0.672-0.01-1.32 c-2.159,0.469-2.614-1.04-2.614-1.04c-0.353-0.896-0.862-1.135-0.862-1.135c-0.705-0.481,0.053-0.472,0.053-0.472 c0.779,0.055,1.189,0.8,1.189,0.8c0.692,1.186,1.816,0.843,2.258,0.645c0.071-0.502,0.271-0.843,0.493-1.037 C4.86,11.425,3.049,10.76,3.049,7.786c0-0.847,0.302-1.54,0.799-2.082C3.768,5.507,3.501,4.718,3.924,3.65 c0,0,0.652-0.209,2.134,0.796C6.677,4.273,7.34,4.187,8,4.184c0.659,0.003,1.323,0.089,1.943,0.261 c1.482-1.004,2.132-0.796,2.132-0.796c0.423,1.068,0.157,1.857,0.077,2.054c0.497,0.542,0.798,1.235,0.798,2.082 c0,2.981-1.814,3.637-3.543,3.829c0.279,0.24,0.527,0.713,0.527,1.437c0,1.037-0.01,1.874-0.01,2.129 c0,0.208,0.14,0.449,0.534,0.373c3.081-1.028,5.302-3.935,5.302-7.362C15.76,3.906,12.285,0.431,7.999,0.431z"/></svg>
+</span><span class="username">illinois-cs241</span></a>
+
+    </div>
+  
+  
+</div>
+
+<div class="row">
+  <div class="col-md-12 col-sm-12">
+    <p>Webpage for CS 241: System Programming at the University of Illinois Urbana-Champaign. All documentation and information about the course can be found here.
+</p>
+  </div>
+</div> -->
+</div>
+
+</footer>
+
+</body>
+</html>

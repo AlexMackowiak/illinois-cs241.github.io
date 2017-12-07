@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- Favicons -->
+  <link rel="apple-touch-icon" sizes="180x180" href="images/favicons/apple-touch-icon.png">
+  <link rel="icon" type="image/png" href="images/favicons/favicon-32x32.png" sizes="32x32">
+  <link rel="icon" type="image/png" href="images/favicons/favicon-16x16.png" sizes="16x16">
+  <link rel="manifest" href="images/favicons/manifest.json">
+  <link rel="mask-icon" href="images/favicons/safari-pinned-tab.svg" color="#5bbad5">
+  <meta name="theme-color" content="#ffffff">
+
+  <title>Processes, Part 1: Introduction</title>
+
+  <link async rel="stylesheet" href="/lib/bootstrap-3.3.7/dist/css/bootstrap.min.css">
+  <link async rel="stylesheet" href="/css/code-style.css">
+  <link async rel="stylesheet" href="/css/main.css">
+
+</head>
+
+<body>
+<!-- Always shows a header, even in smaller screens. -->
+<nav class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <div class="container">
+        <div class="navbar-header">
+
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target=".navbar-collapse" aria-expanded="false" aria-controls="navbar">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            </button>
+
+            <a class="navbar-brand navbar-link normal" href="/">CS 241: System Programming</a>
+            <a class="navbar-brand navbar-link small" href="/">CS 241</a>
+        </div>
+
+        <div id="navbar" class="navbar-collapse collapse">
+          <ul class="nav navbar-nav">
+            <li>
+            <a class="navbar-link" href="/mps.html">MPs</a>
+            </li>
+            <li>
+            <a class="navbar-link" href="/labs.html">Labs</a>
+            </li>
+            <li>
+            <a class="navbar-link" href="/help.html">Help!</a>
+            </li>
+            <li>
+            <a class="navbar-link" href="/schedule.html">Schedule</a>
+            </li>
+            <li>
+            <a class="navbar-link" href="/honors.html">Honors</a>
+            </li>
+            <li>
+            <a class="navbar-link" href="/staff.html">The Crew</a>
+            </li>
+            <li>
+            <a class="navbar-link" href="/search.html">Search</a>
+            </li>
+            <li>
+            <a class="navbar-link" href="/wikibook/home.html">Wikibook</a>
+            </li>
+          </ul>
+        </div>
+        </div>
+</nav>
+
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-md-2 col-sm-1 col-xs-0"></div>
+    <div class="col-md-8 col-sm-10 col-xs-12">
+      <div class="wrapper">
+        <div class="pad"><div class="card">
+          <div class="title">
+            <div class="speaker-wrapper">
+              <button onclick="speak()" class="speaker" alt="Read Page"></button>
+            </div>
+            <h1>
+              Processes, Part 1: Introduction
+              
+                <a class="github-link hidden-xs" href="https://github.com/angrave/SystemProgramming/wiki//Processes,-Part-1:-Introduction">Edit on Github</a>
+              
+            </h1>
+          </div>
+          <div class="container-fluid"><div class="row"><div class="content col-sm-11 .col-sm-offset-1">
+            
+          </div></div></div>
+        </div></div>
+      </div>
+      <div class="toc-wrapper">
+<h4>Content</h4>
+<ul class="toc">
+<li><a id="toc_in-the-beginning" href="#in-the-beginning" class="fancy-link">In the beginning</a></li>
+<li><a id="toc_process-isolation" href="#process-isolation" class="fancy-link">Process Isolation</a></li>
+<li><a id="toc_memory-layout" href="#memory-layout" class="fancy-link">Memory Layout</a></li>
+<li><a id="toc_file-descriptors" href="#file-descriptors" class="fancy-link">File Descriptors</a></li>
+<li><a id="toc_securitypermissions" href="#securitypermissions" class="fancy-link">Security/Permissions</a></li>
+<li><a id="toc_process-id-pid" href="#process-id-pid" class="fancy-link">Process ID (PID)</a></li>
+</ul>
+</div>
+      <div id="content">
+        
+        <div class="wrapper">
+
+</div>
+        <div class="wrapper">
+<div class="pad"><div class="card">
+
+
+
+<div class="container-fluid"><div class="row"><div class="content col-sm-11 .col-sm-offset-1">
+<h1 id="overview">Overview</h1>
+<p>A process is program that is running (kinda). A process is also just one instance of that computer program running. Processes have a lot of things at their disposal. At the start of each program you get one process, but each program can make more processes. In fact, your operating system starts up with only one process and all other processes are forked off of that – all of that is done under the hood when booting up.</p>
+<div class="pad"><div class="card">
+<div class="title"><h2 id="in-the-beginning" class="title-text">In the beginning<a class="anchor title-text" href="#in-the-beginning">#</a>
+</h2></div>
+
+<p>When your operating system starts on a linux machine, there is a process called <code class="highlighter-rouge">init.d</code> that gets created. That process is a special one handling signals, interrupts, and a persistence module for certain kernel elements. Whenever you want to make a new process, you call <code class="highlighter-rouge"><a href="https://linux.die.net/man/3/fork" class="fancy-link">fork</a></code> (to be discussed in a later section) and use another function to load another program.</p>
+
+</div></div>
+<div class="pad"><div class="card">
+<div class="title"><h2 id="process-isolation" class="title-text">Process Isolation<a class="anchor title-text" href="#process-isolation">#</a>
+</h2></div>
+
+<p>Processes are very powerful but they are isolated! That means that by default, no process can communicate with another process. This is very important because if you have a large system (let’s say EWS) then you want some processes to have higher privilages (monitoring, admin) than your average user, and one certainly doesn’t want the average user to be able to bring down the entire system either on purpose or accidentally by modifying a process.</p>
+
+<p>If I run the following code,</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>int secrets; //maybe defined in the kernel or else where
+secrets++;
+printf("%d\n", secrets);
+</code></pre></div></div>
+
+<p>On two different terminals, as you would guess they would both print out 1 not 2. Even if we changed the code to do something really hacky (apart from reading the memory directly) there would be no way to change another process’ state (okay maybe <a href="https://en.wikipedia.org/wiki/Dirty_COW" class="fancy-link wiki-link">this</a> but that is getting a little too in depth).</p>
+
+</div></div>
+</div></div></div>
+</div></div>
+<div class="pad"><div class="card">
+
+<div class="container-fluid"><div class="row"><div class="content col-sm-11 .col-sm-offset-1">
+<h1 id="process-contents">Process Contents</h1>
+<div class="pad"><div class="card">
+<div class="title"><h2 id="memory-layout" class="title-text">Memory Layout<a class="anchor title-text" href="#memory-layout">#</a>
+</h2></div>
+
+<p><img src="https://i.imgur.com/amSsBlJ.png" alt="Address Space"></p>
+
+<p>When a process starts, it gets its own address space. Meaning that each process gets :</p>
+<ul>
+  <li>
+<strong>A Stack</strong>. The Stack is the place where automatic variable and function call return addresses are stored. Every time a new variable is declared, the program moves the stack pointer down to reserve space for the variable. This segment of the stack is Writable but not executable. If the stack grows too far (meaning that it either grows beyond a preset boundary or intersects the heap) you will get a stackoverflow most likely resulting in a SEGFAULT or something similar. <strong>The stack is statically allocated by default meaning that there is only a certain amount of space to which one can write</strong>
+</li>
+  <li>
+<strong>A Heap</strong>. The heap is an expanding region of memory. If you want to allocate a large object, it goes here. The heap starts at the top of the text segment and grows upward (meaning sometimes when you call <code class="highlighter-rouge"><a href="https://linux.die.net/man/3/malloc" class="fancy-link">malloc</a></code> that it asks the operating system to push the heap boundary upward). This area is also Writable but not Executable. One can run out of heap memory if the system is constrained or if you run out of addresses (more common on a 32bit system).</li>
+  <li>
+<strong>A Data Segment</strong> This contains all of your globals. This section starts at the end of the Text segment and is static in size because the amount of globals is known at compile time. This section is Writable but not Executable and there isn’t anything else too fancy here.</li>
+  <li>
+<strong>A Text Segment</strong>. This is, arguably, the most important section of the address. This is where all your code is stored. Since assembly compiles to 1’s and 0’s, this is where the 1’s and 0’s get stored. The program counter moves through this segment executing instructions and moving down the next instruction. It is important to note that this is the only Executable section of the code. If you try to change the code while it’s running, most likely you will segfault (there are ways around it but just assume that it segfaults).</li>
+  <li>Why doesn’t it start at zero? It is outside the <a href="https://en.wikipedia.org/wiki/Address_space_layout_randomization" class="fancy-link wiki-link">scope</a> of this class but it is for security.</li>
+</ul>
+
+</div></div>
+<div class="pad"><div class="card">
+<div class="title"><h2 id="file-descriptors" class="title-text">File Descriptors<a class="anchor title-text" href="#file-descriptors">#</a>
+</h2></div>
+
+<p><img src="https://drawings.jvns.ca/drawings/file-descriptors.svg" alt="Fds"></p>
+
+<p>As the little zine shows, the OS keeps track of the file descriptors and what they point to. We will see later that file descriptors need not point to actual files and the OS keeps track of them for you. Also, notice that between processes file descriptors may be reused but inside of a process they are unique.</p>
+
+<p>File descriptors also have a notion of position. You can read a file on disk completely because the OS keeps track of the position in the file, and that belongs to your process as well.</p>
+
+</div></div>
+<div class="pad"><div class="card">
+<div class="title"><h2 id="securitypermissions" class="title-text">Security/Permissions<a class="anchor title-text" href="#securitypermissions">#</a>
+</h2></div>
+
+</div></div>
+</div></div></div>
+</div></div>
+<div class="pad"><div class="card">
+
+
+
+<div class="container-fluid"><div class="row"><div class="content col-sm-11 .col-sm-offset-1">
+<h1 id="process-functionslimitations-bonus">Process Functions/Limitations (Bonus)</h1>
+<p>When you are reviewing for the final, you can come back and see that a process also has all of these things. The first time around – it won’t make much sense.</p>
+<div class="pad"><div class="card">
+<div class="title"><h2 id="process-id-pid" class="title-text">Process ID (PID)<a class="anchor title-text" href="#process-id-pid">#</a>
+</h2></div>
+
+<p>To keep track of all these processes, your operating system gives each process a number and that process is called the PID, process ID.</p>
+
+<p>Processes could also contain</p>
+<ul>
+  <li>Mappings</li>
+  <li>State</li>
+  <li>File Descriptors</li>
+  <li>Permissions</li>
+</ul>
+
+<div align="center">
+<a href="/wikibook/forking-part-1-introduction.html#" class="fancy-link wiki-link">
+Forking, Part 1: Introduction
+</a>
+</div>
+</div></div>
+</div></div></div>
+</div></div>
+</div>
+        
+        <div class="wrapper">
+</div>
+      </div>
+      <div class="col-md-2 col-sm-1 col-xs-0"></div>
+    </div>
+  </div>
+  <script>
+    var github_repo = "illinois-cs241/illinois-cs241.github.io";
+    var github_path = "_wikibook/processes-part-1-introduction.md";
+  </script>
+  <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML" integrity="sha384-Ra6zh6uYMmH5ydwCqqMoykyf1T/+ZcnOQfFPhDrp2kI4OIxadnhsvvA2vv9A7xYv" crossorigin="anonymous"></script>
+<script src="/lib/bootstrap-3.3.7/dist/js/bootstrap.min.js"></script>
+<script src="/js/main.js"></script>
+
+<script>
+$(document).ready(function(){
+    $('[data-toggle="popover"]').popover({
+      trigger: 'manual',
+        container: $(this).attr('id'),
+        placement: 'top',
+        content: function () {
+            return '<div class="hover-hovercard"></div>';
+        }
+    }).on("mouseenter", function () {
+        var _this = this;
+        $(this).popover("show");
+        $(this).siblings(".popover").on("mouseleave", function () {
+            $(_this).popover('hide');
+        });
+    }).on("mouseleave", function () {
+        var _this = this;
+        setTimeout(function () {
+            if (!$(".popover:hover").length) {
+               $(_this).popover("hide")
+            }
+        }, 100);
+    });
+
+    $('[data-toggle="tooltip"]').tooltip();
+});
+/*
+$('[data-toggle="popover"]').on('shown.bs.popover', function () {
+    var $pop = $(this);
+    setTimeout(function () {
+        $pop.popover('hide');
+    }, 2000);
+});*/
+</script>
+<script src="/js/analytics.js"></script>
+<footer class="">
+
+<div class="container-fluid">
+<div class="shadow"></div>
+<!--<div class="row">
+  <h4 class="col-md-3">CS 241: System Programming</h4>
+  
+    <div class="col-md-3">
+    <a href="https://github.com/illinois-cs241"><span class="icon icon--github"><svg viewBox="0 0 16 16"><path fill="#828282" d="M7.999,0.431c-4.285,0-7.76,3.474-7.76,7.761 c0,3.428,2.223,6.337,5.307,7.363c0.388,0.071,0.53-0.168,0.53-0.374c0-0.184-0.007-0.672-0.01-1.32 c-2.159,0.469-2.614-1.04-2.614-1.04c-0.353-0.896-0.862-1.135-0.862-1.135c-0.705-0.481,0.053-0.472,0.053-0.472 c0.779,0.055,1.189,0.8,1.189,0.8c0.692,1.186,1.816,0.843,2.258,0.645c0.071-0.502,0.271-0.843,0.493-1.037 C4.86,11.425,3.049,10.76,3.049,7.786c0-0.847,0.302-1.54,0.799-2.082C3.768,5.507,3.501,4.718,3.924,3.65 c0,0,0.652-0.209,2.134,0.796C6.677,4.273,7.34,4.187,8,4.184c0.659,0.003,1.323,0.089,1.943,0.261 c1.482-1.004,2.132-0.796,2.132-0.796c0.423,1.068,0.157,1.857,0.077,2.054c0.497,0.542,0.798,1.235,0.798,2.082 c0,2.981-1.814,3.637-3.543,3.829c0.279,0.24,0.527,0.713,0.527,1.437c0,1.037-0.01,1.874-0.01,2.129 c0,0.208,0.14,0.449,0.534,0.373c3.081-1.028,5.302-3.935,5.302-7.362C15.76,3.906,12.285,0.431,7.999,0.431z"/></svg>
+</span><span class="username">illinois-cs241</span></a>
+
+    </div>
+  
+  
+</div>
+
+<div class="row">
+  <div class="col-md-12 col-sm-12">
+    <p>Webpage for CS 241: System Programming at the University of Illinois Urbana-Champaign. All documentation and information about the course can be found here.
+</p>
+  </div>
+</div> -->
+</div>
+
+</footer>
+
+</body>
+</html>

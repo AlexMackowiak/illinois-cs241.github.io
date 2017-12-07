@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- Favicons -->
+  <link rel="apple-touch-icon" sizes="180x180" href="images/favicons/apple-touch-icon.png">
+  <link rel="icon" type="image/png" href="images/favicons/favicon-32x32.png" sizes="32x32">
+  <link rel="icon" type="image/png" href="images/favicons/favicon-16x16.png" sizes="16x16">
+  <link rel="manifest" href="images/favicons/manifest.json">
+  <link rel="mask-icon" href="images/favicons/safari-pinned-tab.svg" color="#5bbad5">
+  <meta name="theme-color" content="#ffffff">
+
+  <title>Development Guide</title>
+
+  <link async rel="stylesheet" href="/lib/bootstrap-3.3.7/dist/css/bootstrap.min.css">
+  <link async rel="stylesheet" href="/css/code-style.css">
+  <link async rel="stylesheet" href="/css/main.css">
+
+</head>
+
+<body>
+<!-- Always shows a header, even in smaller screens. -->
+<nav class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <div class="container">
+        <div class="navbar-header">
+
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target=".navbar-collapse" aria-expanded="false" aria-controls="navbar">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            </button>
+
+            <a class="navbar-brand navbar-link normal" href="/">CS 241: System Programming</a>
+            <a class="navbar-brand navbar-link small" href="/">CS 241</a>
+        </div>
+
+        <div id="navbar" class="navbar-collapse collapse">
+          <ul class="nav navbar-nav">
+            <li>
+            <a class="navbar-link" href="/mps.html">MPs</a>
+            </li>
+            <li>
+            <a class="navbar-link" href="/labs.html">Labs</a>
+            </li>
+            <li>
+            <a class="navbar-link" href="/help.html">Help!</a>
+            </li>
+            <li>
+            <a class="navbar-link" href="/schedule.html">Schedule</a>
+            </li>
+            <li>
+            <a class="navbar-link" href="/honors.html">Honors</a>
+            </li>
+            <li>
+            <a class="navbar-link" href="/staff.html">The Crew</a>
+            </li>
+            <li>
+            <a class="navbar-link" href="/search.html">Search</a>
+            </li>
+            <li>
+            <a class="navbar-link" href="/wikibook/home.html">Wikibook</a>
+            </li>
+          </ul>
+        </div>
+        </div>
+</nav>
+
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-md-2 col-sm-1 col-xs-0"></div>
+    <div class="col-md-8 col-sm-10 col-xs-12">
+      <div class="wrapper">
+        <div class="pad"><div class="card">
+          <div class="title">
+            <div class="speaker-wrapper">
+              <button onclick="speak()" class="speaker" alt="Read Page"></button>
+            </div>
+            <h1>
+              Development Guide
+              
+            </h1>
+          </div>
+          <div class="container-fluid"><div class="row"><div class="content col-sm-11 .col-sm-offset-1">
+            
+          </div></div></div>
+        </div></div>
+      </div>
+      <div class="toc-wrapper">
+<h4>Content</h4>
+<ul class="toc">
+<li><a id="toc_how-to-make-your-life-easier" href="#how-to-make-your-life-easier" class="fancy-link">How to Make Your Life Easier</a></li>
+<li><a id="toc_vms" href="#vms" class="fancy-link">VMs</a></li>
+<li><a id="toc_ssh" href="#ssh" class="fancy-link">SSH</a></li>
+<li><a id="toc_ssh-on-windows" href="#ssh-on-windows" class="fancy-link">SSH on Windows</a></li>
+<li><a id="toc_ssh-maclinux" href="#ssh-maclinux" class="fancy-link">SSH Mac/Linux</a></li>
+<li><a id="toc_i-am-off-campus-and-cannot-connect-to-the-vm-help" href="#i-am-off-campus-and-cannot-connect-to-the-vm-help" class="fancy-link">I AM OFF CAMPUS AND CANNOT CONNECT TO THE VM, HELP!</a></li>
+<li><a id="toc_installing-other-things" href="#installing-other-things" class="fancy-link">Installing other things</a></li>
+</ul>
+</div>
+      <div id="content">
+        
+        <div class="wrapper">
+  <div class="pad"><div class="card">
+<div class="title"><h2 id="learning-objectives" class="title-text">Learning Objectives<a class="anchor title-text" href="#learning-objectives">#</a>
+</h2></div>
+  
+  
+
+
+<div class="container-fluid"><div class="row"><div class="content col-sm-11 .col-sm-offset-1">
+<p>
+    The learning objectives for Development Guide are: <br>
+    </p>
+<ul class="mdl-list">
+      
+        <li class="mdl-list__item">
+          <span class="mdl-list__item-primary-content">Using the tools needed for CS 241</span>
+        </li>
+      
+    </ul>
+</div></div></div>
+</div></div>
+</div>
+        <div class="wrapper">
+<div class="pad"><div class="card">
+<div class="title"><h2 id="how-to-make-your-life-easier" class="title-text">How to Make Your Life Easier<a class="anchor title-text" href="#how-to-make-your-life-easier">#</a>
+</h2></div>
+
+
+
+<div class="container-fluid"><div class="row"><div class="content col-sm-11 .col-sm-offset-1"><p>Hi there! We noticed that there was quite a bit of confusion about ssh, VMs, coding on your own computer, etc. We thought we would try to clear a few things up.</p></div></div></div>
+</div></div>
+<div class="pad"><div class="card">
+<div class="title"><h2 id="vms" class="title-text">VMs<a class="anchor title-text" href="#vms">#</a>
+</h2></div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="container-fluid"><div class="row"><div class="content col-sm-11 .col-sm-offset-1">
+<p>A Virtual Machine is an emulation of a computer system. Your personal VMs in this class are hosted somewhere on a server and are completely separate from your EWS account. You can use ssh to access your VM via the command line.</p>
+<h3 id="how-we-have-things-laid-out" class="title-text">How We Have Things Laid Out</h3>
+<p>We can divide our entire development environment for the class into 3 parts: your own computer, your personal VM, and EWS. EWS is the same environment as when you log into one of the computers in the labs. Your personal VM is what we will show you how to <code class="highlighter-rouge"><a href="https://linux.die.net/man/3/ssh" class="fancy-link">ssh</a></code> into during lab, and is where you should be testing and developing your code as well.</p>
+<p>In this course, we use VMs for all our development, so it is important that you learn how to use them. These VMs are part of the CS Cloud, and we will not support any other machines for grading. This means that you should test on your VM and and not any other machine – this includes the CS2XX VM you received in CS 225, EWS, or your local machine. This is to your benefit, since the grading VM is identical to your VM.</p>
+<p>Please <code class="highlighter-rouge"><a href="https://linux.die.net/man/3/ssh" class="fancy-link">ssh</a></code> into your VM. The VM number is emailed to. The general format is</p>
+<div class="language-console highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="gp">$</span> ssh &lt;NETID&gt;@fa17-cs241-&lt;NUM&gt;.cs.illinois.edu
+</code></pre></div></div>
+<p>into your terminal. If you want to use graphical editors, add the <code class="highlighter-rouge">-Y</code> flag to <code class="highlighter-rouge"><a href="https://linux.die.net/man/3/ssh" class="fancy-link">ssh</a></code> to enable forwarding.  We highly recommend <strong>not</strong> to use GUIs in order to get comfortable with the command line (also because it is slow).</p>
+<p>We would like to stress that no matter what method you use to develop code for CS241, <strong>test all your final code on your VM</strong>. The autograding environment is similar to your VM. Thus even though your code “works” on your machine, it may not work on the VMs and thus for the autograder.</p>
+</div></div></div>
+</div></div>
+<div class="pad"><div class="card">
+<div class="title"><h2 id="ssh" class="title-text">SSH<a class="anchor title-text" href="#ssh">#</a>
+</h2></div>
+
+
+
+<div class="container-fluid"><div class="row"><div class="content col-sm-11 .col-sm-offset-1"><p>SSH is a network protocol for initiating text­-based shell sessions on a remote machine. In plain English, this basically means you can access another machine remotely, sending information via the command line. SSH is normally completely text­-based, but one can use X11 forwarding to use graphical applications like gedit. <strong>We do not support Fastx like in 225.</strong></p></div></div></div>
+</div></div>
+<div class="pad"><div class="card">
+<div class="title"><h2 id="ssh-on-windows" class="title-text">SSH on Windows<a class="anchor title-text" href="#ssh-on-windows">#</a>
+</h2></div>
+
+
+
+
+
+
+<div class="container-fluid"><div class="row"><div class="content col-sm-11 .col-sm-offset-1">
+<p>If you would like to remotely access EWS or your 241 VM on your Windows computer, I recommend Xming and PuTTY.
+Download <a href="http://www.chiark.greenend.org.uk/~sgtatham/putty/download.html" class="fancy-link wiki-link">PuTTY</a>
+Download <a href="http://sourceforge.net/projects/xming/?source=directory" class="fancy-link wiki-link">Xming</a></p>
+<p><a href="https://wiki.utdallas.edu/wiki/display/FAQ/X11+Forwarding+using+Xming+and+PuTTY" class="fancy-link wiki-link">This is a great tutorial</a> on how to use and install Xming and PuTTY.</p>
+<p>There are applications like Sublime and Notepad++ that can use SFTP (Simple File Transfer Protocol) to allow you to modify and save remote files. You could also look into Cywin or a Windows Side SVN handler (SVN Tortoise)</p>
+</div></div></div>
+</div></div>
+<div class="pad"><div class="card">
+<div class="title"><h2 id="ssh-maclinux" class="title-text">SSH Mac/Linux<a class="anchor title-text" href="#ssh-maclinux">#</a>
+</h2></div>
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="container-fluid"><div class="row"><div class="content col-sm-11 .col-sm-offset-1">
+<p>Connecting Mac/Linux is pretty easy because they share the same UNIX architecture as EWS and your VM. It really should just be as easy as opening a terminal and typing:</p>
+<div class="language-console highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="gp">$</span> ssh ­-Y &lt;Hostname&gt;
+</code></pre></div></div>
+<p>You should now be able to use programs with a graphic interface by starting them from the command line by typing, e.g.:</p>
+<div class="language-console highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="gp">gedit &lt;filename&gt;</span>
+</code></pre></div></div>
+<p>gedit should then open with a GUI. It really is that easy. Remember, you can exit ssh by using the command:</p>
+<div class="language-console highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="go">logout
+</span></code></pre></div></div>
+</div></div></div>
+</div></div>
+<div class="pad"><div class="card">
+<div class="title"><h2 id="i-am-off-campus-and-cannot-connect-to-the-vm-help" class="title-text">I AM OFF CAMPUS AND CANNOT CONNECT TO THE VM, HELP!<a class="anchor title-text" href="#i-am-off-campus-and-cannot-connect-to-the-vm-help">#</a>
+</h2></div>
+
+
+
+
+
+
+<div class="container-fluid"><div class="row"><div class="content col-sm-11 .col-sm-offset-1">
+<p>You can use a VPN (Virtual Private Network) to access on campus resources and then use Putty or SSH directly into your VM. <a href="https://techservices.illinois.edu/services/virtual-private-networking-vpn/download-and-set-up-the-vpn-client" class="fancy-link wiki-link">Tutorial</a></p>
+<p>OR, you can SSH twice. First into your EWS account and then into your personal VM. Just remember that this causes potentially double the network lag!</p>
+<p>Of course, there are many other ways to do things too. You could just work on your own machine or in EWS and upload all of your work to SVN and then open your VM and pull down all of your saved files and test, but we think that is tedious. If you have anything interesting you would like to add, please post below and share with your classmates; you will also be helping future students.</p>
+</div></div></div>
+</div></div>
+<div class="pad"><div class="card">
+<div class="title"><h2 id="installing-other-things" class="title-text">Installing other things<a class="anchor title-text" href="#installing-other-things">#</a>
+</h2></div>
+
+
+
+
+<div class="container-fluid"><div class="row"><div class="content col-sm-11 .col-sm-offset-1">
+<p>This is your vm! Install whatever you want on it (given that it is school appropriate). Meaning, you can install <code class="highlighter-rouge"><a href="https://linux.die.net/man/1/vim" class="fancy-link">vim</a></code> or <code class="highlighter-rouge"><a href="https://linux.die.net/man/1/emacs" class="fancy-link">emacs</a></code>. If you’ve ever wanted to become terminal saavy, this is definitely the course to do it.</p>
+<p>If anything is unclear, either post on piazza or ask your TAs/CAs/fellow students! <strong>Be careful about messing up your vm</strong></p>
+</div></div></div>
+</div></div>
+</div>
+        
+        <div class="wrapper">
+</div>
+      </div>
+      <div class="col-md-2 col-sm-1 col-xs-0"></div>
+    </div>
+  </div>
+  <script>
+    var github_repo = "illinois-cs241/illinois-cs241.github.io";
+    var github_path = "_tutorials/development.md";
+  </script>
+  <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML" integrity="sha384-Ra6zh6uYMmH5ydwCqqMoykyf1T/+ZcnOQfFPhDrp2kI4OIxadnhsvvA2vv9A7xYv" crossorigin="anonymous"></script>
+<script src="/lib/bootstrap-3.3.7/dist/js/bootstrap.min.js"></script>
+<script src="/js/main.js"></script>
+
+<script>
+$(document).ready(function(){
+    $('[data-toggle="popover"]').popover({
+      trigger: 'manual',
+        container: $(this).attr('id'),
+        placement: 'top',
+        content: function () {
+            return '<div class="hover-hovercard"></div>';
+        }
+    }).on("mouseenter", function () {
+        var _this = this;
+        $(this).popover("show");
+        $(this).siblings(".popover").on("mouseleave", function () {
+            $(_this).popover('hide');
+        });
+    }).on("mouseleave", function () {
+        var _this = this;
+        setTimeout(function () {
+            if (!$(".popover:hover").length) {
+               $(_this).popover("hide")
+            }
+        }, 100);
+    });
+
+    $('[data-toggle="tooltip"]').tooltip();
+});
+/*
+$('[data-toggle="popover"]').on('shown.bs.popover', function () {
+    var $pop = $(this);
+    setTimeout(function () {
+        $pop.popover('hide');
+    }, 2000);
+});*/
+</script>
+<script src="/js/analytics.js"></script>
+<footer class="">
+
+<div class="container-fluid">
+<div class="shadow"></div>
+<!--<div class="row">
+  <h4 class="col-md-3">CS 241: System Programming</h4>
+  
+    <div class="col-md-3">
+    <a href="https://github.com/illinois-cs241"><span class="icon icon--github"><svg viewBox="0 0 16 16"><path fill="#828282" d="M7.999,0.431c-4.285,0-7.76,3.474-7.76,7.761 c0,3.428,2.223,6.337,5.307,7.363c0.388,0.071,0.53-0.168,0.53-0.374c0-0.184-0.007-0.672-0.01-1.32 c-2.159,0.469-2.614-1.04-2.614-1.04c-0.353-0.896-0.862-1.135-0.862-1.135c-0.705-0.481,0.053-0.472,0.053-0.472 c0.779,0.055,1.189,0.8,1.189,0.8c0.692,1.186,1.816,0.843,2.258,0.645c0.071-0.502,0.271-0.843,0.493-1.037 C4.86,11.425,3.049,10.76,3.049,7.786c0-0.847,0.302-1.54,0.799-2.082C3.768,5.507,3.501,4.718,3.924,3.65 c0,0,0.652-0.209,2.134,0.796C6.677,4.273,7.34,4.187,8,4.184c0.659,0.003,1.323,0.089,1.943,0.261 c1.482-1.004,2.132-0.796,2.132-0.796c0.423,1.068,0.157,1.857,0.077,2.054c0.497,0.542,0.798,1.235,0.798,2.082 c0,2.981-1.814,3.637-3.543,3.829c0.279,0.24,0.527,0.713,0.527,1.437c0,1.037-0.01,1.874-0.01,2.129 c0,0.208,0.14,0.449,0.534,0.373c3.081-1.028,5.302-3.935,5.302-7.362C15.76,3.906,12.285,0.431,7.999,0.431z"/></svg>
+</span><span class="username">illinois-cs241</span></a>
+
+    </div>
+  
+  
+</div>
+
+<div class="row">
+  <div class="col-md-12 col-sm-12">
+    <p>Webpage for CS 241: System Programming at the University of Illinois Urbana-Champaign. All documentation and information about the course can be found here.
+</p>
+  </div>
+</div> -->
+</div>
+
+</footer>
+
+</body>
+</html>

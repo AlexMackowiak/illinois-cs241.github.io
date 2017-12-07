@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- Favicons -->
+  <link rel="apple-touch-icon" sizes="180x180" href="images/favicons/apple-touch-icon.png">
+  <link rel="icon" type="image/png" href="images/favicons/favicon-32x32.png" sizes="32x32">
+  <link rel="icon" type="image/png" href="images/favicons/favicon-16x16.png" sizes="16x16">
+  <link rel="manifest" href="images/favicons/manifest.json">
+  <link rel="mask-icon" href="images/favicons/safari-pinned-tab.svg" color="#5bbad5">
+  <meta name="theme-color" content="#ffffff">
+
+  <title>HW0</title>
+
+  <link async rel="stylesheet" href="/lib/bootstrap-3.3.7/dist/css/bootstrap.min.css">
+  <link async rel="stylesheet" href="/css/code-style.css">
+  <link async rel="stylesheet" href="/css/main.css">
+
+</head>
+
+<body>
+<!-- Always shows a header, even in smaller screens. -->
+<nav class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <div class="container">
+        <div class="navbar-header">
+
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target=".navbar-collapse" aria-expanded="false" aria-controls="navbar">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            </button>
+
+            <a class="navbar-brand navbar-link normal" href="/">CS 241: System Programming</a>
+            <a class="navbar-brand navbar-link small" href="/">CS 241</a>
+        </div>
+
+        <div id="navbar" class="navbar-collapse collapse">
+          <ul class="nav navbar-nav">
+            <li>
+            <a class="navbar-link" href="/mps.html">MPs</a>
+            </li>
+            <li>
+            <a class="navbar-link" href="/labs.html">Labs</a>
+            </li>
+            <li>
+            <a class="navbar-link" href="/help.html">Help!</a>
+            </li>
+            <li>
+            <a class="navbar-link" href="/schedule.html">Schedule</a>
+            </li>
+            <li>
+            <a class="navbar-link" href="/honors.html">Honors</a>
+            </li>
+            <li>
+            <a class="navbar-link" href="/staff.html">The Crew</a>
+            </li>
+            <li>
+            <a class="navbar-link" href="/search.html">Search</a>
+            </li>
+            <li>
+            <a class="navbar-link" href="/wikibook/home.html">Wikibook</a>
+            </li>
+          </ul>
+        </div>
+        </div>
+</nav>
+
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-md-2 col-sm-1 col-xs-0"></div>
+    <div class="col-md-8 col-sm-10 col-xs-12">
+      <div class="wrapper">
+        <div class="pad"><div class="card">
+          <div class="title">
+            <div class="speaker-wrapper">
+              <button onclick="speak()" class="speaker" alt="Read Page"></button>
+            </div>
+            <h1>
+              HW0
+              
+                <a class="github-link hidden-xs" href="https://github.com/angrave/SystemProgramming/wiki//HW0">Edit on Github</a>
+              
+            </h1>
+          </div>
+          <div class="container-fluid"><div class="row"><div class="content col-sm-11 .col-sm-offset-1">
+            
+          </div></div></div>
+        </div></div>
+      </div>
+      <div class="toc-wrapper">
+<h4>Content</h4>
+<ul class="toc"><li><a id="toc_watch-the-videos-and-write-up-your-answers-to-the-following-questions" href="#watch-the-videos-and-write-up-your-answers-to-the-following-questions" class="fancy-link">Watch the videos and write up your answers to the following questions</a></li></ul>
+</div>
+      <div id="content">
+        
+        <div class="wrapper">
+
+</div>
+        <div class="wrapper">
+<div class="pad"><div class="card">
+
+
+
+
+<div class="container-fluid"><div class="row"><div class="content col-sm-11 .col-sm-offset-1">
+<h1 id="welcome">Welcome!</h1>
+<p>If you are taking CS 241, you should submit this homework at the <a href="https://goo.gl/forms/ceDM7n4nJ5qK9L8m2" class="fancy-link wiki-link">Google Form</a>.</p>
+<pre><code class="language-C"><a class="code-copy" rel="code-copy-0" onclick="onCopy(this);">Copy</a><span class="c1">// First, can you guess which lyrics have been transformed into this C-like system code?
+</span><span class="kt">char</span> <span class="n">q</span><span class="p">[]</span> <span class="o">=</span> <span class="s">"Do you wanna build a C99 program?"</span><span class="p">;</span>
+<span class="cp">#define or "go debugging with gdb?"
+</span><span class="k">static</span> <span class="kt">unsigned</span> <span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="k">sizeof</span><span class="p">(</span><span class="n">or</span><span class="p">)</span> <span class="o">!=</span> <span class="n">strlen</span><span class="p">(</span><span class="n">or</span><span class="p">);</span>
+<span class="kt">char</span><span class="o">*</span> <span class="n">ptr</span> <span class="o">=</span> <span class="s">"lathe"</span><span class="p">;</span> <span class="kt">size_t</span> <span class="n">come</span> <span class="o">=</span> <span class="n">fprintf</span><span class="p">(</span><span class="n">stdout</span><span class="p">,</span><span class="s">"%s door"</span><span class="p">,</span> <span class="n">ptr</span><span class="o">+</span><span class="mi">2</span><span class="p">);</span>
+<span class="kt">int</span> <span class="n">away</span> <span class="o">=</span> <span class="o">!</span> <span class="p">(</span><span class="kt">int</span><span class="p">)</span> <span class="o">*</span> <span class="s">""</span><span class="p">;</span>
+
+<span class="kt">int</span><span class="o">*</span> <span class="n">shared</span> <span class="o">=</span> <span class="n">mmap</span><span class="p">(</span><span class="nb">NULL</span><span class="p">,</span> <span class="k">sizeof</span><span class="p">(</span><span class="kt">int</span><span class="o">*</span><span class="p">),</span> <span class="n">PROT_READ</span> <span class="o">|</span> <span class="n">PROT_WRITE</span><span class="p">,</span> <span class="n">MAP_SHARED</span> <span class="o">|</span> <span class="n">MAP_ANONYMOUS</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">);</span>
+<span class="n">munmap</span><span class="p">(</span><span class="n">shared</span><span class="p">,</span><span class="k">sizeof</span><span class="p">(</span><span class="kt">int</span><span class="o">*</span><span class="p">));</span>
+
+<span class="k">if</span><span class="p">(</span><span class="o">!</span><span class="n">fork</span><span class="p">())</span> <span class="p">{</span> <span class="n">execlp</span><span class="p">(</span><span class="s">"man"</span><span class="p">,</span><span class="s">"man"</span><span class="p">,</span><span class="s">"-3"</span><span class="p">,</span><span class="s">"ftell"</span><span class="p">,</span> <span class="p">(</span><span class="kt">char</span><span class="o">*</span><span class="p">)</span><span class="mi">0</span><span class="p">);</span> <span class="n">perror</span><span class="p">(</span><span class="s">"failed"</span><span class="p">);</span> <span class="p">}</span>
+<span class="k">if</span><span class="p">(</span><span class="o">!</span><span class="n">fork</span><span class="p">())</span> <span class="p">{</span> <span class="n">execlp</span><span class="p">(</span><span class="s">"make"</span><span class="p">,</span><span class="s">"make"</span><span class="p">,</span> <span class="s">"snowman"</span><span class="p">,</span> <span class="p">(</span><span class="kt">char</span><span class="o">*</span><span class="p">)</span><span class="mi">0</span><span class="p">);</span> <span class="n">execlp</span><span class="p">(</span><span class="s">"make"</span><span class="p">,</span><span class="s">"make"</span><span class="p">,</span> <span class="p">(</span><span class="kt">char</span><span class="o">*</span><span class="p">)</span><span class="mi">0</span><span class="p">));</span> <span class="p">}</span>
+
+<span class="n">exit</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+<textarea id="code-copy-0" class="code-copy-textarea" value='// First, can you guess which lyrics have been transformed into this C-like system code?
+char q[] = "Do you wanna build a C99 program?";
+#define or "go debugging with gdb?"
+static unsigned int i = sizeof(or) != strlen(or);
+char* ptr = "lathe"; size_t come = fprintf(stdout,"%s door", ptr+2);
+int away = ! (int) * "";
+
+int* shared = mmap(NULL, sizeof(int*), PROT_READ | PROT_WRITE, MAP_SHARED | MAP_ANONYMOUS, -1, 0);
+munmap(shared,sizeof(int*));
+
+if(!fork()) { execlp("man","man","-3","ftell", (char*)0); perror("failed"); }
+if(!fork()) { execlp("make","make", "snowman", (char*)0); execlp("make","make", (char*)0)); }
+
+exit(0);
+'></textarea></code></pre>
+</div></div></div>
+</div></div>
+<div class="pad"><div class="card">
+
+<div class="container-fluid"><div class="row"><div class="content col-sm-11 .col-sm-offset-1">
+<h1 id="so-you-want-to-master-system-programming-and-get-a-better-grade-than-b">So you want to master System Programming? And get a better grade than B?</h1>
+<pre><code class="language-C"><a class="code-copy" rel="code-copy-1" onclick="onCopy(this);">Copy</a><span class="kt">int</span> <span class="nf">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span><span class="o">**</span> <span class="n">argv</span><span class="p">)</span> <span class="p">{</span>
+ <span class="n">puts</span><span class="p">(</span><span class="s">"Great! We have plenty of useful resources for you but it's up to you to"</span><span class="p">);</span>
+ <span class="n">puts</span><span class="p">(</span><span class="s">"be an active learner and learn how to solve problems and debug code."</span><span class="p">);</span>
+ <span class="n">puts</span><span class="p">(</span><span class="s">"Bring your near-completed answers the problems below"</span><span class="p">);</span>
+ <span class="n">puts</span><span class="p">(</span><span class="s">" to the first lab to show that you've been working on this"</span><span class="p">);</span>
+ <span class="n">printf</span><span class="p">(</span><span class="s">"A few </span><span class="se">\"</span><span class="s">don't knows</span><span class="se">\"</span><span class="s"> or </span><span class="se">\"</span><span class="s">unsure</span><span class="se">\"</span><span class="s"> is fine for lab 1"</span><span class="p">);</span> 
+ <span class="n">puts</span><span class="p">(</span><span class="s">"Warning: your peers will be working hard for this class"</span><span class="p">);</span>
+ <span class="n">puts</span><span class="p">(</span><span class="s">"This is not CS225; you will be pushed much harder to"</span><span class="p">);</span>
+ <span class="n">puts</span><span class="p">(</span><span class="s">" work things out on your own"</span><span class="p">);</span>
+ <span class="n">fprintf</span><span class="p">(</span><span class="n">stdout</span><span class="p">,</span><span class="s">"the point is that this homework is a stepping stone to all future assignments"</span><span class="p">);</span>
+ <span class="kt">char</span> <span class="n">p</span><span class="p">[]</span> <span class="o">=</span> <span class="s">"so you will want to clear up any confusions or misconceptions."</span><span class="p">;</span>
+ <span class="n">write</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">p</span><span class="p">,</span> <span class="n">strlen</span><span class="p">(</span><span class="n">p</span><span class="p">)</span> <span class="p">);</span>
+ <span class="kt">char</span> <span class="n">buffer</span><span class="p">[</span><span class="mi">1024</span><span class="p">];</span>
+ <span class="n">sprintf</span><span class="p">(</span><span class="n">buffer</span><span class="p">,</span><span class="s">"For grading purposes, this homework 0 will be graded as part of your lab %d work."</span><span class="p">,</span> <span class="mi">1</span><span class="p">);</span>
+ <span class="n">write</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">buffer</span><span class="p">,</span> <span class="n">strlen</span><span class="p">(</span><span class="n">buffer</span><span class="p">));</span>
+ <span class="n">printf</span><span class="p">(</span><span class="s">"Press Return to continue</span><span class="se">\n</span><span class="s">"</span><span class="p">);</span>
+ <span class="n">read</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">buffer</span><span class="p">,</span> <span class="k">sizeof</span><span class="p">(</span><span class="n">buffer</span><span class="p">));</span>
+ <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+<textarea id="code-copy-1" class="code-copy-textarea" value="int main(int argc, char** argv) {
+ puts(&quot;Great! We have plenty of useful resources for you but it's up to you to&quot;);
+ puts(&quot;be an active learner and learn how to solve problems and debug code.&quot;);
+ puts(&quot;Bring your near-completed answers the problems below&quot;);
+ puts(&quot; to the first lab to show that you've been working on this&quot;);
+ printf(&quot;A few \&quot;don't knows\&quot; or \&quot;unsure\&quot; is fine for lab 1&quot;); 
+ puts(&quot;Warning: your peers will be working hard for this class&quot;);
+ puts(&quot;This is not CS225; you will be pushed much harder to&quot;);
+ puts(&quot; work things out on your own&quot;);
+ fprintf(stdout,&quot;the point is that this homework is a stepping stone to all future assignments&quot;);
+ char p[] = &quot;so you will want to clear up any confusions or misconceptions.&quot;;
+ write(1, p, strlen(p) );
+ char buffer[1024];
+ sprintf(buffer,&quot;For grading purposes, this homework 0 will be graded as part of your lab %d work.&quot;, 1);
+ write(1, buffer, strlen(buffer));
+ printf(&quot;Press Return to continue\n&quot;);
+ read(0, buffer, sizeof(buffer));
+ return 0;
+}
+"></textarea></code></pre>
+<div class="pad"><div class="card">
+<div class="title"><h2 id="watch-the-videos-and-write-up-your-answers-to-the-following-questions" class="title-text">Watch the videos and write up your answers to the following questions<a class="anchor title-text" href="#watch-the-videos-and-write-up-your-answers-to-the-following-questions">#</a>
+</h2></div>
+
+<p>http://cs-education.github.io/sys/</p>
+
+<p>The course wikibook:
+https://github.com/angrave/SystemProgramming/wiki</p>
+
+<p>Questions? Comments? Use Piazza:
+https://piazza.com/illinois/fall2017/cs241</p>
+
+<p>The in-browser virtual machine runs entirely in Javascript and is fastest in Chrome. Note the VM and any code you write is reset when you reload the page, <em>so copy your code to a separate document.</em> The post-video challenges (e.g. Haiku poem) are not part of homework 0.</p>
+
+<h3 id="chapter-1" class="title-text">Chapter 1</h3>
+
+<p>In which our intrepid hero battles standard out, standard error, file descriptors and writing to files</p>
+
+<ul>
+  <li>Hello, World! (system call style)
+    <ul>
+      <li>Write a program that uses <code class="highlighter-rouge">write()</code> to print out “Hi! My name is <code class="highlighter-rouge">&lt;Your Name&gt;</code>”.</li>
+    </ul>
+  </li>
+  <li>Hello, Standard Error Stream!
+    <ul>
+      <li>Write a function to print out a triangle of height <code class="highlighter-rouge">n</code> to standard error.
+        <ul>
+          <li>Your function should have the signature <code class="highlighter-rouge">void write_triangle(int n)</code> and should use <code class="highlighter-rouge">write()</code>.</li>
+          <li>The triangle should look like this, for n = 3:
+            <pre><code class="language-C"><a class="code-copy" rel="code-copy-2" onclick="onCopy(this);">Copy</a><span class="o">*</span>
+<span class="o">**</span>
+<span class="o">***</span>
+<textarea id="code-copy-2" class="code-copy-textarea" value="*
+**
+***
+"></textarea></code></pre>
+          </li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+  <li>Writing to files
+    <ul>
+      <li>Take your program from “Hello, World!” modify it write to a file called <code class="highlighter-rouge">hello_world.txt</code>.
+        <ul>
+          <li>Make sure to to use correct flags and a correct mode for <code class="highlighter-rouge">open()</code> (<code class="highlighter-rouge">man 2 open</code> is your friend).</li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+  <li>Not everything is a system call
+    <ul>
+      <li>Take your program from “Writing to files” and replace <code class="highlighter-rouge">write()</code> with <code class="highlighter-rouge">printf()</code>.
+        <ul>
+          <li>Make sure to print to the file instead of standard out!</li>
+        </ul>
+      </li>
+      <li>What are some differences between <code class="highlighter-rouge">write()</code> and <code class="highlighter-rouge">printf()</code>?</li>
+    </ul>
+  </li>
+</ul>
+
+<h3 id="chapter-2" class="title-text">Chapter 2</h3>
+
+<p>Sizing up C types and their limits, int, char arrays and incrementing pointers</p>
+
+<ul>
+  <li>Not all bytes are 8 bits?
+    <ul>
+      <li>How many bits are there in a byte?</li>
+      <li>How many bytes are there in a <code class="highlighter-rouge"><a href="https://linux.die.net/man/3/char" class="fancy-link">char</a></code>?</li>
+      <li>How many bytes the following are on your machine?
+        <ul>
+          <li>
+<code class="highlighter-rouge"><a href="https://linux.die.net/man/3/int" class="fancy-link">int</a></code>, <code class="highlighter-rouge">double</code>, <code class="highlighter-rouge">float</code>, <code class="highlighter-rouge">long</code>, and <code class="highlighter-rouge">long long</code>
+</li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+  <li>Follow the int pointer
+    <ul>
+      <li>On a machine with 8 byte integers:
+        <pre><code class="language-C"><a class="code-copy" rel="code-copy-3" onclick="onCopy(this);">Copy</a><span class="kt">int</span> <span class="n">main</span><span class="p">(){</span>
+  <span class="kt">int</span> <span class="n">data</span><span class="p">[</span><span class="mi">8</span><span class="p">];</span>
+<span class="p">}</span> 
+<textarea id="code-copy-3" class="code-copy-textarea" value="int main(){
+  int data[8];
+} 
+"></textarea></code></pre>
+        <p>If the address of data is <code class="highlighter-rouge">0x7fbd9d40</code>, then what is the address of <code class="highlighter-rouge">data+2</code>?</p>
+      </li>
+      <li>What is <code class="highlighter-rouge">data[3]</code> equivalent to in C?
+        <ul>
+          <li>Hint: what does C convert <code class="highlighter-rouge">data[3]</code> to before dereferencing the address?</li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+  <li>
+    <p><code class="highlighter-rouge">sizeof</code> character arrays, incrementing pointers</p>
+
+    <p>Remember the type of a string constant <code class="highlighter-rouge">"abc"</code> is an array.</p>
+    <ul>
+      <li>Why does this segfault?
+        <pre><code class="language-C"><a class="code-copy" rel="code-copy-4" onclick="onCopy(this);">Copy</a><span class="kt">char</span> <span class="o">*</span><span class="n">ptr</span> <span class="o">=</span> <span class="s">"hello"</span><span class="p">;</span>
+<span class="o">*</span><span class="n">ptr</span> <span class="o">=</span> <span class="sc">'J'</span><span class="p">;</span>
+<textarea id="code-copy-4" class="code-copy-textarea" value="char *ptr = &quot;hello&quot;;
+*ptr = 'J';
+"></textarea></code></pre>
+      </li>
+      <li>What does <code class="highlighter-rouge">sizeof("Hello\0World")</code> return?</li>
+      <li>What does <code class="highlighter-rouge">strlen("Hello\0World")</code> return?</li>
+      <li>Give an example of X such that <code class="highlighter-rouge">sizeof(X)</code> is 3.</li>
+      <li>Give an example of Y such that <code class="highlighter-rouge">sizeof(Y)</code> might be 4 or 8 depending on the machine.</li>
+    </ul>
+  </li>
+</ul>
+
+<h3 id="chapter-3" class="title-text">Chapter 3</h3>
+
+<p>Program arguments, environment variables, and working with character arrays (strings)</p>
+
+<ul>
+  <li>Program arguments, <code class="highlighter-rouge">argc</code>, <code class="highlighter-rouge"><a href="https://linux.die.net/man/3/argv" class="fancy-link">argv</a></code>
+    <ul>
+      <li>What are two ways to find the length of <code class="highlighter-rouge"><a href="https://linux.die.net/man/3/argv" class="fancy-link">argv</a></code>?</li>
+      <li>What does <code class="highlighter-rouge">argv[0]</code> represent?</li>
+    </ul>
+  </li>
+  <li>Environment Variables
+    <ul>
+      <li>Where are the pointers to environment variables stored?</li>
+    </ul>
+  </li>
+  <li>String searching (strings are just char arrays)
+    <ul>
+      <li>On a machine where pointers are 8 bytes, and with the following code:
+        <pre><code class="language-C"><a class="code-copy" rel="code-copy-5" onclick="onCopy(this);">Copy</a><span class="kt">char</span> <span class="o">*</span><span class="n">ptr</span> <span class="o">=</span> <span class="s">"Hello"</span><span class="p">;</span>
+<span class="kt">char</span> <span class="n">array</span><span class="p">[]</span> <span class="o">=</span> <span class="s">"Hello"</span><span class="p">;</span>
+<textarea id="code-copy-5" class="code-copy-textarea" value='char *ptr = "Hello";
+char array[] = "Hello";
+'></textarea></code></pre>
+        <p>What are the values of <code class="highlighter-rouge">sizeof(ptr)</code> and <code class="highlighter-rouge">sizeof(array)</code>? Explain why.</p>
+      </li>
+    </ul>
+  </li>
+  <li>Lifetime of automatic variables
+    <ul>
+      <li>What data structure manages the lifetime of automatic variables?</li>
+    </ul>
+  </li>
+</ul>
+
+<h3 id="chapter-4" class="title-text">Chapter 4</h3>
+
+<p>Heap and stack memory, and working with structs</p>
+
+<ul>
+  <li>Memory allocation using <code class="highlighter-rouge"><a href="https://linux.die.net/man/3/malloc" class="fancy-link">malloc</a></code>, the heap, and time
+    <ul>
+      <li>If I want to use data after the lifetime of the function it was created in ends, where should I put it? How do I put it there?</li>
+      <li>Fill in the blank: “In a good C program, for every malloc, there is a ___”.</li>
+    </ul>
+  </li>
+  <li>Heap allocation gotchas
+    <ul>
+      <li>What is one reason <code class="highlighter-rouge"><a href="https://linux.die.net/man/3/malloc" class="fancy-link">malloc</a></code> can fail?</li>
+      <li>What are some differences between <code class="highlighter-rouge">time()</code> and <code class="highlighter-rouge">ctime()</code>?</li>
+      <li>What is wrong with this code snippet?
+        <pre><code class="language-C"><a class="code-copy" rel="code-copy-6" onclick="onCopy(this);">Copy</a><span class="n">free</span><span class="p">(</span><span class="n">ptr</span><span class="p">);</span>
+<span class="n">free</span><span class="p">(</span><span class="n">ptr</span><span class="p">);</span>
+<textarea id="code-copy-6" class="code-copy-textarea" value="free(ptr);
+free(ptr);
+"></textarea></code></pre>
+      </li>
+      <li>What is wrong with this code snippet?
+        <pre><code class="language-C"><a class="code-copy" rel="code-copy-7" onclick="onCopy(this);">Copy</a><span class="n">free</span><span class="p">(</span><span class="n">ptr</span><span class="p">);</span>
+<span class="n">printf</span><span class="p">(</span><span class="s">"%s</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">ptr</span><span class="p">);</span>
+<textarea id="code-copy-7" class="code-copy-textarea" value='free(ptr);
+printf("%s\n", ptr);
+'></textarea></code></pre>
+      </li>
+      <li>How can one avoid the previous two mistakes?</li>
+    </ul>
+  </li>
+  <li>struct, typedefs, and a linked list
+    <ul>
+      <li>Create a struct that represents a <code class="highlighter-rouge">Person</code>, and then make a typedef, so that <code class="highlighter-rouge">struct Person</code> can be replaced with a single word.
+        <ul>
+          <li>A person should contain the following information: their name (a string), their age (an integer), and a list of their friends (stored as a pointer to an array of pointers to <code class="highlighter-rouge">Person</code>s).</li>
+        </ul>
+      </li>
+      <li>Now make two persons on the heap, “Agent Smith” and “Sonny Moore”, who are 128 and 256 years old respectively and are friends with each other.</li>
+    </ul>
+  </li>
+  <li>Duplicating strings, memory allocation and deallocation of structures
+    <ul>
+      <li>Create functions to create and destroy a Person (Person’s and their names should live on the heap).
+        <ul>
+          <li>
+<code class="highlighter-rouge">create()</code> should take a name and age. The name should be copied onto the heap. Use malloc to reserve sufficient memory for everyone having up to ten friends. Be sure initialize all fields (why?).</li>
+          <li>
+<code class="highlighter-rouge">destroy()</code> should free up not only the memory of the person struct, but also free all of its attributes that are stored on the heap. Destroying one person should not destroy any others.</li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+</ul>
+
+<h3 id="chapter-5" class="title-text">Chapter 5</h3>
+
+<p>Text input and output and parsing using getchar, gets, getline</p>
+
+<ul>
+  <li>Reading characters, trouble with gets
+    <ul>
+      <li>What functions can be used for getting characters from <code class="highlighter-rouge"><a href="https://linux.die.net/man/3/stdin" class="fancy-link">stdin</a></code> and writing them to <code class="highlighter-rouge"><a href="https://linux.die.net/man/3/stdout" class="fancy-link">stdout</a></code>?</li>
+      <li>Name one issue with <code class="highlighter-rouge">gets()</code>.</li>
+    </ul>
+  </li>
+  <li>Introducing <code class="highlighter-rouge"><a href="https://linux.die.net/man/3/sscanf" class="fancy-link">sscanf</a></code> and friends
+    <ul>
+      <li>Write code that parses the string “Hello 5 World” and initializes 3 variables to “Hello”, 5, and “World”.</li>
+    </ul>
+  </li>
+  <li>
+<code class="highlighter-rouge"><a href="https://linux.die.net/man/3/getline" class="fancy-link">getline</a></code> is useful
+    <ul>
+      <li>What does one need to define before including <code class="highlighter-rouge">getline()</code>?</li>
+      <li>Write a C program to print out the content of a file line-by-line using <code class="highlighter-rouge">getline()</code>.</li>
+    </ul>
+  </li>
+</ul>
+
+<h3 id="c-development" class="title-text">C Development</h3>
+
+<p>A web search is useful here</p>
+
+<ul>
+  <li>What compiler flag is used to generate a debug build?</li>
+  <li>You modify the makefile to generate debug builds and type <code class="highlighter-rouge"><a href="https://linux.die.net/man/3/make" class="fancy-link">make</a></code> again. Explain why this is insufficient to generate a new build.</li>
+  <li>Are tabs or spaces used to indent the commands after the rule in a Makefile?</li>
+  <li>What are the differences between heap and stack memory?</li>
+  <li>Are there other kinds of memory in a process?</li>
+</ul>
+
+<h3 id="optional-just-for-fun" class="title-text">Optional (Just for fun)</h3>
+<ul>
+  <li>Convert your a song lyrics into System Programming and C code covered in this wiki book and share on Piazza.</li>
+  <li>Find, in your opinion, the best and worst C code on the web and post the link to Piazza.</li>
+  <li>Write a short C program with a deliberate subtle C bug and post it on Piazza to see if others can spot your bug.</li>
+</ul>
+</div></div>
+</div></div></div>
+</div></div>
+</div>
+        
+        <div class="wrapper">
+</div>
+      </div>
+      <div class="col-md-2 col-sm-1 col-xs-0"></div>
+    </div>
+  </div>
+  <script>
+    var github_repo = "illinois-cs241/illinois-cs241.github.io";
+    var github_path = "_wikibook/hw0.md";
+  </script>
+  <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML" integrity="sha384-Ra6zh6uYMmH5ydwCqqMoykyf1T/+ZcnOQfFPhDrp2kI4OIxadnhsvvA2vv9A7xYv" crossorigin="anonymous"></script>
+<script src="/lib/bootstrap-3.3.7/dist/js/bootstrap.min.js"></script>
+<script src="/js/main.js"></script>
+
+<script>
+$(document).ready(function(){
+    $('[data-toggle="popover"]').popover({
+      trigger: 'manual',
+        container: $(this).attr('id'),
+        placement: 'top',
+        content: function () {
+            return '<div class="hover-hovercard"></div>';
+        }
+    }).on("mouseenter", function () {
+        var _this = this;
+        $(this).popover("show");
+        $(this).siblings(".popover").on("mouseleave", function () {
+            $(_this).popover('hide');
+        });
+    }).on("mouseleave", function () {
+        var _this = this;
+        setTimeout(function () {
+            if (!$(".popover:hover").length) {
+               $(_this).popover("hide")
+            }
+        }, 100);
+    });
+
+    $('[data-toggle="tooltip"]').tooltip();
+});
+/*
+$('[data-toggle="popover"]').on('shown.bs.popover', function () {
+    var $pop = $(this);
+    setTimeout(function () {
+        $pop.popover('hide');
+    }, 2000);
+});*/
+</script>
+<script src="/js/analytics.js"></script>
+<footer class="">
+
+<div class="container-fluid">
+<div class="shadow"></div>
+<!--<div class="row">
+  <h4 class="col-md-3">CS 241: System Programming</h4>
+  
+    <div class="col-md-3">
+    <a href="https://github.com/illinois-cs241"><span class="icon icon--github"><svg viewBox="0 0 16 16"><path fill="#828282" d="M7.999,0.431c-4.285,0-7.76,3.474-7.76,7.761 c0,3.428,2.223,6.337,5.307,7.363c0.388,0.071,0.53-0.168,0.53-0.374c0-0.184-0.007-0.672-0.01-1.32 c-2.159,0.469-2.614-1.04-2.614-1.04c-0.353-0.896-0.862-1.135-0.862-1.135c-0.705-0.481,0.053-0.472,0.053-0.472 c0.779,0.055,1.189,0.8,1.189,0.8c0.692,1.186,1.816,0.843,2.258,0.645c0.071-0.502,0.271-0.843,0.493-1.037 C4.86,11.425,3.049,10.76,3.049,7.786c0-0.847,0.302-1.54,0.799-2.082C3.768,5.507,3.501,4.718,3.924,3.65 c0,0,0.652-0.209,2.134,0.796C6.677,4.273,7.34,4.187,8,4.184c0.659,0.003,1.323,0.089,1.943,0.261 c1.482-1.004,2.132-0.796,2.132-0.796c0.423,1.068,0.157,1.857,0.077,2.054c0.497,0.542,0.798,1.235,0.798,2.082 c0,2.981-1.814,3.637-3.543,3.829c0.279,0.24,0.527,0.713,0.527,1.437c0,1.037-0.01,1.874-0.01,2.129 c0,0.208,0.14,0.449,0.534,0.373c3.081-1.028,5.302-3.935,5.302-7.362C15.76,3.906,12.285,0.431,7.999,0.431z"/></svg>
+</span><span class="username">illinois-cs241</span></a>
+
+    </div>
+  
+  
+</div>
+
+<div class="row">
+  <div class="col-md-12 col-sm-12">
+    <p>Webpage for CS 241: System Programming at the University of Illinois Urbana-Champaign. All documentation and information about the course can be found here.
+</p>
+  </div>
+</div> -->
+</div>
+
+</footer>
+
+</body>
+</html>
